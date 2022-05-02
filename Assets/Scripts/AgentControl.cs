@@ -8,6 +8,8 @@ using Unity.MLAgents.Actuators;
 
 public class AgentControl : Agent
 {
+    public int agent_id;
+
     public override void Initialize()
     {
         base.Initialize();

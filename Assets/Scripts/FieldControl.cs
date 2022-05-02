@@ -7,12 +7,16 @@ public class FieldControl : MonoBehaviour
 {
     Settings settings;
 
-    public Tilemap field_tilemap;
-    public Tilemap agent_tilemap;
-    public TileBase agent_tile;
-    public List<Sprite> tilemapSprites;
+    public GameObject TrainingArea;
 
     List<List<int>> fieldData = new List<List<int>>();
+    public List<Sprite> tilemapSprites;
+    public Tilemap field_tilemap;
+
+    public Tilemap agent_tilemap;
+    public TileBase agent_tile;
+    public GameObject agent;
+
 
     private void Start()
     {
@@ -30,23 +34,29 @@ public class FieldControl : MonoBehaviour
 
     }
 
-    public void ResetFieldData(int x, int y)
+
+    /// <summary>
+    /// Initializing Field data.
+    /// </summary>
+    /// <param name="width">Field's width</param>
+    /// <param name="height">Field's height</param>
+    public void ResetFieldData(int width, int height)
     {
-        for (int i = 0; i < y; i++)
+        for (int i = 0; i < height; i++)
         {
             List<int> temp = new List<int>();
-            for (int j = 0; j < x; j++)
+            for (int j = 0; j < width; j++)
             {
                 temp.Add(0);
             }
             fieldData.Add(temp);
         }
 
-        for (int i = 0; i < y; i++)
+        for (int i = 0; i < height; i++)
         {
-            for (int j = 0; j < x; j++)
+            for (int j = 0; j < width; j++)
             {
-                Vector3Int pos = new Vector3Int(-x / 2 + j, y / 2 - 1 - i, 0);
+                Vector3Int pos = new Vector3Int(-width / 2 + j, height / 2 - 1 - i, 0);
 
                 // Empty
                 if (field_tilemap.GetSprite(pos) == tilemapSprites[1])
@@ -69,6 +79,13 @@ public class FieldControl : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// Agents set random place in field.
+    /// </summary>
+    /// <param name="width">Field's width</param>
+    /// <param name="height">Field's height</param>
+    /// <param name="num">Number of Agents</param>
     public void RandomSetAgent(int width, int height, int num)
     {
         int cnt = 0;
@@ -81,18 +98,30 @@ public class FieldControl : MonoBehaviour
             {
                 agent_tilemap.SetTile(pos, agent_tile);
                 fieldData[height / 2 - 1 - pos.y][pos.x + width / 2] = 10 + cnt;
+
+                GameObject obj = (GameObject)Instantiate(agent);
+                obj.transform.parent = TrainingArea.transform;
+                AgentControl agentControl = obj.GetComponent<AgentControl>();
+                agentControl.agent_id = 10 + cnt;
+
                 cnt++;
             }
         }
     }
 
-    public void PrintFieldData(int x, int y)
+
+    /// <summary>
+    /// Output Field data(for debug).
+    /// </summary>
+    /// <param name="width">Field's width</param>
+    /// <param name="height">Field's height</param>
+    public void PrintFieldData(int width, int height)
     {
         Debug.Log("===== Field data =====");
-        for (int i = 0; i < y; i++)
+        for (int i = 0; i < height; i++)
         {
             string s = string.Empty;
-            for (int j = 0; j < x; j++)
+            for (int j = 0; j < width; j++)
             {
                 s += fieldData[i][j].ToString() + " ";
             }
