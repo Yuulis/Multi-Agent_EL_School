@@ -5,11 +5,12 @@ using UnityEngine.Tilemaps;
 
 public class FieldControl : MonoBehaviour
 {
+    public GameObject Settings_obj;
     Settings settings;
 
     public GameObject TrainingArea;
 
-    List<List<int>> fieldData = new List<List<int>>();
+    [HideInInspector] public List<List<int>> fieldData = new List<List<int>>();
     public List<Sprite> tilemapSprites;
     public Tilemap field_tilemap;
 
@@ -18,9 +19,9 @@ public class FieldControl : MonoBehaviour
     public GameObject agent;
 
 
-    private void Start()
+    private void Awake()
     {
-        settings = GameObject.Find("Settings").GetComponent<Settings>();
+        settings = Settings_obj.GetComponent<Settings>();
 
         ResetFieldData(settings.fieldWidth, settings.fieldHeight);
         RandomSetAgent(settings.fieldWidth, settings.fieldHeight, settings.agentCnt);
@@ -103,6 +104,8 @@ public class FieldControl : MonoBehaviour
                 obj.transform.parent = TrainingArea.transform;
                 AgentControl agentControl = obj.GetComponent<AgentControl>();
                 agentControl.agent_id = 10 + cnt;
+                
+
 
                 cnt++;
             }

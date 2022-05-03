@@ -8,4 +8,5 @@ public class Settings : MonoBehaviour
     public int fieldHeight = 20;
 
     public int agentCnt = 10;
+    public int agentSight = 5;
 }
