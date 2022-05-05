@@ -104,8 +104,6 @@ public class FieldControl : MonoBehaviour
                 obj.transform.parent = TrainingArea.transform;
                 AgentControl agentControl = obj.GetComponent<AgentControl>();
                 agentControl.agent_id = 10 + cnt;
-                
-
 
                 cnt++;
             }
