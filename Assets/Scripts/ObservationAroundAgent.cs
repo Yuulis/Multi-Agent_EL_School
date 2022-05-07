@@ -5,7 +5,7 @@ using UnityEngine;
 public class ObservationAroundAgent
 {
     List<List<int>> m_fieldData;
-    List<List<int>> m_observationList;
+    public List<List<int>> m_observationList;
 
     int m_posX;
     int m_posY;
