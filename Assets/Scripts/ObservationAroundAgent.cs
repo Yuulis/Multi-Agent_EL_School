@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ObservationAroundAgent
@@ -7,20 +8,26 @@ public class ObservationAroundAgent
     List<List<int>> m_fieldData;
     public List<List<int>> m_observationList;
 
+    int m_fieldLineSize;
+    int m_fieldColumnSize;
     int m_posX;
     int m_posY;
     int m_sight;
     int m_agentCnt;
 
 
-    public ObservationAroundAgent(List<List<int>> fieldData, int agentPos_x, int agentPos_y, int agentSight, int agentCnt)
+    public ObservationAroundAgent(List<List<int>> fieldData, int fieldLineSize, int fieldColumnSize, int agentPos_x, int agentPos_y, int agentSight, int agentCnt)
     {
-        this.m_fieldData = fieldData;
+        m_fieldData = fieldData;
         m_observationList = new List<List<int>>();
+        m_fieldLineSize = fieldLineSize;
+        m_fieldColumnSize = fieldColumnSize;
         m_posX = agentPos_x;
         m_posY = agentPos_y;
         m_sight = agentSight;
         m_agentCnt = agentCnt;
+
+        GetObservation();
     }
 
     public void PrintAgentObservation(int agent_id)
@@ -38,7 +45,7 @@ public class ObservationAroundAgent
         Debug.Log("=================================");
     }
 
-    public void GetObservation()
+    private void GetObservation()
     {
         for (int i = 0; i < m_sight * 2 + 1; i++)
         {
@@ -49,7 +56,7 @@ public class ObservationAroundAgent
             }
             m_observationList.Add(temp);
         }
-        m_observationList[m_sight][m_sight] = 1;
+        m_observationList[m_sight][m_sight] = 9;
 
         for (int i = 0; i < 4; i++) GetObservationType1(i);
         for (int i = 0; i < 4; i++) GetObservationType2(i);
@@ -114,7 +121,7 @@ public class ObservationAroundAgent
             for (int i = 1; i <= m_sight; i++)
             {
                 // Out of range
-                if (m_sight * 2 < m_posX + i)
+                if (m_fieldColumnSize < m_posX + i)
                 {
                     m_observationList[m_sight][m_sight + i] = 0;
                 }
@@ -162,7 +169,7 @@ public class ObservationAroundAgent
             for (int i = 1; i <= m_sight; i++)
             {
                 // Out of range
-                if (m_sight * 2 < m_posY + i)
+                if (m_fieldLineSize < m_posY + i)
                 {
                     m_observationList[m_sight + i][m_sight] = 0;
                 }
@@ -309,7 +316,7 @@ public class ObservationAroundAgent
             for (int i = 1; i <= m_sight; i++)
             {
                 // Out of range
-                if (m_sight * 2 < m_posY + i || m_sight * 2 < m_posX + i)
+                if (m_fieldLineSize < m_posY + i || m_fieldColumnSize < m_posX + i)
                 {
                     m_observationList[m_sight + i][m_sight + i] = 0;
                 }
@@ -357,7 +364,7 @@ public class ObservationAroundAgent
             for (int i = 1; i <= m_sight; i++)
             {
                 // Out of range
-                if (m_sight * 2 < m_posY + i || m_posX - i < 0)
+                if (m_fieldLineSize < m_posY + i || m_posX - i < 0)
                 {
                     m_observationList[m_sight + i][m_sight - i] = 0;
                 }
@@ -460,7 +467,7 @@ public class ObservationAroundAgent
                 for (int j = 1; j < i; j++)
                 {
                     // Out of range
-                    if (m_posY - i < 0 || m_sight * 2 < m_posX + j)
+                    if (m_posY - i < 0 || m_fieldColumnSize < m_posX + j)
                     {
                         m_observationList[m_sight - i][m_sight + j] = 0;
                     }
@@ -513,7 +520,7 @@ public class ObservationAroundAgent
                 for (int i = 1; i < j; i++)
                 {
                     // Out of range
-                    if (m_posY - i < 0 || m_sight * 2 < m_posX + j)
+                    if (m_posY - i < 0 || m_fieldColumnSize < m_posX + j)
                     {
                         m_observationList[m_sight - i][m_sight + j] = 0;
                     }
@@ -566,7 +573,7 @@ public class ObservationAroundAgent
                 for (int i = 1; i < j; i++)
                 {
                     // Out of range
-                    if (m_sight * 2 < m_posY + i || m_sight * 2 < m_posX + j)
+                    if (m_fieldLineSize < m_posY + i || m_fieldColumnSize < m_posX + j)
                     {
                         m_observationList[m_sight + i][m_sight + j] = 0;
                     }
@@ -619,7 +626,7 @@ public class ObservationAroundAgent
                 for (int j = 1; j < i; j++)
                 {
                     // Out of range
-                    if (m_sight * 2 < m_posY + i || m_sight * 2 < m_posX + j)
+                    if (m_fieldLineSize < m_posY + i || m_fieldColumnSize < m_posX + j)
                     {
                         m_observationList[m_sight + i][m_sight + j] = 0;
                     }
@@ -672,7 +679,7 @@ public class ObservationAroundAgent
                 for (int j = 1; j < i; j++)
                 {
                     // Out of range
-                    if (m_sight * 2 < m_posY + i || m_posX - j < 0)
+                    if (m_fieldLineSize < m_posY + i || m_posX - j < 0)
                     {
                         m_observationList[m_sight + i][m_sight - j] = 0;
                     }
@@ -725,7 +732,7 @@ public class ObservationAroundAgent
                 for (int i = 1; i < j; i++)
                 {
                     // Out of range
-                    if (m_sight * 2 < m_posY + i || m_posX - j < 0)
+                    if (m_fieldLineSize < m_posY + i || m_posX - j < 0)
                     {
                         m_observationList[m_sight + i][m_sight - j] = 0;
                     }

@@ -16,6 +16,7 @@ public class FieldControl : MonoBehaviour
 
     public Tilemap agent_tilemap;
     public TileBase agent_tile;
+
     public GameObject agent;
 
 
