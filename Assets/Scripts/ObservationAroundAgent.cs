@@ -21,6 +21,8 @@ public class ObservationAroundAgent
         m_posY = agentPos_y;
         m_sight = agentSight;
         m_agentCnt = agentCnt;
+
+        GetObservation();
     }
 
     public void PrintAgentObservation(int agent_id)
@@ -38,7 +40,7 @@ public class ObservationAroundAgent
         Debug.Log("=================================");
     }
 
-    public void GetObservation()
+    private void GetObservation()
     {
         for (int i = 0; i < m_sight * 2 + 1; i++)
         {
@@ -49,7 +51,7 @@ public class ObservationAroundAgent
             }
             m_observationList.Add(temp);
         }
-        m_observationList[m_sight][m_sight] = 1;
+        m_observationList[m_sight][m_sight] = 9;
 
         for (int i = 0; i < 4; i++) GetObservationType1(i);
         for (int i = 0; i < 4; i++) GetObservationType2(i);
