@@ -64,7 +64,7 @@ public class AgentControl : Agent
         {
             for (int j = 0; j < settings.agentSight * 2 + 1; j++)
             {
-                sensor.AddObservation(observation.m_observationList[i][j]);
+                sensor.AddObservation(observation.observationList[i][j]);
             }
         }
     }
