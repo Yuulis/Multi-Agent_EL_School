@@ -57,7 +57,7 @@ public class AgentControl : Agent
             settings.agentSight,
             settings.agentCnt
         );
-
+        
         observation.PrintAgentObservation(agent_id);
 
         for (int i = 0; i < settings.agentSight * 2 + 1; i++)
