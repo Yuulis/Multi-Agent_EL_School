@@ -48,7 +48,7 @@ public class AgentControl : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        ObservationAroundAgent observation = new ObservationAroundAgent(
+        ObservationAroundAgent observation = new(
             fieldControl.fieldData,
             settings.fieldHeight,
             settings.fieldWidth, 
