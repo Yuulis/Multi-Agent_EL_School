@@ -62,7 +62,7 @@ public class ObservationAroundAgent
         GetObservationNeighborhood();
         for (int i = 0; i < 4; i++) GetObservationStraight(i);
         for (int i = 0; i < 4; i++) GetObservationDiagonal(i);
-        //for (int i = 0; i < 8; i++) GetObservationSubDiagonal(i);
+        for (int i = 0; i < 8; i++) GetObservationSubDiagonal(i);
     }
 
     private void GetObservationNeighborhood()
@@ -159,7 +159,7 @@ public class ObservationAroundAgent
         else if (dir == 1)
         {
             // Neighboorhood is not empty
-            if (observationNeighborhood[4] != 1) return;
+            if (observationNeighborhood[5] != 1) return;
 
             for (int i = 2; i <= m_sight; i++)
             {
@@ -199,7 +199,7 @@ public class ObservationAroundAgent
         else if (dir == 2)
         {
             // Neighboorhood is not empty
-            if (observationNeighborhood[6] != 1) return;
+            if (observationNeighborhood[7] != 1) return;
 
             for (int i = 2; i <= m_sight; i++)
             {
