@@ -10,12 +10,13 @@ public class FieldControl : MonoBehaviour
 
     public GameObject TrainingArea;
 
-    [HideInInspector] public List<List<int>> fieldData = new List<List<int>>();
+    [HideInInspector] public List<List<int>> fieldData = new();
     public List<Sprite> tilemapSprites;
     public Tilemap field_tilemap;
 
     public Tilemap agent_tilemap;
     public TileBase agent_tile;
+
     public GameObject agent;
 
 
@@ -45,7 +46,7 @@ public class FieldControl : MonoBehaviour
     {
         for (int i = 0; i < height; i++)
         {
-            List<int> temp = new List<int>();
+            List<int> temp = new();
             for (int j = 0; j < width; j++)
             {
                 temp.Add(0);
@@ -57,7 +58,7 @@ public class FieldControl : MonoBehaviour
         {
             for (int j = 0; j < width; j++)
             {
-                Vector3Int pos = new Vector3Int(-width / 2 + j, height / 2 - 1 - i, 0);
+                Vector3Int pos = new(-width / 2 + j, height / 2 - 1 - i, 0);
 
                 // Empty
                 if (field_tilemap.GetSprite(pos) == tilemapSprites[1])
@@ -92,7 +93,7 @@ public class FieldControl : MonoBehaviour
         int cnt = 0;
         while (cnt < num)
         {
-            Vector3Int pos = new Vector3Int(Random.Range(-width / 2, width / 2), Random.Range(height / 2 - 1, -height / 2 + 1), 0);
+            Vector3Int pos = new(Random.Range(-width / 2, width / 2), Random.Range(height / 2 - 1, -height / 2 + 1), 0);
             
             // Only Empty position
             if (field_tilemap.GetSprite(pos) == tilemapSprites[1])

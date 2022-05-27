@@ -6664,5 +6664,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fieldWidth: 30
   fieldHeight: 20
-  agentCnt: 10
+  agentCnt: 1
   agentSight: 5

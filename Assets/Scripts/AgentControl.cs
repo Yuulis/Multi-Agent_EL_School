@@ -48,15 +48,23 @@ public class AgentControl : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        ObservationAroundAgent observation = new ObservationAroundAgent(fieldControl.fieldData, agentPos_x, agentPos_y, settings.agentSight, settings.agentCnt);
-        observation.GetObservation();
+        ObservationAroundAgent observation = new(
+            fieldControl.fieldData,
+            settings.fieldHeight,
+            settings.fieldWidth, 
+            agentPos_x,
+            agentPos_y,
+            settings.agentSight,
+            settings.agentCnt
+        );
+        
         observation.PrintAgentObservation(agent_id);
 
         for (int i = 0; i < settings.agentSight * 2 + 1; i++)
         {
             for (int j = 0; j < settings.agentSight * 2 + 1; j++)
             {
-                sensor.AddObservation(observation.m_observationList[i][j]);
+                sensor.AddObservation(observation.observationList[i][j]);
             }
         }
     }
