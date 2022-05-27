@@ -16,7 +16,16 @@ public class ObservationAroundAgent
     int m_sight;
     int m_agentCnt;
 
-
+    /// <summary>
+    /// Create observation list.
+    /// </summary>
+    /// <param name="fieldData"></param>
+    /// <param name="fieldLineSize">height of field</param>
+    /// <param name="fieldColumnSize">width of field</param>
+    /// <param name="agentPos_x">Agent's x position (first-index of fieldData)</param>
+    /// <param name="agentPos_y">Agent's y position (second-index of fieldData)</param>
+    /// <param name="agentSight">Agent's sight</param>
+    /// <param name="agentCnt">Number of Agents</param>
     public ObservationAroundAgent(List<List<int>> fieldData, int fieldLineSize, int fieldColumnSize, int agentPos_x, int agentPos_y, int agentSight, int agentCnt)
     {
         observationList = new List<List<int>>();
@@ -32,6 +41,11 @@ public class ObservationAroundAgent
         GetObservation();
     }
 
+
+    /// <summary>
+    /// For debug
+    /// </summary>
+    /// <param name="agent_id">Agent's id</param>
     public void PrintAgentObservation(int agent_id)
     {
         Debug.Log($"===== Agent{agent_id}'s Observation =====");
@@ -47,6 +61,9 @@ public class ObservationAroundAgent
         Debug.Log("=================================");
     }
 
+    /// <summary>
+    /// Initialize observation list and call four GetObservation functions.
+    /// </summary>
     private void GetObservation()
     {
         for (int i = 0; i < m_sight * 2 + 1; i++)
@@ -65,6 +82,9 @@ public class ObservationAroundAgent
         for (int i = 0; i < 8; i++) GetObservationSubDiagonal(i);
     }
 
+    /// <summary>
+    /// Get observation of Agent'S neighborhood(nine tiles)
+    /// </summary>
     private void GetObservationNeighborhood()
     {
         int cnt = 0;
@@ -112,6 +132,10 @@ public class ObservationAroundAgent
         }
     }
 
+    /// <summary>
+    /// Get observation of straight direction.
+    /// </summary>
+    /// <param name="dir">direction</param>
     private void GetObservationStraight(int dir)
     {
         // Forward
@@ -276,6 +300,10 @@ public class ObservationAroundAgent
         }
     }
 
+    /// <summary>
+    /// Get observation of diagonal direction.
+    /// </summary>
+    /// <param name="dir">direction</param>
     private void GetObservationDiagonal(int dir)
     {
         // Right forward
@@ -439,6 +467,10 @@ public class ObservationAroundAgent
         }
     }
 
+    /// <summary>
+    /// Get observation of sub-diagonal direction.
+    /// </summary>
+    /// <param name="dir">direction</param>
     private void GetObservationSubDiagonal(int dir)
     {
         // Forward right
