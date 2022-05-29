@@ -10,30 +10,30 @@ public class FieldControl : MonoBehaviour
 
     public GameObject TrainingArea;
 
-    [HideInInspector] public List<List<int>> fieldData = new();
+    [HideInInspector] public List<List<int>> fieldData;
     public List<Sprite> tilemapSprites;
+
     public Tilemap field_tilemap;
 
     public Tilemap agent_tilemap;
     public TileBase agent_tile;
 
     public GameObject agent;
+    [HideInInspector] public int activeAgentsNum;
+    [HideInInspector] public List<Vector3Int> agentsPos;
 
 
     private void Awake()
     {
         settings = Settings_obj.GetComponent<Settings>();
 
+        activeAgentsNum = settings.agentCnt;
+
         ResetFieldData(settings.fieldWidth, settings.fieldHeight);
         RandomSetAgent(settings.fieldWidth, settings.fieldHeight, settings.agentCnt);
 
         // For debug
-        PrintFieldData(settings.fieldWidth, settings.fieldHeight);
-    }
-
-    private void Update()
-    {
-
+        if (settings.debugMode) PrintFieldData(settings.fieldWidth, settings.fieldHeight);
     }
 
 
@@ -44,6 +44,8 @@ public class FieldControl : MonoBehaviour
     /// <param name="height">Field's height</param>
     public void ResetFieldData(int width, int height)
     {
+        fieldData = new();
+
         for (int i = 0; i < height; i++)
         {
             List<int> temp = new();
@@ -90,6 +92,8 @@ public class FieldControl : MonoBehaviour
     /// <param name="num">Number of Agents</param>
     public void RandomSetAgent(int width, int height, int num)
     {
+        agentsPos = new();
+
         int cnt = 0;
         while (cnt < num)
         {
@@ -104,10 +108,55 @@ public class FieldControl : MonoBehaviour
                 GameObject obj = (GameObject)Instantiate(agent);
                 obj.transform.parent = TrainingArea.transform;
                 AgentControl agentControl = obj.GetComponent<AgentControl>();
+
                 agentControl.agent_id = 10 + cnt;
+                agentsPos.Add(pos);
 
                 cnt++;
             }
+        }
+    }
+
+
+    /// <summary>
+    /// Move agent_tile in the direction specified by dir.
+    /// </summary>
+    /// <param name="agent_id">Agent's id</param>
+    /// <param name="dir">Direction of moving</param>
+    public void MoveAgentTile(int agent_id, int dir)
+    {
+        Vector3Int pos = agentsPos[agent_id - 10];
+
+        // Forward
+        if (dir == 0)
+        {
+            Vector3Int newPos = new(pos.x, pos.y + 1, pos.z);
+            agent_tilemap.SetTile(newPos, agent_tile);
+            agent_tilemap.SetTile(pos, null);
+        }
+
+        // Right
+        else if (dir == 1)
+        {
+            Vector3Int newPos = new(pos.x + 1, pos.y, pos.z);
+            agent_tilemap.SetTile(newPos, agent_tile);
+            agent_tilemap.SetTile(pos, null);
+        }
+
+        // Back
+        else if (dir == 2)
+        {
+            Vector3Int newPos = new(pos.x, pos.y - 1, pos.z);
+            agent_tilemap.SetTile(newPos, agent_tile);
+            agent_tilemap.SetTile(pos, null);
+        }
+
+        // Left
+        else if (dir == 3)
+        {
+            Vector3Int newPos = new(pos.x - 1, pos.y, pos.z);
+            agent_tilemap.SetTile(newPos, agent_tile);
+            agent_tilemap.SetTile(pos, null);
         }
     }
 

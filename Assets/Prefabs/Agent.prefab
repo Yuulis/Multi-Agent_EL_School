@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 997979482682399118}
   - component: {fileID: 997979482682399152}
-  - component: {fileID: 3776182073995168771}
   - component: {fileID: 997979482682399119}
   - component: {fileID: 4985868021326194900}
   m_Layer: 0
@@ -52,8 +51,8 @@ MonoBehaviour:
     NumStackedVectorObservations: 3
     m_ActionSpec:
       m_NumContinuousActions: 0
-      BranchSizes: 01000000
-    VectorActionSize: 01000000
+      BranchSizes: 04000000
+    VectorActionSize: 04000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
@@ -66,21 +65,6 @@ MonoBehaviour:
   m_UseChildActuators: 1
   m_DeterministicInference: 0
   m_ObservableAttributeHandling: 0
---- !u!114 &3776182073995168771
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 997979482682399117}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd8012d5925524537b27131fef517017, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SensorName: BufferSensor
-  m_ObservableSize: 0
-  m_MaxNumObservables: 0
 --- !u!114 &997979482682399119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,7 +80,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
+  MaxStep: 5000
   agent_id: 0
 --- !u!114 &4985868021326194900
 MonoBehaviour:
@@ -110,5 +94,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DecisionPeriod: 5
+  DecisionPeriod: 10
   TakeActionsBetweenDecisions: 1

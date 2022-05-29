@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class ObservationAroundAgent
@@ -135,7 +134,7 @@ public class ObservationAroundAgent
     /// <summary>
     /// Get observation of straight direction.
     /// </summary>
-    /// <param name="dir">direction</param>
+    /// <param name="dir">Direction of moving</param>
     private void GetObservationStraight(int dir)
     {
         // Forward
@@ -303,7 +302,7 @@ public class ObservationAroundAgent
     /// <summary>
     /// Get observation of diagonal direction.
     /// </summary>
-    /// <param name="dir">direction</param>
+    /// <param name="dir">Direction of moving</param>
     private void GetObservationDiagonal(int dir)
     {
         // Right forward
@@ -470,7 +469,7 @@ public class ObservationAroundAgent
     /// <summary>
     /// Get observation of sub-diagonal direction.
     /// </summary>
-    /// <param name="dir">direction</param>
+    /// <param name="dir">Direction of moving</param>
     private void GetObservationSubDiagonal(int dir)
     {
         // Forward right
