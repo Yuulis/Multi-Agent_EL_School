@@ -42,7 +42,7 @@ public class FieldControl : MonoBehaviour
     /// </summary>
     /// <param name="width">Field's width</param>
     /// <param name="height">Field's height</param>
-    public void ResetFieldData(int width, int height)
+    private void ResetFieldData(int width, int height)
     {
         fieldData = new();
 
@@ -90,7 +90,7 @@ public class FieldControl : MonoBehaviour
     /// <param name="width">Field's width</param>
     /// <param name="height">Field's height</param>
     /// <param name="num">Number of Agents</param>
-    public void RandomSetAgent(int width, int height, int num)
+    private void RandomSetAgent(int width, int height, int num)
     {
         agentsPos = new();
 
@@ -128,35 +128,39 @@ public class FieldControl : MonoBehaviour
         Vector3Int pos = agentsPos[agent_id - 10];
 
         // Forward
-        if (dir == 0)
+        if (dir == 1)
         {
             Vector3Int newPos = new(pos.x, pos.y + 1, pos.z);
             agent_tilemap.SetTile(newPos, agent_tile);
             agent_tilemap.SetTile(pos, null);
+            agentsPos[agent_id - 10] = newPos;
         }
 
         // Right
-        else if (dir == 1)
+        else if (dir == 2)
         {
             Vector3Int newPos = new(pos.x + 1, pos.y, pos.z);
             agent_tilemap.SetTile(newPos, agent_tile);
             agent_tilemap.SetTile(pos, null);
+            agentsPos[agent_id - 10] = newPos;
         }
 
         // Back
-        else if (dir == 2)
+        else if (dir == 3)
         {
             Vector3Int newPos = new(pos.x, pos.y - 1, pos.z);
             agent_tilemap.SetTile(newPos, agent_tile);
             agent_tilemap.SetTile(pos, null);
+            agentsPos[agent_id - 10] = newPos;
         }
 
         // Left
-        else if (dir == 3)
+        else if (dir == 4)
         {
             Vector3Int newPos = new(pos.x - 1, pos.y, pos.z);
             agent_tilemap.SetTile(newPos, agent_tile);
             agent_tilemap.SetTile(pos, null);
+            agentsPos[agent_id - 10] = newPos;
         }
     }
 
@@ -166,7 +170,7 @@ public class FieldControl : MonoBehaviour
     /// </summary>
     /// <param name="width">Field's width</param>
     /// <param name="height">Field's height</param>
-    public void PrintFieldData(int width, int height)
+    private void PrintFieldData(int width, int height)
     {
         Debug.Log("===== Field data =====");
         for (int i = 0; i < height; i++)

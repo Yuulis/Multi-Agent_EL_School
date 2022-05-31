@@ -80,7 +80,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 5000
+  MaxStep: 1000
   agent_id: 0
 --- !u!114 &4985868021326194900
 MonoBehaviour:
@@ -95,4 +95,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DecisionPeriod: 10
-  TakeActionsBetweenDecisions: 1
+  TakeActionsBetweenDecisions: 0

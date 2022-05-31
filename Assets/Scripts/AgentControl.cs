@@ -55,22 +55,24 @@ public class AgentControl : Agent
                 }
             }
         }
+
+        observation = new(
+            fieldControl.fieldData,
+            settings.fieldHeight,
+            settings.fieldWidth,
+            agentPos_x,
+            agentPos_y,
+            settings.agentSight,
+            settings.agentCnt
+        );
     }
 
 
     // Agent collect observation.
     public override void CollectObservations(VectorSensor sensor)
     {
-        observation = new(
-            fieldControl.fieldData,
-            settings.fieldHeight,
-            settings.fieldWidth, 
-            agentPos_x,
-            agentPos_y,
-            settings.agentSight,
-            settings.agentCnt
-        );
-        
+        observation.UpdateObservation(agentPos_x, agentPos_y);
+
         // For debug
         if (settings.debugMode) observation.PrintAgentObservation(agent_id);
 
@@ -89,27 +91,31 @@ public class AgentControl : Agent
     {
         var action = actions.DiscreteActions;
 
+        // Forward
         if (action[0] == 1)
         {
-            fieldControl.MoveAgentTile(agent_id, 0);
+            fieldControl.MoveAgentTile(agent_id, 1);
             agentPos_y--;
         }
 
+        // Right
         else if (action[0] == 2)
         {
-            fieldControl.MoveAgentTile(agent_id, 1);
+            fieldControl.MoveAgentTile(agent_id, 2);
             agentPos_x++;
         }
 
+        // Back
         else if (action[0] == 3)
         {
-            fieldControl.MoveAgentTile(agent_id, 2);
+            fieldControl.MoveAgentTile(agent_id, 3);
             agentPos_y++;
         }
 
+        // Left
         else if (action[0] == 4)
         {
-            fieldControl.MoveAgentTile(agent_id, 3);
+            fieldControl.MoveAgentTile(agent_id, 4);
             agentPos_x--;
         }
 
@@ -173,9 +179,11 @@ public class AgentControl : Agent
     {
         var discreteActionsOut = actionsOut.DiscreteActions;
 
-        if (Input.GetKey(KeyCode.W)) discreteActionsOut[0] = 1;
-        if (Input.GetKey(KeyCode.D)) discreteActionsOut[0] = 2;
-        if (Input.GetKey(KeyCode.S)) discreteActionsOut[0] = 3;
-        if (Input.GetKey(KeyCode.A)) discreteActionsOut[0] = 4;
+        GetNeighborhoodInfo();
+
+        if (neighborhoodInfo[0] && Input.GetKey(KeyCode.W)) discreteActionsOut[0] = 1;
+        if (neighborhoodInfo[1] && Input.GetKey(KeyCode.D)) discreteActionsOut[0] = 2;
+        if (neighborhoodInfo[2] && Input.GetKey(KeyCode.S)) discreteActionsOut[0] = 3;
+        if (neighborhoodInfo[3] && Input.GetKey(KeyCode.A)) discreteActionsOut[0] = 4;
     }
 }

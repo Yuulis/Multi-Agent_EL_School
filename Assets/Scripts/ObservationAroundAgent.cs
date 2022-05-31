@@ -5,7 +5,7 @@ using UnityEngine;
 public class ObservationAroundAgent
 {
     public List<List<int>> observationList;
-    private int[] observationNeighborhood;
+    private List<int> observationNeighborhood;
 
     List<List<int>> m_fieldData;
     int m_fieldLineSize;
@@ -27,8 +27,8 @@ public class ObservationAroundAgent
     /// <param name="agentCnt">Number of Agents</param>
     public ObservationAroundAgent(List<List<int>> fieldData, int fieldLineSize, int fieldColumnSize, int agentPos_x, int agentPos_y, int agentSight, int agentCnt)
     {
-        observationList = new List<List<int>>();
-        observationNeighborhood = new int[10];
+        observationList = new();
+        observationNeighborhood = new();
         m_fieldData = fieldData;
         m_fieldLineSize = fieldLineSize;
         m_fieldColumnSize = fieldColumnSize;
@@ -36,6 +36,28 @@ public class ObservationAroundAgent
         m_posY = agentPos_y;
         m_sight = agentSight;
         m_agentCnt = agentCnt;
+
+        UpdateObservation(agentPos_x, agentPos_y);
+    }
+
+
+    /// <summary>
+    /// Update observation list.
+    /// </summary>
+    /// <param name="new_agentPos_x">new Agent's x position</param>
+    /// <param name="new_agentPos_y">new Agent's y position</param>
+    public void UpdateObservation(int new_agentPos_x, int new_agentPos_y)
+    {
+        observationList.Clear();
+        observationNeighborhood.Clear();
+
+        for (int i = 0; i < 10; i++)
+        {
+            observationNeighborhood.Add(0);
+        }
+
+        m_posX = new_agentPos_x;
+        m_posY = new_agentPos_y;
 
         GetObservation();
     }
@@ -86,6 +108,8 @@ public class ObservationAroundAgent
     /// </summary>
     private void GetObservationNeighborhood()
     {
+        Debug.Log($"Pos{m_posX}, {m_posY}");
+
         int cnt = 0;
         for (int i = -1; i < 2; i++)
         {

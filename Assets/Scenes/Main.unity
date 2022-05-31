@@ -6538,6 +6538,8 @@ MonoBehaviour:
   agent_tilemap: {fileID: 851246851}
   agent_tile: {fileID: 11400000, guid: fb1e72465730d8549b38c322c68e962e, type: 2}
   agent: {fileID: 997979482682399117, guid: 8f69f84cd5a87a74c9ed4b1b5037001f, type: 3}
+  activeAgentsNum: 0
+  agentsPos: []
 --- !u!1 &1762529270
 GameObject:
   m_ObjectHideFlags: 0
@@ -6666,3 +6668,4 @@ MonoBehaviour:
   fieldHeight: 20
   agentCnt: 1
   agentSight: 5
+  debugMode: 1
