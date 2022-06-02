@@ -20,15 +20,23 @@ public class FieldControl : MonoBehaviour
 
     public GameObject agent;
     [HideInInspector] public int activeAgentsNum;
-    [HideInInspector] public List<Vector3Int> agentsPos;
+    public List<Vector3Int> agentsPos;
 
 
     private void Awake()
     {
         settings = Settings_obj.GetComponent<Settings>();
-
         activeAgentsNum = settings.agentCnt;
 
+        InitializeField();
+    }
+
+
+    /// <summary>
+    /// Initializing Field data.
+    /// </summary>
+    public void InitializeField()
+    {
         ResetFieldData(settings.fieldWidth, settings.fieldHeight);
         RandomSetAgent(settings.fieldWidth, settings.fieldHeight, settings.agentCnt);
 
@@ -38,7 +46,7 @@ public class FieldControl : MonoBehaviour
 
 
     /// <summary>
-    /// Initializing Field data.
+    /// Reset Field data.
     /// </summary>
     /// <param name="width">Field's width</param>
     /// <param name="height">Field's height</param>

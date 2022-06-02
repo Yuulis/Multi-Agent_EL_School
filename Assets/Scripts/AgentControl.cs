@@ -130,10 +130,17 @@ public class AgentControl : Agent
     {
         neighborhoodInfo = Enumerable.Repeat<bool>(true, 4).ToArray();
 
-        if (observation.observationList[settings.agentSight - 1][settings.agentSight] != 1) neighborhoodInfo[0] = false;
-        if (observation.observationList[settings.agentSight][settings.agentSight + 1] != 1) neighborhoodInfo[1] = false;
-        if (observation.observationList[settings.agentSight + 1][settings.agentSight] != 1) neighborhoodInfo[2] = false;
-        if (observation.observationList[settings.agentSight][settings.agentSight - 1] != 1) neighborhoodInfo[3] = false;
+        if (observation.observationList[settings.agentSight - 1][settings.agentSight] != 1
+            && observation.observationList[settings.agentSight - 1][settings.agentSight] != 2) neighborhoodInfo[0] = false;
+
+        if (observation.observationList[settings.agentSight][settings.agentSight + 1] != 1
+            && observation.observationList[settings.agentSight][settings.agentSight + 1] != 2) neighborhoodInfo[1] = false;
+
+        if (observation.observationList[settings.agentSight + 1][settings.agentSight] != 1
+            && observation.observationList[settings.agentSight + 1][settings.agentSight] != 2) neighborhoodInfo[2] = false;
+
+        if (observation.observationList[settings.agentSight][settings.agentSight - 1] != 1
+            && observation.observationList[settings.agentSight][settings.agentSight - 1] != 2) neighborhoodInfo[3] = false;
     }
 
 
@@ -162,12 +169,17 @@ public class AgentControl : Agent
         if (fieldControl.fieldData[i][j] == 2)
         {
             AddReward(1.0f);
-            fieldControl.agentsPos[agent_id] = new(0, 0, -1);
+            fieldControl.agentsPos[agent_id - 10] = new(0, 0, -1);
             Destroy(this.gameObject);
 
             fieldControl.activeAgentsNum--;
 
-            if (fieldControl.activeAgentsNum == 0) EndEpisode();
+            if (fieldControl.activeAgentsNum == 0)
+            {
+                EndEpisode();
+
+                fieldControl.InitializeField();
+            }
         }
 
         AddReward(-1.0f / 5000 / settings.agentCnt);
