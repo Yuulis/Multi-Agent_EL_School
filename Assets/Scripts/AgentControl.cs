@@ -11,19 +11,18 @@ using Unity.MLAgents.Actuators;
 public class AgentControl : Agent
 {
     Settings settings;
-
     FieldControl fieldControl;
 
     [HideInInspector] public int agent_id;
-    private int agentPos_x;
-    private int agentPos_y;
+    [HideInInspector] public int agentIndex_x;
+    [HideInInspector] public int agentIndex_y;
 
     private ObservationAroundAgent observation;
     private bool[] neighborhoodInfo;
 
 
-    // Called when this agent was instantiated.
-    private void Start()
+    // Initializing.
+    public override void Initialize()
     {
         Transform TrainingArea = transform.parent;
         settings = TrainingArea.GetComponentInChildren<Settings>();
@@ -31,37 +30,15 @@ public class AgentControl : Agent
     }
 
 
-    // Initializing.
-    public override void Initialize()
-    {
-        base.Initialize();
-    }
-
-
     // Set agentPos.
     public override void OnEpisodeBegin()
     {
-        agentPos_x = 0;
-        agentPos_y = 0;
-
-        for (int i = 0; i < settings.fieldHeight; i++)
-        {
-            for (int j = 0; j < settings.fieldWidth; j++)
-            {
-                if (fieldControl.fieldData[i][j] == agent_id)
-                {
-                    agentPos_x = j;
-                    agentPos_y = i;
-                }
-            }
-        }
-
         observation = new(
             fieldControl.fieldData,
             settings.fieldHeight,
             settings.fieldWidth,
-            agentPos_x,
-            agentPos_y,
+            agentIndex_x,
+            agentIndex_y,
             settings.agentSight,
             settings.agentCnt
         );
@@ -71,16 +48,19 @@ public class AgentControl : Agent
     // Agent collect observation.
     public override void CollectObservations(VectorSensor sensor)
     {
-        observation.UpdateObservation(agentPos_x, agentPos_y);
-
-        // For debug
-        if (settings.debugMode) observation.PrintAgentObservation(agent_id);
-
-        for (int i = 0; i < settings.agentSight * 2 + 1; i++)
+        if (fieldControl.agentsData[agent_id - 10].active)
         {
-            for (int j = 0; j < settings.agentSight * 2 + 1; j++)
+            observation.UpdateObservation(agentIndex_x, agentIndex_y);
+
+            // For debug
+            if (settings.debugMode) observation.PrintAgentObservation(agent_id);
+
+            for (int i = 0; i < settings.agentSight * 2 + 1; i++)
             {
-                sensor.AddObservation(observation.observationList[i][j]);
+                for (int j = 0; j < settings.agentSight * 2 + 1; j++)
+                {
+                    sensor.AddObservation(observation.observationList[i][j]);
+                }
             }
         }
     }
@@ -89,37 +69,40 @@ public class AgentControl : Agent
     // Agent moves.
     public override void OnActionReceived(ActionBuffers actions)
     {
-        var action = actions.DiscreteActions;
-
-        // Forward
-        if (action[0] == 1)
+        if (fieldControl.agentsData[agent_id - 10].active)
         {
-            fieldControl.MoveAgentTile(agent_id, 1);
-            agentPos_y--;
-        }
+            var action = actions.DiscreteActions;
 
-        // Right
-        else if (action[0] == 2)
-        {
-            fieldControl.MoveAgentTile(agent_id, 2);
-            agentPos_x++;
-        }
+            // Forward
+            if (action[0] == 1)
+            {
+                fieldControl.MoveAgentTile(agent_id, 1);
+                agentIndex_y--;
+            }
 
-        // Back
-        else if (action[0] == 3)
-        {
-            fieldControl.MoveAgentTile(agent_id, 3);
-            agentPos_y++;
-        }
+            // Right
+            else if (action[0] == 2)
+            {
+                fieldControl.MoveAgentTile(agent_id, 2);
+                agentIndex_x++;
+            }
 
-        // Left
-        else if (action[0] == 4)
-        {
-            fieldControl.MoveAgentTile(agent_id, 4);
-            agentPos_x--;
-        }
+            // Back
+            else if (action[0] == 3)
+            {
+                fieldControl.MoveAgentTile(agent_id, 3);
+                agentIndex_y++;
+            }
 
-        CheckAgentReachGoal(agent_id);
+            // Left
+            else if (action[0] == 4)
+            {
+                fieldControl.MoveAgentTile(agent_id, 4);
+                agentIndex_x--;
+            }
+
+            CheckAgentReachGoal(agent_id);
+        }
     }
 
     
@@ -162,15 +145,17 @@ public class AgentControl : Agent
     /// <param name="agent_id">Agent's id</param>
     public void CheckAgentReachGoal(int agent_id)
     {
-        Vector3Int pos = fieldControl.agentsPos[agent_id - 10];
-        int i = pos.y * -1 + settings.fieldHeight / 2 - 1;
+        Vector3Int pos = fieldControl.agentsData[agent_id - 10].position;
+        int i = -pos.y + settings.fieldHeight / 2 - 1;
         int j = pos.x + settings.fieldWidth / 2;
 
         if (fieldControl.fieldData[i][j] == 2)
         {
             AddReward(1.0f);
-            fieldControl.agentsPos[agent_id - 10] = new(0, 0, -1);
-            Destroy(this.gameObject);
+
+            FieldControl.agentInfo info = fieldControl.agentsData[agent_id - 10];
+            info.active = false;
+            fieldControl.agentsData[agent_id - 10] = info;
 
             fieldControl.activeAgentsNum--;
 

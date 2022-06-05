@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 using UnityEngine.Tilemaps;
 
 public class FieldControl : MonoBehaviour
@@ -9,18 +11,25 @@ public class FieldControl : MonoBehaviour
     Settings settings;
 
     public GameObject TrainingArea;
+    private bool firstEpisode;
 
     [HideInInspector] public List<List<int>> fieldData;
     public List<Sprite> tilemapSprites;
-
     public Tilemap field_tilemap;
-
     public Tilemap agent_tilemap;
     public TileBase agent_tile;
 
     public GameObject agent;
     [HideInInspector] public int activeAgentsNum;
-    public List<Vector3Int> agentsPos;
+    public List<agentInfo> agentsData;
+
+    public struct agentInfo
+    {
+        public int id;
+        public Vector3Int position;
+        public bool active;
+        public GameObject obj;
+    }
 
 
     private void Awake()
@@ -28,7 +37,16 @@ public class FieldControl : MonoBehaviour
         settings = Settings_obj.GetComponent<Settings>();
         activeAgentsNum = settings.agentCnt;
 
+        firstEpisode = true;
+
+        ResetFieldData(settings.fieldWidth, settings.fieldHeight);
+
+        // For debug
+        if (settings.debugMode) PrintFieldData(settings.fieldWidth, settings.fieldHeight);
+
         InitializeField();
+
+        firstEpisode = false;
     }
 
 
@@ -37,11 +55,8 @@ public class FieldControl : MonoBehaviour
     /// </summary>
     public void InitializeField()
     {
-        ResetFieldData(settings.fieldWidth, settings.fieldHeight);
+        agent_tilemap.ClearAllTiles();
         RandomSetAgent(settings.fieldWidth, settings.fieldHeight, settings.agentCnt);
-
-        // For debug
-        if (settings.debugMode) PrintFieldData(settings.fieldWidth, settings.fieldHeight);
     }
 
 
@@ -100,7 +115,7 @@ public class FieldControl : MonoBehaviour
     /// <param name="num">Number of Agents</param>
     private void RandomSetAgent(int width, int height, int num)
     {
-        agentsPos = new();
+        if (firstEpisode) agentsData = new();
 
         int cnt = 0;
         while (cnt < num)
@@ -108,17 +123,32 @@ public class FieldControl : MonoBehaviour
             Vector3Int pos = new(Random.Range(-width / 2, width / 2), Random.Range(height / 2 - 1, -height / 2 + 1), 0);
             
             // Only Empty position
-            if (field_tilemap.GetSprite(pos) == tilemapSprites[1])
+            if (field_tilemap.GetSprite(pos) == tilemapSprites[1] && agent_tilemap.GetTile(pos) != agent_tile)
             {
                 agent_tilemap.SetTile(pos, agent_tile);
                 fieldData[height / 2 - 1 - pos.y][pos.x + width / 2] = 10 + cnt;
 
-                GameObject obj = (GameObject)Instantiate(agent);
-                obj.transform.parent = TrainingArea.transform;
-                AgentControl agentControl = obj.GetComponent<AgentControl>();
+                int pos_x = pos.x + width / 2;
+                int pos_y = height / 2 - 1 - pos.y;
 
-                agentControl.agent_id = 10 + cnt;
-                agentsPos.Add(pos);
+                if (firstEpisode)
+                {
+                    GameObject obj = (GameObject)Instantiate(agent);
+                    obj.transform.parent = TrainingArea.transform;
+
+                    int id = 10 + cnt;
+                    agentsData.Add(new agentInfo { id = id, position = pos, active = true, obj = obj });
+                }
+                else
+                {
+                    agentInfo info = agentsData[cnt];
+                    info.position = new Vector3Int(pos_x, pos_y, 0);
+                    agentsData[cnt] = info;
+
+                    info = agentsData[cnt];
+                    info.active = true;
+                    agentsData[cnt] = info;
+                }
 
                 cnt++;
             }
@@ -133,7 +163,8 @@ public class FieldControl : MonoBehaviour
     /// <param name="dir">Direction of moving</param>
     public void MoveAgentTile(int agent_id, int dir)
     {
-        Vector3Int pos = agentsPos[agent_id - 10];
+        //Vector3Int pos = agentsPos[agent_id - 10];
+        Vector3Int pos = new();
 
         // Forward
         if (dir == 1)
@@ -141,7 +172,7 @@ public class FieldControl : MonoBehaviour
             Vector3Int newPos = new(pos.x, pos.y + 1, pos.z);
             agent_tilemap.SetTile(newPos, agent_tile);
             agent_tilemap.SetTile(pos, null);
-            agentsPos[agent_id - 10] = newPos;
+            //agentsPos[agent_id - 10] = newPos;
         }
 
         // Right
@@ -150,7 +181,7 @@ public class FieldControl : MonoBehaviour
             Vector3Int newPos = new(pos.x + 1, pos.y, pos.z);
             agent_tilemap.SetTile(newPos, agent_tile);
             agent_tilemap.SetTile(pos, null);
-            agentsPos[agent_id - 10] = newPos;
+            //agentsPos[agent_id - 10] = newPos;
         }
 
         // Back
@@ -159,7 +190,7 @@ public class FieldControl : MonoBehaviour
             Vector3Int newPos = new(pos.x, pos.y - 1, pos.z);
             agent_tilemap.SetTile(newPos, agent_tile);
             agent_tilemap.SetTile(pos, null);
-            agentsPos[agent_id - 10] = newPos;
+            //agentsPos[agent_id - 10] = newPos;
         }
 
         // Left
@@ -168,7 +199,7 @@ public class FieldControl : MonoBehaviour
             Vector3Int newPos = new(pos.x - 1, pos.y, pos.z);
             agent_tilemap.SetTile(newPos, agent_tile);
             agent_tilemap.SetTile(pos, null);
-            agentsPos[agent_id - 10] = newPos;
+            //agentsPos[agent_id - 10] = newPos;
         }
     }
 
