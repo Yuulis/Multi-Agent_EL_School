@@ -32,7 +32,7 @@ public class FieldControl : MonoBehaviour
     }
 
 
-    private void Awake()
+    private void Start()
     {
         settings = Settings_obj.GetComponent<Settings>();
         activeAgentsNum = settings.agentCnt;
