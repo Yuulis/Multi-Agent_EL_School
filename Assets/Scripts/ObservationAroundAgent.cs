@@ -10,8 +10,8 @@ public class ObservationAroundAgent
     List<List<int>> m_fieldData;
     int m_fieldLineSize;
     int m_fieldColumnSize;
-    int m_posX;
-    int m_posY;
+    int m_index_X;
+    int m_index_Y;
     int m_sight;
     int m_agentCnt;
 
@@ -21,23 +21,23 @@ public class ObservationAroundAgent
     /// <param name="fieldData"></param>
     /// <param name="fieldLineSize">height of field</param>
     /// <param name="fieldColumnSize">width of field</param>
-    /// <param name="agentPos_x">Agent's x position (first-index of fieldData)</param>
-    /// <param name="agentPos_y">Agent's y position (second-index of fieldData)</param>
+    /// <param name="agentIndex_x">Agent's x position (second-index of fieldData)</param>
+    /// <param name="agentIndex_y">Agent's y position (first-index of fieldData)</param>
     /// <param name="agentSight">Agent's sight</param>
     /// <param name="agentCnt">Number of Agents</param>
-    public ObservationAroundAgent(List<List<int>> fieldData, int fieldLineSize, int fieldColumnSize, int agentPos_x, int agentPos_y, int agentSight, int agentCnt)
+    public ObservationAroundAgent(List<List<int>> fieldData, int fieldLineSize, int fieldColumnSize, int agentIndex_x, int agentIndex_y, int agentSight, int agentCnt)
     {
         observationList = new();
         observationNeighborhood = new();
         m_fieldData = fieldData;
         m_fieldLineSize = fieldLineSize;
         m_fieldColumnSize = fieldColumnSize;
-        m_posX = agentPos_x;
-        m_posY = agentPos_y;
+        m_index_X = agentIndex_x;
+        m_index_Y = agentIndex_y;
         m_sight = agentSight;
         m_agentCnt = agentCnt;
 
-        UpdateObservation(agentPos_x, agentPos_y);
+        UpdateObservation(agentIndex_x, agentIndex_y);
     }
 
 
@@ -56,8 +56,8 @@ public class ObservationAroundAgent
             observationNeighborhood.Add(0);
         }
 
-        m_posX = new_agentPos_x;
-        m_posY = new_agentPos_y;
+        m_index_X = new_agentPos_x;
+        m_index_Y = new_agentPos_y;
 
         GetObservation();
     }
@@ -108,7 +108,7 @@ public class ObservationAroundAgent
     /// </summary>
     private void GetObservationNeighborhood()
     {
-        Debug.Log($"Pos{m_posX}, {m_posY}");
+        Debug.Log($"Pos{m_index_X}, {m_index_Y}");
 
         int cnt = 0;
         for (int i = -1; i < 2; i++)
@@ -123,28 +123,28 @@ public class ObservationAroundAgent
                 }
 
                 // Empty
-                else if (m_fieldData[m_posY + i][m_posX + j] == 1)
+                else if (m_fieldData[m_index_Y + i][m_index_X + j] == 1)
                 {
                     observationNeighborhood[cnt] = 1;
                     observationList[m_sight + i][m_sight + j] = 1;
                 }
 
                 // Exit
-                else if (m_fieldData[m_posY + i][m_posX + j] == 2)
+                else if (m_fieldData[m_index_Y + i][m_index_X + j] == 2)
                 {
                     observationNeighborhood[cnt] = 2;
                     observationList[m_sight + i][m_sight + j] = 2;
                 }
 
                 // Obstacle
-                else if (m_fieldData[m_posY + i][m_posX + j] == 3)
+                else if (m_fieldData[m_index_Y + i][m_index_X + j] == 3)
                 {
                     observationNeighborhood[cnt] = 3;
                     observationList[m_sight + i][m_sight + j] = 3;
                 }
 
                 // Agent
-                else if (m_fieldData[m_posY + i][m_posX + j] == 4)
+                else if (m_fieldData[m_index_Y + i][m_index_X + j] == 4)
                 {
                     observationNeighborhood[cnt] = 4;
                     observationList[m_sight + i][m_sight + j] = 4;
@@ -170,16 +170,16 @@ public class ObservationAroundAgent
             for (int i = 2; i <= m_sight; i++)
             {
                 // Out of range
-                if (m_posY - i < 0) return;
+                if (m_index_Y - i < 0) return;
 
                 // Empty
-                else if (m_fieldData[m_posY - i][m_posX] == 1)
+                else if (m_fieldData[m_index_Y - i][m_index_X] == 1)
                 {
                     observationList[m_sight - i][m_sight] = 1;
                 }
 
                 // Exit
-                else if (m_fieldData[m_posY - i][m_posX] == 2)
+                else if (m_fieldData[m_index_Y - i][m_index_X] == 2)
                 {
                     observationList[m_sight - i][m_sight] = 2;
                     return;
@@ -187,14 +187,14 @@ public class ObservationAroundAgent
                 }
 
                 // Obstacle
-                else if (m_fieldData[m_posY - i][m_posX] == 3)
+                else if (m_fieldData[m_index_Y - i][m_index_X] == 3)
                 {
                     observationList[m_sight - i][m_sight] = 3;
                     return;
                 }
 
                 // Agent
-                else if (10 <= m_fieldData[m_posY - i][m_posX] && m_fieldData[m_posY - i][m_posX] < 10 + m_agentCnt)
+                else if (10 <= m_fieldData[m_index_Y - i][m_index_X] && m_fieldData[m_index_Y - i][m_index_X] < 10 + m_agentCnt)
                 {
                     observationList[m_sight - i][m_sight] = 4;
                     return;
@@ -211,30 +211,30 @@ public class ObservationAroundAgent
             for (int i = 2; i <= m_sight; i++)
             {
                 // Out of range
-                if (m_fieldColumnSize < m_posX + i) return;
+                if (m_fieldColumnSize < m_index_X + i) return;
 
                 // Empty
-                else if (m_fieldData[m_posY][m_posX + i] == 1)
+                else if (m_fieldData[m_index_Y][m_index_X + i] == 1)
                 {
                     observationList[m_sight][m_sight + i] = 1;
                 }
 
                 // Exit
-                else if (m_fieldData[m_posY][m_posX + i] == 2)
+                else if (m_fieldData[m_index_Y][m_index_X + i] == 2)
                 {
                     observationList[m_sight][m_sight + i] = 2;
                     return;
                 }
 
                 // Obstacle
-                else if (m_fieldData[m_posY][m_posX + i] == 3)
+                else if (m_fieldData[m_index_Y][m_index_X + i] == 3)
                 {
                     observationList[m_sight][m_sight + i] = 3;
                     return;
                 }
 
                 // Agent
-                else if (10 <= m_fieldData[m_posY][m_posX + i] && m_fieldData[m_posY][m_posX + i] < 10 + m_agentCnt)
+                else if (10 <= m_fieldData[m_index_Y][m_index_X + i] && m_fieldData[m_index_Y][m_index_X + i] < 10 + m_agentCnt)
                 {
                     observationList[m_sight][m_sight + i] = 4;
                     return;
@@ -251,30 +251,30 @@ public class ObservationAroundAgent
             for (int i = 2; i <= m_sight; i++)
             {
                 // Out of range
-                if (m_fieldLineSize < m_posY + i) return;
+                if (m_fieldLineSize < m_index_Y + i) return;
 
                 // Empty
-                else if (m_fieldData[m_posY + i][m_posX] == 1)
+                else if (m_fieldData[m_index_Y + i][m_index_X] == 1)
                 {
                     observationList[m_sight + i][m_sight] = 1;
                 }
 
                 // Exit
-                else if (m_fieldData[m_posY + i][m_posX] == 2)
+                else if (m_fieldData[m_index_Y + i][m_index_X] == 2)
                 {
                     observationList[m_sight + i][m_sight] = 2;
                     return;
                 }
 
                 // Obstacle
-                else if (m_fieldData[m_posY + i][m_posX] == 3)
+                else if (m_fieldData[m_index_Y + i][m_index_X] == 3)
                 {
                     observationList[m_sight + i][m_sight] = 3;
                     return;
                 }
 
                 // Agent
-                else if (10 <= m_fieldData[m_posY + i][m_posX] && m_fieldData[m_posY + i][m_posX] < 10 + m_agentCnt)
+                else if (10 <= m_fieldData[m_index_Y + i][m_index_X] && m_fieldData[m_index_Y + i][m_index_X] < 10 + m_agentCnt)
                 {
                     observationList[m_sight + i][m_sight] = 4;
                     return;
@@ -291,30 +291,30 @@ public class ObservationAroundAgent
             for (int i = 2; i <= m_sight; i++)
             {
                 // Out of range
-                if (m_posX - i < 0) return;
+                if (m_index_X - i < 0) return;
 
                 // Empty
-                else if (m_fieldData[m_posY][m_posX - i] == 1)
+                else if (m_fieldData[m_index_Y][m_index_X - i] == 1)
                 {
                     observationList[m_sight][m_sight - i] = 1;
                 }
 
                 // Exit
-                else if (m_fieldData[m_posY][m_posX - i] == 2)
+                else if (m_fieldData[m_index_Y][m_index_X - i] == 2)
                 {
                     observationList[m_sight][m_sight - i] = 2;
                     return;
                 }
 
                 // Obstacle
-                else if (m_fieldData[m_posY][m_posX - i] == 3)
+                else if (m_fieldData[m_index_Y][m_index_X - i] == 3)
                 {
                    observationList[m_sight][m_sight - i] = 3;
                     return;
                 }
 
                 // Agent
-                else if (10 <= m_fieldData[m_posY][m_posX - i] && m_fieldData[m_posY][m_posX - i] < 10 + m_agentCnt)
+                else if (10 <= m_fieldData[m_index_Y][m_index_X - i] && m_fieldData[m_index_Y][m_index_X - i] < 10 + m_agentCnt)
                 {
                     observationList[m_sight][m_sight - i] = 4;
                     return;
@@ -338,30 +338,30 @@ public class ObservationAroundAgent
             for (int i = 2; i <= m_sight; i++)
             {
                 // Out of range
-                if (m_posY - i < 0 || m_fieldColumnSize < m_posX + i) return;
+                if (m_index_Y - i < 0 || m_fieldColumnSize < m_index_X + i) return;
 
                 // Empty
-                else if (m_fieldData[m_posY - i][m_posX + i] == 1)
+                else if (m_fieldData[m_index_Y - i][m_index_X + i] == 1)
                 {
                     observationList[m_sight - i][m_sight + i] = 1;
                 }
 
                 // Exit
-                else if (m_fieldData[m_posY - i][m_posX + i] == 2)
+                else if (m_fieldData[m_index_Y - i][m_index_X + i] == 2)
                 {
                     observationList[m_sight - i][m_sight + i] = 2;
                     return;
                 }
 
                 // Obstacle
-                else if (m_fieldData[m_posY - i][m_posX + i] == 3)
+                else if (m_fieldData[m_index_Y - i][m_index_X + i] == 3)
                 {
                     observationList[m_sight - i][m_sight + i] = 3;
                     return;
                 }
 
                 // Agent
-                else if (10 <= m_fieldData[m_posY - i][m_posX + i] && m_fieldData[m_posY - i][m_posX + i] < 10 + m_agentCnt)
+                else if (10 <= m_fieldData[m_index_Y - i][m_index_X + i] && m_fieldData[m_index_Y - i][m_index_X + i] < 10 + m_agentCnt)
                 {
                     observationList[m_sight - i][m_sight + i] = 4;
                     return;
@@ -378,30 +378,30 @@ public class ObservationAroundAgent
             for (int i = 2; i <= m_sight; i++)
             {
                 // Out of range
-                if (m_fieldLineSize < m_posY + i || m_fieldColumnSize < m_posX + i) return;
+                if (m_fieldLineSize < m_index_Y + i || m_fieldColumnSize < m_index_X + i) return;
 
                 // Empty
-                else if (m_fieldData[m_posY + i][m_posX + i] == 1)
+                else if (m_fieldData[m_index_Y + i][m_index_X + i] == 1)
                 {
                     observationList[m_sight + i][m_sight + i] = 1;
                 }
 
                 // Exit
-                else if (m_fieldData[m_posY + i][m_posX + i] == 2)
+                else if (m_fieldData[m_index_Y + i][m_index_X + i] == 2)
                 {
                     observationList[m_sight + i][m_sight + i] = 2;
                     return;
                 }
 
                 // Obstacle
-                else if (m_fieldData[m_posY + i][m_posX + i] == 3)
+                else if (m_fieldData[m_index_Y + i][m_index_X + i] == 3)
                 {
                     observationList[m_sight + i][m_sight + i] = 3;
                     return;
                 }
 
                 // Agent
-                else if (10 <= m_fieldData[m_posY + i][m_posX + i] && m_fieldData[m_posY + i][m_posX + i] < 10 + m_agentCnt)
+                else if (10 <= m_fieldData[m_index_Y + i][m_index_X + i] && m_fieldData[m_index_Y + i][m_index_X + i] < 10 + m_agentCnt)
                 {
                     observationList[m_sight + i][m_sight + i] = 4;
                     return;
@@ -418,30 +418,30 @@ public class ObservationAroundAgent
             for (int i = 2; i <= m_sight; i++)
             {
                 // Out of range
-                if (m_fieldLineSize < m_posY + i || m_posX - i < 0) return;
+                if (m_fieldLineSize < m_index_Y + i || m_index_X - i < 0) return;
 
                 // Empty
-                else if (m_fieldData[m_posY + i][m_posX - i] == 1)
+                else if (m_fieldData[m_index_Y + i][m_index_X - i] == 1)
                 {
                     observationList[m_sight + i][m_sight - i] = 1;
                 }
 
                 // Exit
-                else if (m_fieldData[m_posY + i][m_posX - i] == 2)
+                else if (m_fieldData[m_index_Y + i][m_index_X - i] == 2)
                 {
                     observationList[m_sight + i][m_sight - i] = 2;
                     return;
                 }
 
                 // Obstacle
-                else if (m_fieldData[m_posY + i][m_posX - i] == 3)
+                else if (m_fieldData[m_index_Y + i][m_index_X - i] == 3)
                 {
                     observationList[m_sight + i][m_sight - i] = 3;
                     return;
                 }
 
                 // Agent
-                else if (10 <= m_fieldData[m_posY + i][m_posX - i] && m_fieldData[m_posY + i][m_posX - i] < 10 + m_agentCnt)
+                else if (10 <= m_fieldData[m_index_Y + i][m_index_X - i] && m_fieldData[m_index_Y + i][m_index_X - i] < 10 + m_agentCnt)
                 {
                     observationList[m_sight + i][m_sight - i] = 4;
                     return;
@@ -458,30 +458,30 @@ public class ObservationAroundAgent
             for (int i = 2; i <= m_sight; i++)
             {
                 // Out of range
-                if (m_posY - i < 0 || m_posX - i < 0) return;
+                if (m_index_Y - i < 0 || m_index_X - i < 0) return;
 
                 // Empty
-                else if (m_fieldData[m_posY - i][m_posX - i] == 1)
+                else if (m_fieldData[m_index_Y - i][m_index_X - i] == 1)
                 {
                     observationList[m_sight - i][m_sight - i] = 1;
                 }
 
                 // Exit
-                else if (m_fieldData[m_posY - i][m_posX - i] == 2)
+                else if (m_fieldData[m_index_Y - i][m_index_X - i] == 2)
                 {
                     observationList[m_sight - i][m_sight - i] = 2;
                     return;
                 }
 
                 // Obstacle
-                else if (m_fieldData[m_posY - i][m_posX - i] == 3)
+                else if (m_fieldData[m_index_Y - i][m_index_X - i] == 3)
                 {
                     observationList[m_sight - i][m_sight - i] = 3;
                     return;
                 }
 
                 // Agent
-                else if (10 <= m_fieldData[m_posY - i][m_posX - i] && m_fieldData[m_posY - i][m_posX - i] < 10 + m_agentCnt)
+                else if (10 <= m_fieldData[m_index_Y - i][m_index_X - i] && m_fieldData[m_index_Y - i][m_index_X - i] < 10 + m_agentCnt)
                 {
                     observationList[m_sight - i][m_sight - i] = 4;
                     return;
@@ -519,7 +519,7 @@ public class ObservationAroundAgent
                 for (int j = 0; j < i; j++)
                 {
                     // Out of range
-                    if (m_posY - i < 0 || m_fieldColumnSize < m_posX + j) return;
+                    if (m_index_Y - i < 0 || m_fieldColumnSize < m_index_X + j) return;
 
                     // Cannot be seen from Agent
                     if (fop <= j && j <= mop)
@@ -534,13 +534,13 @@ public class ObservationAroundAgent
                     }
 
                     // Empty
-                    if (m_fieldData[m_posY - i][m_posX + j] == 1)
+                    if (m_fieldData[m_index_Y - i][m_index_X + j] == 1)
                     {
                         if (j != 0) observationList[m_sight - i][m_sight + j] = 1;
                     }
 
                     // Exit
-                    else if (m_fieldData[m_posY - i][m_posX + j] == 2)
+                    else if (m_fieldData[m_index_Y - i][m_index_X + j] == 2)
                     {
                         if (j != 0) observationList[m_sight - i][m_sight + j] = 2;
                         if (!skip)
@@ -551,7 +551,7 @@ public class ObservationAroundAgent
                     }
 
                     // Obstacle
-                    else if (m_fieldData[m_posY - i][m_posX + j] == 3)
+                    else if (m_fieldData[m_index_Y - i][m_index_X + j] == 3)
                     {
                         if (j != 0) observationList[m_sight - i][m_sight + j] = 3;
                         if (!skip)
@@ -562,7 +562,7 @@ public class ObservationAroundAgent
                     }
 
                     // Agent
-                    else if (10 <= m_fieldData[m_posY - i][m_posX + j] && m_fieldData[m_posY - i][m_posX + j] < 10 + m_agentCnt)
+                    else if (10 <= m_fieldData[m_index_Y - i][m_index_X + j] && m_fieldData[m_index_Y - i][m_index_X + j] < 10 + m_agentCnt)
                     {
                         if (j != 0) observationList[m_sight - i][m_sight + j] = 4;
                         if (!skip)
@@ -598,7 +598,7 @@ public class ObservationAroundAgent
                 for (int i = 0; i < j; i++)
                 {
                     // Out of range
-                    if (m_posY - i < 0 || m_fieldColumnSize < m_posX + j) return;
+                    if (m_index_Y - i < 0 || m_fieldColumnSize < m_index_X + j) return;
 
                     // Cannot be seen from Agent
                     if (fop <= i && i <= mop)
@@ -613,13 +613,13 @@ public class ObservationAroundAgent
                     }
 
                     // Empty
-                    if (m_fieldData[m_posY - i][m_posX + j] == 1)
+                    if (m_fieldData[m_index_Y - i][m_index_X + j] == 1)
                     {
                         if (i != 0) observationList[m_sight - i][m_sight + j] = 1;
                     }
 
                     // Exit
-                    else if (m_fieldData[m_posY - i][m_posX + j] == 2)
+                    else if (m_fieldData[m_index_Y - i][m_index_X + j] == 2)
                     {
                         if (i != 0) observationList[m_sight - i][m_sight + j] = 2;
                         if (!skip)
@@ -630,7 +630,7 @@ public class ObservationAroundAgent
                     }
 
                     // Obstacle
-                    else if (m_fieldData[m_posY - i][m_posX + j] == 3)
+                    else if (m_fieldData[m_index_Y - i][m_index_X + j] == 3)
                     {
                         if (i != 0) observationList[m_sight - i][m_sight + j] = 3;
                         if (!skip)
@@ -641,7 +641,7 @@ public class ObservationAroundAgent
                     }
 
                     // Agent
-                    else if (10 <= m_fieldData[m_posY - i][m_posX + j] && m_fieldData[m_posY - i][m_posX + j] < 10 + m_agentCnt)
+                    else if (10 <= m_fieldData[m_index_Y - i][m_index_X + j] && m_fieldData[m_index_Y - i][m_index_X + j] < 10 + m_agentCnt)
                     {
                         if (i != 0) observationList[m_sight - i][m_sight + j] = 4;
                         if (!skip)
@@ -677,7 +677,7 @@ public class ObservationAroundAgent
                 for (int i = 0; i < j; i++)
                 {
                     // Out of range
-                    if (m_fieldLineSize < m_posY + i || m_fieldColumnSize < m_posX + j) return;
+                    if (m_fieldLineSize < m_index_Y + i || m_fieldColumnSize < m_index_X + j) return;
 
                     // Cannot be seen from Agent
                     if (fop <= i && i <= mop)
@@ -692,13 +692,13 @@ public class ObservationAroundAgent
                     }
 
                     // Empty
-                    if (m_fieldData[m_posY + i][m_posX + j] == 1)
+                    if (m_fieldData[m_index_Y + i][m_index_X + j] == 1)
                     {
                         if (i != 0) observationList[m_sight + i][m_sight + j] = 1;
                     }
 
                     // Exit
-                    else if (m_fieldData[m_posY + i][m_posX + j] == 2)
+                    else if (m_fieldData[m_index_Y + i][m_index_X + j] == 2)
                     {
                         if (i != 0) observationList[m_sight + i][m_sight + j] = 2;
                         if (!skip)
@@ -709,7 +709,7 @@ public class ObservationAroundAgent
                     }
 
                     // Obstacle
-                    else if (m_fieldData[m_posY + i][m_posX + j] == 3)
+                    else if (m_fieldData[m_index_Y + i][m_index_X + j] == 3)
                     {
                         if (i != 0) observationList[m_sight + i][m_sight + j] = 3;
                         if (!skip)
@@ -720,7 +720,7 @@ public class ObservationAroundAgent
                     }
 
                     // Agent
-                    else if (10 <= m_fieldData[m_posY + i][m_posX + j] && m_fieldData[m_posY + i][m_posX + j] < 10 + m_agentCnt)
+                    else if (10 <= m_fieldData[m_index_Y + i][m_index_X + j] && m_fieldData[m_index_Y + i][m_index_X + j] < 10 + m_agentCnt)
                     {
                         if (i != 0) observationList[m_sight + i][m_sight + j] = 4;
                         if (!skip)
@@ -756,7 +756,7 @@ public class ObservationAroundAgent
                 for (int j = 0; j < i; j++)
                 {
                     // Out of range
-                    if (m_fieldLineSize < m_posY + i || m_fieldColumnSize < m_posX + j) return;
+                    if (m_fieldLineSize < m_index_Y + i || m_fieldColumnSize < m_index_X + j) return;
 
                     // Cannot be seen from Agent
                     if (fop <= j && j <= mop)
@@ -771,13 +771,13 @@ public class ObservationAroundAgent
                     }
 
                     // Empty
-                    if (m_fieldData[m_posY + i][m_posX + j] == 1)
+                    if (m_fieldData[m_index_Y + i][m_index_X + j] == 1)
                     {
                         if (j != 0) observationList[m_sight + i][m_sight + j] = 1;
                     }
 
                     // Exit
-                    else if (m_fieldData[m_posY + i][m_posX + j] == 2)
+                    else if (m_fieldData[m_index_Y + i][m_index_X + j] == 2)
                     {
                         if (j != 0) observationList[m_sight + i][m_sight + j] = 2;
                         if (!skip)
@@ -788,7 +788,7 @@ public class ObservationAroundAgent
                     }
 
                     // Obstacle
-                    else if (m_fieldData[m_posY + i][m_posX + j] == 3)
+                    else if (m_fieldData[m_index_Y + i][m_index_X + j] == 3)
                     {
                         if (j != 0) observationList[m_sight + i][m_sight + j] = 3;
                         if (!skip)
@@ -799,7 +799,7 @@ public class ObservationAroundAgent
                     }
 
                     // Agent
-                    else if (10 <= m_fieldData[m_posY + i][m_posX + j] && m_fieldData[m_posY + i][m_posX + j] < 10 + m_agentCnt)
+                    else if (10 <= m_fieldData[m_index_Y + i][m_index_X + j] && m_fieldData[m_index_Y + i][m_index_X + j] < 10 + m_agentCnt)
                     {
                         if (j != 0) observationList[m_sight + i][m_sight + j] = 4;
                         if (!skip)
@@ -835,7 +835,7 @@ public class ObservationAroundAgent
                 for (int j = 0; j < i; j++)
                 {
                     // Out of range
-                    if (m_fieldLineSize < m_posY + i || m_posX - j < 0) return;
+                    if (m_fieldLineSize < m_index_Y + i || m_index_X - j < 0) return;
 
                     // Cannot be seen from Agent
                     if (fop <= j && j <= mop)
@@ -850,13 +850,13 @@ public class ObservationAroundAgent
                     }
 
                     // Empty
-                    if (m_fieldData[m_posY + i][m_posX - j] == 1)
+                    if (m_fieldData[m_index_Y + i][m_index_X - j] == 1)
                     {
                         if (j != 0) observationList[m_sight + i][m_sight - j] = 1;
                     }
 
                     // Exit
-                    else if (m_fieldData[m_posY + i][m_posX - j] == 2)
+                    else if (m_fieldData[m_index_Y + i][m_index_X - j] == 2)
                     {
                         if (j != 0) observationList[m_sight + i][m_sight - j] = 2;
                         if (!skip)
@@ -867,7 +867,7 @@ public class ObservationAroundAgent
                     }
 
                     // Obstacle
-                    else if (m_fieldData[m_posY + i][m_posX - j] == 3)
+                    else if (m_fieldData[m_index_Y + i][m_index_X - j] == 3)
                     {
                         if (j != 0) observationList[m_sight + i][m_sight - j] = 3;
                         if (!skip)
@@ -878,7 +878,7 @@ public class ObservationAroundAgent
                     }
 
                     // Agent
-                    else if (10 <= m_fieldData[m_posY + i][m_posX - j] && m_fieldData[m_posY + i][m_posX - j] < 10 + m_agentCnt)
+                    else if (10 <= m_fieldData[m_index_Y + i][m_index_X - j] && m_fieldData[m_index_Y + i][m_index_X - j] < 10 + m_agentCnt)
                     {
                         if (j != 0) observationList[m_sight + i][m_sight - j] = 4;
                         if (!skip)
@@ -914,7 +914,7 @@ public class ObservationAroundAgent
                 for (int i = 0; i < j; i++)
                 {
                     // Out of range
-                    if (m_fieldLineSize < m_posY + i || m_posX - j < 0) return;
+                    if (m_fieldLineSize < m_index_Y + i || m_index_X - j < 0) return;
 
                     // Cannot be seen from Agent
                     if (fop <= i && i <= mop)
@@ -929,13 +929,13 @@ public class ObservationAroundAgent
                     }
 
                     // Empty
-                    if (m_fieldData[m_posY + i][m_posX - j] == 1)
+                    if (m_fieldData[m_index_Y + i][m_index_X - j] == 1)
                     {
                         if (i != 0) observationList[m_sight + i][m_sight - j] = 1;
                     }
 
                     // Exit
-                    else if (m_fieldData[m_posY + i][m_posX - j] == 2)
+                    else if (m_fieldData[m_index_Y + i][m_index_X - j] == 2)
                     {
                         if (i == 0) observationList[m_sight + i][m_sight - j] = 2;
                         if (!skip)
@@ -946,7 +946,7 @@ public class ObservationAroundAgent
                     }
 
                     // Obstacle
-                    else if (m_fieldData[m_posY + i][m_posX - j] == 3)
+                    else if (m_fieldData[m_index_Y + i][m_index_X - j] == 3)
                     {
                         if (i != 0) observationList[m_sight + i][m_sight - j] = 3;
                         if (!skip)
@@ -957,7 +957,7 @@ public class ObservationAroundAgent
                     }
 
                     // Agent
-                    else if (10 <= m_fieldData[m_posY + i][m_posX - j] && m_fieldData[m_posY + i][m_posX - j] < 10 + m_agentCnt)
+                    else if (10 <= m_fieldData[m_index_Y + i][m_index_X - j] && m_fieldData[m_index_Y + i][m_index_X - j] < 10 + m_agentCnt)
                     {
                         if (i != 0) observationList[m_sight + i][m_sight - j] = 4;
                         if (!skip)
@@ -993,7 +993,7 @@ public class ObservationAroundAgent
                 for (int i = 0; i < j; i++)
                 {
                     // Out of range
-                    if (m_posY - i < 0 || m_posX - j < 0) return;
+                    if (m_index_Y - i < 0 || m_index_X - j < 0) return;
 
                     // Cannot be seen from Agent
                     if (fop <= i && i <= mop)
@@ -1008,13 +1008,13 @@ public class ObservationAroundAgent
                     }
 
                     // Empty
-                    if (m_fieldData[m_posY - i][m_posX - j] == 1)
+                    if (m_fieldData[m_index_Y - i][m_index_X - j] == 1)
                     {
                         if (i != 0) observationList[m_sight - i][m_sight - j] = 1;
                     }
 
                     // Exit
-                    else if (m_fieldData[m_posY - i][m_posX - j] == 2)
+                    else if (m_fieldData[m_index_Y - i][m_index_X - j] == 2)
                     {
                         if (i != 0) observationList[m_sight - i][m_sight - j] = 2;
                         if (!skip)
@@ -1025,7 +1025,7 @@ public class ObservationAroundAgent
                     }
 
                     // Obstacle
-                    else if (m_fieldData[m_posY - i][m_posX - j] == 3)
+                    else if (m_fieldData[m_index_Y - i][m_index_X - j] == 3)
                     {
                         if (i != 0) observationList[m_sight - i][m_sight - j] = 3;
                         if (!skip)
@@ -1036,7 +1036,7 @@ public class ObservationAroundAgent
                     }
 
                     // Agent
-                    else if (10 <= m_fieldData[m_posY - i][m_posX - j] && m_fieldData[m_posY - i][m_posX - j] < 10 + m_agentCnt)
+                    else if (10 <= m_fieldData[m_index_Y - i][m_index_X - j] && m_fieldData[m_index_Y - i][m_index_X - j] < 10 + m_agentCnt)
                     {
                         if (i != 0) observationList[m_sight - i][m_sight - j] = 4;
                         if (!skip)
@@ -1072,7 +1072,7 @@ public class ObservationAroundAgent
                 for (int j = 0; j < i; j++)
                 {
                     // Out of range
-                    if (m_posY - i < 0 || m_posX - j < 0) return;
+                    if (m_index_Y - i < 0 || m_index_X - j < 0) return;
 
                     // Cannot be seen from Agent
                     if (fop <= j && j <= mop)
@@ -1087,13 +1087,13 @@ public class ObservationAroundAgent
                     }
 
                     // Empty
-                    if (m_fieldData[m_posY - i][m_posX - j] == 1)
+                    if (m_fieldData[m_index_Y - i][m_index_X - j] == 1)
                     {
                         if (j != 0) observationList[m_sight - i][m_sight - j] = 1;
                     }
 
                     // Exit
-                    else if (m_fieldData[m_posY - i][m_posX - j] == 2)
+                    else if (m_fieldData[m_index_Y - i][m_index_X - j] == 2)
                     {
                         if (j != 0) observationList[m_sight - i][m_sight - j] = 2;
                         if (!skip)
@@ -1104,7 +1104,7 @@ public class ObservationAroundAgent
                     }
 
                     // Obstacle
-                    else if (m_fieldData[m_posY - i][m_posX - j] == 3)
+                    else if (m_fieldData[m_index_Y - i][m_index_X - j] == 3)
                     {
                         if (j != 0) observationList[m_sight - i][m_sight - j] = 3;
                         if (!skip)
@@ -1115,7 +1115,7 @@ public class ObservationAroundAgent
                     }
 
                     // Agent
-                    else if (10 <= m_fieldData[m_posY - i][m_posX - j] && m_fieldData[m_posY - i][m_posX - j] < 10 + m_agentCnt)
+                    else if (10 <= m_fieldData[m_index_Y - i][m_index_X - j] && m_fieldData[m_index_Y - i][m_index_X - j] < 10 + m_agentCnt)
                     {
                         if (j != 0) observationList[m_sight - i][m_sight - j] = 4;
                         if (!skip)

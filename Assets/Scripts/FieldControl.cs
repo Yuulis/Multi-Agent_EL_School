@@ -11,16 +11,18 @@ public class FieldControl : MonoBehaviour
     Settings settings;
 
     public GameObject TrainingArea;
+
     private bool firstEpisode;
 
     [HideInInspector] public List<List<int>> fieldData;
+
     public List<Sprite> tilemapSprites;
     public Tilemap field_tilemap;
     public Tilemap agent_tilemap;
     public TileBase agent_tile;
 
-    public GameObject agent;
     [HideInInspector] public int activeAgentsNum;
+    public List<GameObject> agentsList;
     public List<agentInfo> agentsData;
 
     public struct agentInfo
@@ -32,7 +34,7 @@ public class FieldControl : MonoBehaviour
     }
 
 
-    private void Start()
+    private void Awake()
     {
         settings = Settings_obj.GetComponent<Settings>();
         activeAgentsNum = settings.agentCnt;
@@ -131,24 +133,8 @@ public class FieldControl : MonoBehaviour
                 int pos_x = pos.x + width / 2;
                 int pos_y = height / 2 - 1 - pos.y;
 
-                if (firstEpisode)
-                {
-                    GameObject obj = (GameObject)Instantiate(agent);
-                    obj.transform.parent = TrainingArea.transform;
-
-                    int id = 10 + cnt;
-                    agentsData.Add(new agentInfo { id = id, position = pos, active = true, obj = obj });
-                }
-                else
-                {
-                    agentInfo info = agentsData[cnt];
-                    info.position = new Vector3Int(pos_x, pos_y, 0);
-                    agentsData[cnt] = info;
-
-                    info = agentsData[cnt];
-                    info.active = true;
-                    agentsData[cnt] = info;
-                }
+                agentInfo info = new agentInfo{ id=(cnt + 10), position=pos, active=true, obj=agentsList[cnt] };
+                agentsData.Add(info);
 
                 cnt++;
             }

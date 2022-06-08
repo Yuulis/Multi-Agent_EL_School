@@ -33,6 +33,23 @@ public class AgentControl : Agent
     // Set agentPos.
     public override void OnEpisodeBegin()
     {
+        int n = (int)this.gameObject.name[5] - 48;
+        agent_id = fieldControl.agentsData[n].id;
+
+        for (int i = 0; i < settings.fieldHeight; i++)
+        {
+            for (int j = 0; j < settings.fieldWidth; j++)
+            {
+                if (fieldControl.fieldData[i][j] == agent_id)
+                {
+                    agentIndex_x = j;
+                    agentIndex_y = i;
+                }
+            }
+        }
+
+        Debug.Log($"Pos{agentIndex_x}, {agentIndex_y}");
+
         observation = new(
             fieldControl.fieldData,
             settings.fieldHeight,
