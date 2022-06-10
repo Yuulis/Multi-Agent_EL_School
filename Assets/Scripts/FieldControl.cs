@@ -149,44 +149,28 @@ public class FieldControl : MonoBehaviour
     /// <param name="dir">Direction of moving</param>
     public void MoveAgentTile(int agent_id, int dir)
     {
-        //Vector3Int pos = agentsPos[agent_id - 10];
-        Vector3Int pos = new();
+        agentInfo info = agentsData[agent_id - 10];
+        Vector3Int pos = info.position;
+        Vector3Int newPos = new();
 
         // Forward
-        if (dir == 1)
-        {
-            Vector3Int newPos = new(pos.x, pos.y + 1, pos.z);
-            agent_tilemap.SetTile(newPos, agent_tile);
-            agent_tilemap.SetTile(pos, null);
-            //agentsPos[agent_id - 10] = newPos;
-        }
+        if (dir == 1) newPos = new(pos.x, pos.y + 1, pos.z);
 
         // Right
-        else if (dir == 2)
-        {
-            Vector3Int newPos = new(pos.x + 1, pos.y, pos.z);
-            agent_tilemap.SetTile(newPos, agent_tile);
-            agent_tilemap.SetTile(pos, null);
-            //agentsPos[agent_id - 10] = newPos;
-        }
+        else if (dir == 2) newPos = new(pos.x + 1, pos.y, pos.z);
 
         // Back
-        else if (dir == 3)
-        {
-            Vector3Int newPos = new(pos.x, pos.y - 1, pos.z);
-            agent_tilemap.SetTile(newPos, agent_tile);
-            agent_tilemap.SetTile(pos, null);
-            //agentsPos[agent_id - 10] = newPos;
-        }
+        else if (dir == 3) newPos = new(pos.x, pos.y - 1, pos.z);
 
         // Left
-        else if (dir == 4)
-        {
-            Vector3Int newPos = new(pos.x - 1, pos.y, pos.z);
-            agent_tilemap.SetTile(newPos, agent_tile);
-            agent_tilemap.SetTile(pos, null);
-            //agentsPos[agent_id - 10] = newPos;
-        }
+        else if (dir == 4) newPos = new(pos.x - 1, pos.y, pos.z);
+
+        info.position = newPos;
+
+        agent_tilemap.SetTile(pos, null);
+        agent_tilemap.SetTile(newPos, agent_tile);
+
+        agentsData[agent_id - 10] = info;
     }
 
 

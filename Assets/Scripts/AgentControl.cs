@@ -88,6 +88,8 @@ public class AgentControl : Agent
     {
         if (fieldControl.agentsData[agent_id - 10].active)
         {
+            CheckAgentReachGoal(agent_id);
+
             var action = actions.DiscreteActions;
 
             // Forward
@@ -117,8 +119,6 @@ public class AgentControl : Agent
                 fieldControl.MoveAgentTile(agent_id, 4);
                 agentIndex_x--;
             }
-
-            CheckAgentReachGoal(agent_id);
         }
     }
 
