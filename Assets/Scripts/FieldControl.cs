@@ -171,6 +171,8 @@ public class FieldControl : MonoBehaviour
         agent_tilemap.SetTile(newPos, agent_tile);
 
         agentsData[agent_id - 10] = info;
+
+        Debug.Log($"Dir : {dir}, position : {pos} -> {newPos}");
     }
 
 

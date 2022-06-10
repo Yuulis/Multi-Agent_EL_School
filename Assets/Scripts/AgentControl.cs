@@ -48,8 +48,6 @@ public class AgentControl : Agent
             }
         }
 
-        Debug.Log($"Pos{agentIndex_x}, {agentIndex_y}");
-
         observation = new(
             fieldControl.fieldData,
             settings.fieldHeight,
@@ -119,6 +117,8 @@ public class AgentControl : Agent
                 fieldControl.MoveAgentTile(agent_id, 4);
                 agentIndex_x--;
             }
+
+            Debug.Log($"Pos{agentIndex_x}, {agentIndex_y}");
         }
     }
 
