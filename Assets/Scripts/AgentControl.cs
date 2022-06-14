@@ -14,8 +14,8 @@ public class AgentControl : Agent
     FieldControl fieldControl;
 
     [HideInInspector] public int agent_id;
-    [HideInInspector] public int agentIndex_x;
-    [HideInInspector] public int agentIndex_y;
+    [HideInInspector] public int agent_tilemapData_x;
+    [HideInInspector] public int agent_tilemapData_y;
 
     private ObservationAroundAgent observation;
     private bool[] neighborhoodInfo;
@@ -34,7 +34,7 @@ public class AgentControl : Agent
     public override void OnEpisodeBegin()
     {
         int n = (int)this.gameObject.name[5] - 48;
-        agent_id = fieldControl.agentsData[n].id;
+        agent_id = fieldControl.agentsData[n].m_id;
 
         for (int i = 0; i < settings.fieldHeight; i++)
         {
@@ -42,8 +42,8 @@ public class AgentControl : Agent
             {
                 if (fieldControl.fieldData[i][j] == agent_id)
                 {
-                    agentIndex_x = j;
-                    agentIndex_y = i;
+                    agent_tilemapData_x = j;
+                    agent_tilemapData_y = i;
                 }
             }
         }
@@ -52,8 +52,8 @@ public class AgentControl : Agent
             fieldControl.fieldData,
             settings.fieldHeight,
             settings.fieldWidth,
-            agentIndex_x,
-            agentIndex_y,
+            agent_tilemapData_x,
+            agent_tilemapData_y,
             settings.agentSight,
             settings.agentCnt
         );
@@ -63,9 +63,9 @@ public class AgentControl : Agent
     // Agent collect observation.
     public override void CollectObservations(VectorSensor sensor)
     {
-        if (fieldControl.agentsData[agent_id - 10].active)
+        if (fieldControl.agentsData[agent_id - 10].m_active)
         {
-            observation.UpdateObservation(agentIndex_x, agentIndex_y);
+            observation.UpdateObservation(agent_tilemapData_x, agent_tilemapData_y);
 
             // For debug
             if (settings.debugMode) observation.PrintAgentObservation(agent_id);
@@ -84,7 +84,7 @@ public class AgentControl : Agent
     // Agent moves.
     public override void OnActionReceived(ActionBuffers actions)
     {
-        if (fieldControl.agentsData[agent_id - 10].active)
+        if (fieldControl.agentsData[agent_id - 10].m_active)
         {
             CheckAgentReachGoal(agent_id);
 
@@ -94,31 +94,29 @@ public class AgentControl : Agent
             if (action[0] == 1)
             {
                 fieldControl.MoveAgentTile(agent_id, 1);
-                agentIndex_y--;
+                agent_tilemapData_y--;
             }
 
             // Right
             else if (action[0] == 2)
             {
                 fieldControl.MoveAgentTile(agent_id, 2);
-                agentIndex_x++;
+                agent_tilemapData_x++;
             }
 
             // Back
             else if (action[0] == 3)
             {
                 fieldControl.MoveAgentTile(agent_id, 3);
-                agentIndex_y++;
+                agent_tilemapData_y++;
             }
 
             // Left
             else if (action[0] == 4)
             {
                 fieldControl.MoveAgentTile(agent_id, 4);
-                agentIndex_x--;
+                agent_tilemapData_x--;
             }
-
-            Debug.Log($"Pos{agentIndex_x}, {agentIndex_y}");
         }
     }
 
@@ -162,17 +160,15 @@ public class AgentControl : Agent
     /// <param name="agent_id">Agent's id</param>
     public void CheckAgentReachGoal(int agent_id)
     {
-        Vector3Int pos = fieldControl.agentsData[agent_id - 10].position;
-        int i = -pos.y + settings.fieldHeight / 2 - 1;
-        int j = pos.x + settings.fieldWidth / 2;
+
+        int i = fieldControl.agentsData[agent_id].m_position.m_tilemapData_x;
+        int j = fieldControl.agentsData[agent_id].m_position.m_tilemapData_y;
 
         if (fieldControl.fieldData[i][j] == 2)
         {
             AddReward(1.0f);
 
-            FieldControl.agentInfo info = fieldControl.agentsData[agent_id - 10];
-            info.active = false;
-            fieldControl.agentsData[agent_id - 10] = info;
+            fieldControl.agentsData[agent_id - 10].m_active = false;
 
             fieldControl.activeAgentsNum--;
 

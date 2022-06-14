@@ -23,15 +23,7 @@ public class FieldControl : MonoBehaviour
 
     [HideInInspector] public int activeAgentsNum;
     public List<GameObject> agentsList;
-    public List<agentInfo> agentsData;
-
-    public struct agentInfo
-    {
-        public int id;
-        public Vector3Int position;
-        public bool active;
-        public GameObject obj;
-    }
+    public List<AgentInfo> agentsData;
 
 
     private void Awake()
@@ -85,22 +77,25 @@ public class FieldControl : MonoBehaviour
         {
             for (int j = 0; j < width; j++)
             {
-                Vector3Int pos = new(-width / 2 + j, height / 2 - 1 - i, 0);
+                TilemapPosition tPos = new();
+                tPos.m_tilemapData_x = j;
+                tPos.m_tilemapData_y = i;
+                tPos.m_tilemap_pos = tPos.ChangeFICStoTCCS(tPos.m_tilemapData_x, tPos.m_tilemapData_y, height, width);
 
                 // Empty
-                if (field_tilemap.GetSprite(pos) == tilemapSprites[1])
+                if (field_tilemap.GetSprite(tPos.m_tilemap_pos) == tilemapSprites[1])
                 {
                     fieldData[i][j] = 1;
                 }
 
                 // Exit
-                else if (field_tilemap.GetSprite(pos) == tilemapSprites[2])
+                else if (field_tilemap.GetSprite(tPos.m_tilemap_pos) == tilemapSprites[2])
                 {
                     fieldData[i][j] = 2;
                 }
 
                 // Obstacle
-                else if (field_tilemap.GetSprite(pos) == tilemapSprites[3])
+                else if (field_tilemap.GetSprite(tPos.m_tilemap_pos) == tilemapSprites[3])
                 {
                     fieldData[i][j] = 3;
                 }
@@ -117,24 +112,29 @@ public class FieldControl : MonoBehaviour
     /// <param name="num">Number of Agents</param>
     private void RandomSetAgent(int width, int height, int num)
     {
-        if (firstEpisode) agentsData = new();
+        agentsData = new();
 
         int cnt = 0;
         while (cnt < num)
         {
-            Vector3Int pos = new(Random.Range(-width / 2, width / 2), Random.Range(height / 2 - 1, -height / 2 + 1), 0);
+            Vector3Int spawPos = new(Random.Range(-width / 2, width / 2), Random.Range(height / 2 - 1, -height / 2 + 1), 0);
             
             // Only Empty position
-            if (field_tilemap.GetSprite(pos) == tilemapSprites[1] && agent_tilemap.GetTile(pos) != agent_tile)
+            if (field_tilemap.GetSprite(spawPos) == tilemapSprites[1] && agent_tilemap.GetTile(spawPos) != agent_tile)
             {
-                agent_tilemap.SetTile(pos, agent_tile);
-                fieldData[height / 2 - 1 - pos.y][pos.x + width / 2] = 10 + cnt;
+                agent_tilemap.SetTile(spawPos, agent_tile);
 
-                int pos_x = pos.x + width / 2;
-                int pos_y = height / 2 - 1 - pos.y;
+                TilemapPosition tPos = new();
+                tPos.m_tilemap_pos = spawPos;
+                (tPos.m_tilemapData_x, tPos.m_tilemapData_y) = tPos.ChangeTCCStoFICS(tPos.m_tilemap_pos, height, width);
 
-                agentInfo info = new agentInfo{ id=(cnt + 10), position=pos, active=true, obj=agentsList[cnt] };
+                fieldData[tPos.m_tilemapData_y][tPos.m_tilemapData_x] = 10 + cnt;
+
+                AgentInfo info = new(cnt + 10, tPos, true, agentsList[cnt]);
                 agentsData.Add(info);
+
+                // For debug
+                if (settings.debugMode) info.PrintAgentInfo();
 
                 cnt++;
             }
@@ -149,8 +149,7 @@ public class FieldControl : MonoBehaviour
     /// <param name="dir">Direction of moving</param>
     public void MoveAgentTile(int agent_id, int dir)
     {
-        agentInfo info = agentsData[agent_id - 10];
-        Vector3Int pos = info.position;
+        Vector3Int pos = agentsData[agent_id - 10].m_position.m_tilemap_pos;
         Vector3Int newPos = new();
 
         // Forward
@@ -165,14 +164,14 @@ public class FieldControl : MonoBehaviour
         // Left
         else if (dir == 4) newPos = new(pos.x - 1, pos.y, pos.z);
 
-        info.position = newPos;
 
         agent_tilemap.SetTile(pos, null);
         agent_tilemap.SetTile(newPos, agent_tile);
 
-        agentsData[agent_id - 10] = info;
+        agentsData[agent_id - 10].m_position.m_tilemap_pos = newPos;
 
-        Debug.Log($"Dir : {dir}, position : {pos} -> {newPos}");
+        // For debug
+        if (settings.debugMode) agentsData[agent_id].PrintAgentInfo();
     }
 
 
