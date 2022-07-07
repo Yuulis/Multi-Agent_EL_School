@@ -5,20 +5,24 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
-using Unity.MLAgents.Policies;
 using Unity.MLAgents.Actuators;
 
 public class AgentControl : Agent
 {
+    // Settings
     Settings settings;
+
+    // FieldControl
     FieldControl fieldControl;
 
+    // Agent's data
     [HideInInspector] public int agent_id;
-    [HideInInspector] public int agent_tilemapData_x;
-    [HideInInspector] public int agent_tilemapData_y;
+    [HideInInspector] public int agent_tilemapIndex_x;
+    [HideInInspector] public int agent_tilemapIndex_y;
 
+    // Agent's observation
     private ObservationAroundAgent observation;
-    private bool[] neighborhoodInfo;
+    private readonly List<bool> observationNeighborhood;
 
 
     // Initializing.
@@ -36,27 +40,28 @@ public class AgentControl : Agent
         int n = (int)this.gameObject.name[5] - 48;
         agent_id = fieldControl.agentsData[n].m_id;
 
-        for (int i = 0; i < settings.fieldHeight; i++)
+        for (int y = 0; y < settings.fieldHeight; y++)
         {
-            for (int j = 0; j < settings.fieldWidth; j++)
+            for (int x = 0; x < settings.fieldWidth; x++)
             {
-                if (fieldControl.fieldData[i][j] == agent_id)
+                if (fieldControl.fieldData2D[y][x].tileNum == agent_id)
                 {
-                    agent_tilemapData_x = j;
-                    agent_tilemapData_y = i;
+                    agent_tilemapIndex_x = x;
+                    agent_tilemapIndex_y = y;
                 }
             }
         }
 
         observation = new(
-            fieldControl.fieldData,
+            fieldControl.fieldData2D,
             settings.fieldHeight,
             settings.fieldWidth,
-            agent_tilemapData_x,
-            agent_tilemapData_y,
+            agent_tilemapIndex_x,
+            agent_tilemapIndex_y,
             settings.agentSight,
             settings.agentCnt
         );
+
     }
 
 
@@ -65,7 +70,7 @@ public class AgentControl : Agent
     {
         if (fieldControl.agentsData[agent_id - 10].m_active)
         {
-            observation.UpdateObservation(agent_tilemapData_x, agent_tilemapData_y);
+            observation.UpdateObservation(agent_tilemapIndex_x, agent_tilemapIndex_y);
 
             // For debug
             if (settings.debugMode) observation.PrintAgentObservation(agent_id);
@@ -94,28 +99,28 @@ public class AgentControl : Agent
             if (action[0] == 1)
             {
                 fieldControl.MoveAgentTile(agent_id, 1);
-                agent_tilemapData_y--;
+                agent_tilemapIndex_y--;
             }
 
             // Right
             else if (action[0] == 2)
             {
                 fieldControl.MoveAgentTile(agent_id, 2);
-                agent_tilemapData_x++;
+                agent_tilemapIndex_x++;
             }
 
             // Back
             else if (action[0] == 3)
             {
                 fieldControl.MoveAgentTile(agent_id, 3);
-                agent_tilemapData_y++;
+                agent_tilemapIndex_y++;
             }
 
             // Left
             else if (action[0] == 4)
             {
                 fieldControl.MoveAgentTile(agent_id, 4);
-                agent_tilemapData_x--;
+                agent_tilemapIndex_x--;
             }
         }
     }
@@ -126,19 +131,17 @@ public class AgentControl : Agent
     /// </summary>
     private void GetNeighborhoodInfo()
     {
-        neighborhoodInfo = Enumerable.Repeat<bool>(true, 4).ToArray();
-
         if (observation.observationList[settings.agentSight - 1][settings.agentSight] != 1
-            && observation.observationList[settings.agentSight - 1][settings.agentSight] != 2) neighborhoodInfo[0] = false;
+            && observation.observationList[settings.agentSight - 1][settings.agentSight] != 2) observationNeighborhood[0] = false;
 
         if (observation.observationList[settings.agentSight][settings.agentSight + 1] != 1
-            && observation.observationList[settings.agentSight][settings.agentSight + 1] != 2) neighborhoodInfo[1] = false;
+            && observation.observationList[settings.agentSight][settings.agentSight + 1] != 2) observationNeighborhood[1] = false;
 
         if (observation.observationList[settings.agentSight + 1][settings.agentSight] != 1
-            && observation.observationList[settings.agentSight + 1][settings.agentSight] != 2) neighborhoodInfo[2] = false;
+            && observation.observationList[settings.agentSight + 1][settings.agentSight] != 2) observationNeighborhood[2] = false;
 
         if (observation.observationList[settings.agentSight][settings.agentSight - 1] != 1
-            && observation.observationList[settings.agentSight][settings.agentSight - 1] != 2) neighborhoodInfo[3] = false;
+            && observation.observationList[settings.agentSight][settings.agentSight - 1] != 2) observationNeighborhood[3] = false;
     }
 
 
@@ -147,10 +150,10 @@ public class AgentControl : Agent
     {
         GetNeighborhoodInfo();
 
-        if (!neighborhoodInfo[0]) actionMask.SetActionEnabled(0, 0, false);
-        if (!neighborhoodInfo[1]) actionMask.SetActionEnabled(0, 1, false);
-        if (!neighborhoodInfo[2]) actionMask.SetActionEnabled(0, 2, false);
-        if (!neighborhoodInfo[3]) actionMask.SetActionEnabled(0, 3, false);
+        if (!observationNeighborhood[1]) actionMask.SetActionEnabled(0, 0, false);
+        if (!observationNeighborhood[3]) actionMask.SetActionEnabled(0, 1, false);
+        if (!observationNeighborhood[5]) actionMask.SetActionEnabled(0, 2, false);
+        if (!observationNeighborhood[8]) actionMask.SetActionEnabled(0, 3, false);
     }
 
 
@@ -161,10 +164,10 @@ public class AgentControl : Agent
     public void CheckAgentReachGoal(int agent_id)
     {
 
-        int i = fieldControl.agentsData[agent_id].m_position.m_tilemapData_x;
-        int j = fieldControl.agentsData[agent_id].m_position.m_tilemapData_y;
+        int i = fieldControl.agentsData[agent_id].m_position.m_fieldDataIndex_y;
+        int j = fieldControl.agentsData[agent_id].m_position.m_fieldDataIndex_x;
 
-        if (fieldControl.fieldData[i][j] == 2)
+        if (fieldControl.fieldData2D[i][j].tileNum == 2)
         {
             AddReward(1.0f);
 
@@ -191,9 +194,9 @@ public class AgentControl : Agent
 
         GetNeighborhoodInfo();
 
-        if (neighborhoodInfo[0] && Input.GetKey(KeyCode.W)) discreteActionsOut[0] = 1;
-        if (neighborhoodInfo[1] && Input.GetKey(KeyCode.D)) discreteActionsOut[0] = 2;
-        if (neighborhoodInfo[2] && Input.GetKey(KeyCode.S)) discreteActionsOut[0] = 3;
-        if (neighborhoodInfo[3] && Input.GetKey(KeyCode.A)) discreteActionsOut[0] = 4;
+        if (observationNeighborhood[0] && Input.GetKey(KeyCode.W)) discreteActionsOut[0] = 1;
+        if (observationNeighborhood[1] && Input.GetKey(KeyCode.D)) discreteActionsOut[0] = 2;
+        if (observationNeighborhood[2] && Input.GetKey(KeyCode.S)) discreteActionsOut[0] = 3;
+        if (observationNeighborhood[3] && Input.GetKey(KeyCode.A)) discreteActionsOut[0] = 4;
     }
 }

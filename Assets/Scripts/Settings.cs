@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Settings : MonoBehaviour
 {
+    // Field size
     public int fieldWidth = 30;
     public int fieldHeight = 20;
 

@@ -7,40 +7,36 @@ using UnityEngine.Tilemaps;
 
 public class FieldControl : MonoBehaviour
 {
+    // Settings
     public GameObject Settings_obj;
     Settings settings;
 
-    public GameObject TrainingArea;
+    // FieldData
+    [HideInInspector] public FieldData fieldData;
+    [HideInInspector] public List<List<TileCellInfo>> fieldData2D;
 
-    private bool firstEpisode;
-
-    [HideInInspector] public List<List<int>> fieldData;
-
+    // Tilemaps resources
     public List<Sprite> tilemapSprites;
     public Tilemap field_tilemap;
     public Tilemap agent_tilemap;
     public TileBase agent_tile;
 
+    // Agents resources
     [HideInInspector] public int activeAgentsNum;
     public List<GameObject> agentsList;
     public List<AgentInfo> agentsData;
 
 
-    private void Awake()
+    private void Start()
     {
         settings = Settings_obj.GetComponent<Settings>();
         activeAgentsNum = settings.agentCnt;
 
-        firstEpisode = true;
-
-        ResetFieldData(settings.fieldWidth, settings.fieldHeight);
-
-        // For debug
-        if (settings.debugMode) PrintFieldData(settings.fieldWidth, settings.fieldHeight);
-
+        ResetFieldData(settings.fieldHeight, settings.fieldWidth);
         InitializeField();
 
-        firstEpisode = false;
+        // For debug
+        if (settings.debugMode) PrintFieldData(settings.fieldHeight, settings.fieldWidth);
     }
 
 
@@ -50,7 +46,7 @@ public class FieldControl : MonoBehaviour
     public void InitializeField()
     {
         agent_tilemap.ClearAllTiles();
-        RandomSetAgent(settings.fieldWidth, settings.fieldHeight, settings.agentCnt);
+        RandomSetAgent(settings.fieldHeight, settings.fieldWidth, settings.agentCnt);
     }
 
 
@@ -58,48 +54,21 @@ public class FieldControl : MonoBehaviour
     /// Reset Field data.
     /// </summary>
     /// <param name="width">Field's width</param>
-    /// <param name="height">Field's height</param>
-    private void ResetFieldData(int width, int height)
+    private void ResetFieldData(int height, int width)
     {
-        fieldData = new();
+        fieldData = new(field_tilemap, height, width, tilemapSprites);
+        fieldData2D = new();
 
-        for (int i = 0; i < height; i++)
+        for (int y = 0; y < height; y++)
         {
-            List<int> temp = new();
-            for (int j = 0; j < width; j++)
+            List<TileCellInfo> list = new();
+            for (int x = 0; x < width; x++)
             {
-                temp.Add(0);
+                fieldData.m_data[y * width + x].position.m_fieldDataIndex_x = x;
+                fieldData.m_data[y * width + x].position.m_fieldDataIndex_y = y;
+                list.Add(fieldData.m_data[y * width + x]);
             }
-            fieldData.Add(temp);
-        }
-
-        for (int i = 0; i < height; i++)
-        {
-            for (int j = 0; j < width; j++)
-            {
-                TilemapPosition tPos = new();
-                tPos.m_tilemapData_x = j;
-                tPos.m_tilemapData_y = i;
-                tPos.m_tilemap_pos = tPos.ChangeFICStoTCCS(tPos.m_tilemapData_x, tPos.m_tilemapData_y, height, width);
-
-                // Empty
-                if (field_tilemap.GetSprite(tPos.m_tilemap_pos) == tilemapSprites[1])
-                {
-                    fieldData[i][j] = 1;
-                }
-
-                // Exit
-                else if (field_tilemap.GetSprite(tPos.m_tilemap_pos) == tilemapSprites[2])
-                {
-                    fieldData[i][j] = 2;
-                }
-
-                // Obstacle
-                else if (field_tilemap.GetSprite(tPos.m_tilemap_pos) == tilemapSprites[3])
-                {
-                    fieldData[i][j] = 3;
-                }
-            }
+            fieldData2D.Add(list);
         }
     }
 
@@ -107,30 +76,37 @@ public class FieldControl : MonoBehaviour
     /// <summary>
     /// Agents set random place in field.
     /// </summary>
-    /// <param name="width">Field's width</param>
     /// <param name="height">Field's height</param>
-    /// <param name="num">Number of Agents</param>
-    private void RandomSetAgent(int width, int height, int num)
+    /// <param name="width">Field's width</param>
+    /// <param name="agentNum">Number of Agents</param>
+    private void RandomSetAgent(int height, int width, int agentNum)
     {
         agentsData = new();
 
         int cnt = 0;
-        while (cnt < num)
+        while (cnt < agentNum)
         {
-            Vector3Int spawPos = new(Random.Range(-width / 2, width / 2), Random.Range(height / 2 - 1, -height / 2 + 1), 0);
-            
+            TilemapPositionInfo spawn_tPos = new();
+            spawn_tPos.m_fieldDataIndex_x = Random.Range(0, width);
+            spawn_tPos.m_fieldDataIndex_y = Random.Range(0, height);
+            spawn_tPos.m_tilemapPosition = spawn_tPos.ChangeFICStoTCCS(
+                spawn_tPos.m_fieldDataIndex_x, 
+                spawn_tPos.m_fieldDataIndex_y, 
+                height, 
+                width
+            );
+
             // Only Empty position
-            if (field_tilemap.GetSprite(spawPos) == tilemapSprites[1] && agent_tilemap.GetTile(spawPos) != agent_tile)
+            if (field_tilemap.GetSprite(spawn_tPos.m_tilemapPosition) == tilemapSprites[0] && agent_tilemap.GetTile(spawn_tPos.m_tilemapPosition) != agent_tile)
             {
-                agent_tilemap.SetTile(spawPos, agent_tile);
+                agent_tilemap.SetTile(spawn_tPos.m_tilemapPosition, agent_tile);
 
-                TilemapPosition tPos = new();
-                tPos.m_tilemap_pos = spawPos;
-                (tPos.m_tilemapData_x, tPos.m_tilemapData_y) = tPos.ChangeTCCStoFICS(tPos.m_tilemap_pos, height, width);
+                TileCellInfo cellInfo = new();
+                cellInfo.position = spawn_tPos;
+                cellInfo.tileNum = 10 + cnt;
+                fieldData2D[spawn_tPos.m_fieldDataIndex_y][spawn_tPos.m_fieldDataIndex_x] = cellInfo;
 
-                fieldData[tPos.m_tilemapData_y][tPos.m_tilemapData_x] = 10 + cnt;
-
-                AgentInfo info = new(cnt + 10, tPos, true, agentsList[cnt]);
+                AgentInfo info = new(cnt + 10, spawn_tPos, true, agentsList[cnt]);
                 agentsData.Add(info);
 
                 // For debug
@@ -149,7 +125,7 @@ public class FieldControl : MonoBehaviour
     /// <param name="dir">Direction of moving</param>
     public void MoveAgentTile(int agent_id, int dir)
     {
-        Vector3Int pos = agentsData[agent_id - 10].m_position.m_tilemap_pos;
+        Vector3Int pos = agentsData[agent_id - 10].m_position.m_tilemapPosition;
         Vector3Int newPos = new();
 
         // Forward
@@ -168,7 +144,7 @@ public class FieldControl : MonoBehaviour
         agent_tilemap.SetTile(pos, null);
         agent_tilemap.SetTile(newPos, agent_tile);
 
-        agentsData[agent_id - 10].m_position.m_tilemap_pos = newPos;
+        agentsData[agent_id - 10].m_position.m_tilemapPosition = newPos;
 
         // For debug
         if (settings.debugMode) agentsData[agent_id].PrintAgentInfo();
@@ -176,19 +152,19 @@ public class FieldControl : MonoBehaviour
 
 
     /// <summary>
-    /// Output Field data(for debug).
+    /// Output Field data. (for debug)
     /// </summary>
-    /// <param name="width">Field's width</param>
     /// <param name="height">Field's height</param>
-    private void PrintFieldData(int width, int height)
+    /// <param name="width">Field's width</param>
+    private void PrintFieldData(int height, int width)
     {
         Debug.Log("===== Field data =====");
-        for (int i = 0; i < height; i++)
+        for (int y = 0; y < height; y++)
         {
             string s = string.Empty;
-            for (int j = 0; j < width; j++)
+            for (int x = 0; x < width; x++)
             {
-                s += fieldData[i][j].ToString() + " ";
+                s += fieldData2D[y][x].tileNum.ToString() + " ";
             }
             Debug.Log(s);
         }
