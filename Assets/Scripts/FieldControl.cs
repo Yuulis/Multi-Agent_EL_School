@@ -86,9 +86,11 @@ public class FieldControl : MonoBehaviour
         int cnt = 0;
         while (cnt < agentNum)
         {
-            TilemapPositionInfo spawn_tPos = new();
-            spawn_tPos.m_fieldDataIndex_x = Random.Range(0, width);
-            spawn_tPos.m_fieldDataIndex_y = Random.Range(0, height);
+            TilemapPositionInfo spawn_tPos = new()
+            {
+                m_fieldDataIndex_x = Random.Range(0, width),
+                m_fieldDataIndex_y = Random.Range(0, height)
+            };
             spawn_tPos.m_tilemapPosition = spawn_tPos.ChangeFICStoTCCS(
                 spawn_tPos.m_fieldDataIndex_x, 
                 spawn_tPos.m_fieldDataIndex_y, 

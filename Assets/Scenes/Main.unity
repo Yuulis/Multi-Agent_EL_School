@@ -6509,7 +6509,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1819391670}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &922966935
 MonoBehaviour:
@@ -6535,6 +6535,50 @@ MonoBehaviour:
   activeAgentsNum: 0
   agentsList:
   - {fileID: 1633383784}
+--- !u!1 &1556031027
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1556031028}
+  - component: {fileID: 1556031029}
+  m_Layer: 0
+  m_Name: FieldDataReader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1556031028
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556031027}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1819391670}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1556031029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556031027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3c1f992ad756fe408c2d5b54072bf92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1633383782
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6548,7 +6592,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 997979482682399118, guid: 8f69f84cd5a87a74c9ed4b1b5037001f, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 997979482682399118, guid: 8f69f84cd5a87a74c9ed4b1b5037001f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6646,7 +6690,7 @@ Transform:
   - {fileID: 138107868}
   - {fileID: 851246849}
   m_Father: {fileID: 1819391670}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1819391669
 GameObject:
@@ -6677,6 +6721,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2020497047}
+  - {fileID: 1556031028}
   - {fileID: 922966934}
   - {fileID: 1762529272}
   - {fileID: 1633383783}
@@ -6731,4 +6776,5 @@ MonoBehaviour:
   fieldHeight: 20
   agentCnt: 1
   agentSight: 5
+  csvFileName: fieldData_freeRoom
   debugMode: 1

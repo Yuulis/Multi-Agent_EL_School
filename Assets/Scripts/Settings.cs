@@ -15,6 +15,9 @@ public class Settings : MonoBehaviour
     // Space size = (agentSight * 2 + 1) ^ 2 .
     public int agentSight = 5;
 
+    // The name of reading csv file.
+    public string csvFileName;
+
     // For debug.
     public bool debugMode = false;
 }
