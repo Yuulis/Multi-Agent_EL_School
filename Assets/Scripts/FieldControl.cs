@@ -8,32 +8,45 @@ using UnityEngine.Tilemaps;
 public class FieldControl : MonoBehaviour
 {
     // Settings
-    public GameObject Settings_obj;
+    public GameObject settings_obj;
     Settings settings;
 
+    // FieldDataReader
+    public GameObject fieldDataReader_obj;
+    FieldDataReader fieldDataReader;
+
     // FieldData
-    [HideInInspector] public FieldData fieldData;
-    [HideInInspector] public List<List<TileCellInfo>> fieldData2D;
+    [HideInInspector] public List<List<int>> fieldData2D;
 
     // Tilemaps resources
     public List<Sprite> tilemapSprites;
+    public List<TileBase> tiles;
     public Tilemap field_tilemap;
     public Tilemap agent_tilemap;
-    public TileBase agent_tile;
 
     // Agents resources
     [HideInInspector] public int activeAgentsNum;
     public List<GameObject> agentsList;
-    public List<AgentInfo> agentsData;
+    public List<AgentInfo> agentsInfo;
 
 
     private void Start()
     {
-        settings = Settings_obj.GetComponent<Settings>();
+        settings = settings_obj.GetComponent<Settings>();
+        fieldDataReader = fieldDataReader_obj.GetComponent<FieldDataReader>();
         activeAgentsNum = settings.agentCnt;
 
-        ResetFieldData(settings.fieldHeight, settings.fieldWidth);
-        InitializeField();
+        ResetFieldData();
+        InitializeTileMaps();
+    }
+
+
+    /// <summary>
+    /// Reset Field data.
+    /// </summary>
+    private void ResetFieldData()
+    {
+        fieldData2D = fieldDataReader.m_fieldData;
 
         // For debug
         if (settings.debugMode) PrintFieldData(settings.fieldHeight, settings.fieldWidth);
@@ -41,34 +54,31 @@ public class FieldControl : MonoBehaviour
 
 
     /// <summary>
-    /// Initializing Field data.
+    /// Initializing tilemaps.
     /// </summary>
-    public void InitializeField()
+    public void InitializeTileMaps()
     {
+        field_tilemap.ClearAllTiles();
         agent_tilemap.ClearAllTiles();
+        SetFieldTilemap(settings.fieldHeight, settings.fieldWidth);
         RandomSetAgent(settings.fieldHeight, settings.fieldWidth, settings.agentCnt);
     }
 
 
-    /// <summary>
-    /// Reset Field data.
-    /// </summary>
-    /// <param name="width">Field's width</param>
-    private void ResetFieldData(int height, int width)
+    private void SetFieldTilemap(int height, int width)
     {
-        fieldData = new(field_tilemap, height, width, tilemapSprites);
-        fieldData2D = new();
-
         for (int y = 0; y < height; y++)
         {
-            List<TileCellInfo> list = new();
             for (int x = 0; x < width; x++)
             {
-                fieldData.m_data[y * width + x].position.m_fieldDataIndex_x = x;
-                fieldData.m_data[y * width + x].position.m_fieldDataIndex_y = y;
-                list.Add(fieldData.m_data[y * width + x]);
+                TileBase tile = null;
+                if (fieldData2D[y][x] == 0) tile = null;
+                if (fieldData2D[y][x] == 1) tile = tiles[0];
+                if (fieldData2D[y][x] == 2) tile = tiles[1];
+                if (fieldData2D[y][x] == 3) tile = tiles[2];
+
+                field_tilemap.SetTile(new Vector3Int(x, y, 0), tile);
             }
-            fieldData2D.Add(list);
         }
     }
 
@@ -81,35 +91,20 @@ public class FieldControl : MonoBehaviour
     /// <param name="agentNum">Number of Agents</param>
     private void RandomSetAgent(int height, int width, int agentNum)
     {
-        agentsData = new();
+        agentsInfo = new();
 
         int cnt = 0;
         while (cnt < agentNum)
         {
-            TilemapPositionInfo spawn_tPos = new()
-            {
-                m_fieldDataIndex_x = Random.Range(0, width),
-                m_fieldDataIndex_y = Random.Range(0, height)
-            };
-            spawn_tPos.m_tilemapPosition = spawn_tPos.ChangeFICStoTCCS(
-                spawn_tPos.m_fieldDataIndex_x, 
-                spawn_tPos.m_fieldDataIndex_y, 
-                height, 
-                width
-            );
+            Vector2Int spawnIndex = new(Random.Range(0, width), Random.Range(0, height));
 
             // Only Empty position
-            if (field_tilemap.GetSprite(spawn_tPos.m_tilemapPosition) == tilemapSprites[0] && agent_tilemap.GetTile(spawn_tPos.m_tilemapPosition) != agent_tile)
+            if (fieldData2D[spawnIndex.y][spawnIndex.x] == 1)
             {
-                agent_tilemap.SetTile(spawn_tPos.m_tilemapPosition, agent_tile);
+                agent_tilemap.SetTile(new Vector3Int(spawnIndex.x, spawnIndex.y, 0), tiles[3]);
 
-                TileCellInfo cellInfo = new();
-                cellInfo.position = spawn_tPos;
-                cellInfo.tileNum = 10 + cnt;
-                fieldData2D[spawn_tPos.m_fieldDataIndex_y][spawn_tPos.m_fieldDataIndex_x] = cellInfo;
-
-                AgentInfo info = new(cnt + 10, spawn_tPos, true, agentsList[cnt]);
-                agentsData.Add(info);
+                AgentInfo info = new(cnt + 10, spawnIndex, true, agentsList[cnt]);
+                agentsInfo.Add(info);
 
                 // For debug
                 if (settings.debugMode) info.PrintAgentInfo();
@@ -127,7 +122,7 @@ public class FieldControl : MonoBehaviour
     /// <param name="dir">Direction of moving</param>
     public void MoveAgentTile(int agent_id, int dir)
     {
-        Vector3Int pos = agentsData[agent_id - 10].m_position.m_tilemapPosition;
+        Vector3Int pos = new(agentsInfo[agent_id - 10].m_positionIndex.x, agentsInfo[agent_id - 10].m_positionIndex.y, 0);
         Vector3Int newPos = new();
 
         // Forward
@@ -144,12 +139,12 @@ public class FieldControl : MonoBehaviour
 
 
         agent_tilemap.SetTile(pos, null);
-        agent_tilemap.SetTile(newPos, agent_tile);
+        agent_tilemap.SetTile(newPos, tiles[3]);
 
-        agentsData[agent_id - 10].m_position.m_tilemapPosition = newPos;
+        agentsInfo[agent_id - 10].m_positionIndex = (Vector2Int)newPos;
 
         // For debug
-        if (settings.debugMode) agentsData[agent_id].PrintAgentInfo();
+        if (settings.debugMode) agentsInfo[agent_id].PrintAgentInfo();
     }
 
 
@@ -166,7 +161,7 @@ public class FieldControl : MonoBehaviour
             string s = string.Empty;
             for (int x = 0; x < width; x++)
             {
-                s += fieldData2D[y][x].tileNum.ToString() + " ";
+                s += fieldData2D[y][x].ToString() + " ";
             }
             Debug.Log(s);
         }
