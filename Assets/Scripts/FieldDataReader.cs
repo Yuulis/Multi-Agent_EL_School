@@ -6,11 +6,16 @@ using UnityEngine;
 
 public class FieldDataReader : MonoBehaviour
 {
+    // Settings
     Settings settings;
 
+    // For csv reading
     private TextAsset csvFile;
     private readonly List<string[]> csvDatas = new();
+
+    // fieldData
     public List<List<int>> m_fieldData;
+
 
     void Start()
     {
@@ -28,6 +33,11 @@ public class FieldDataReader : MonoBehaviour
         m_fieldData = ChangeToFieldData();
     }
 
+
+    /// <summary>
+    /// Change csv data to fieldData
+    /// </summary>
+    /// <returns>List<List<int>> fieldData</returns>
     private List<List<int>> ChangeToFieldData()
     {
         List<List<int>> res = new();

@@ -16,9 +16,9 @@ public class FieldControl : MonoBehaviour
     FieldDataReader fieldDataReader;
 
     // FieldData
-    [HideInInspector] public List<List<int>> fieldData2D;
+    [HideInInspector] public List<List<int>> fieldData;
 
-    // Tilemaps resources
+    // Tilemap resources
     public List<Sprite> tilemapSprites;
     public List<TileBase> tiles;
     public Tilemap field_tilemap;
@@ -27,7 +27,7 @@ public class FieldControl : MonoBehaviour
     // Agents resources
     [HideInInspector] public int activeAgentsNum;
     public List<GameObject> agentsList;
-    public List<AgentInfo> agentsInfo;
+    [HideInInspector] public List<AgentInfo> agentsInfo;
 
 
     private void Start()
@@ -46,7 +46,7 @@ public class FieldControl : MonoBehaviour
     /// </summary>
     private void ResetFieldData()
     {
-        fieldData2D = fieldDataReader.m_fieldData;
+        fieldData = fieldDataReader.m_fieldData;
 
         // For debug
         if (settings.debugMode) PrintFieldData(settings.fieldHeight, settings.fieldWidth);
@@ -60,11 +60,17 @@ public class FieldControl : MonoBehaviour
     {
         field_tilemap.ClearAllTiles();
         agent_tilemap.ClearAllTiles();
+
         SetFieldTilemap(settings.fieldHeight, settings.fieldWidth);
         RandomSetAgent(settings.fieldHeight, settings.fieldWidth, settings.agentCnt);
     }
 
 
+    /// <summary>
+    /// Set tiles of field.
+    /// </summary>
+    /// <param name="height">Height of the field</param>
+    /// <param name="width">Width of the field</param>
     private void SetFieldTilemap(int height, int width)
     {
         for (int y = 0; y < height; y++)
@@ -72,10 +78,10 @@ public class FieldControl : MonoBehaviour
             for (int x = 0; x < width; x++)
             {
                 TileBase tile = null;
-                if (fieldData2D[y][x] == 0) tile = null;
-                if (fieldData2D[y][x] == 1) tile = tiles[0];
-                if (fieldData2D[y][x] == 2) tile = tiles[1];
-                if (fieldData2D[y][x] == 3) tile = tiles[2];
+                if (fieldData[y][x] == 0) tile = null;
+                if (fieldData[y][x] == 1) tile = tiles[0];
+                if (fieldData[y][x] == 2) tile = tiles[1];
+                if (fieldData[y][x] == 3) tile = tiles[2];
 
                 field_tilemap.SetTile(new Vector3Int(x, y, 0), tile);
             }
@@ -84,10 +90,10 @@ public class FieldControl : MonoBehaviour
 
 
     /// <summary>
-    /// Agents set random place in field.
+    /// Set agents to random place in the field.
     /// </summary>
-    /// <param name="height">Field's height</param>
-    /// <param name="width">Field's width</param>
+    /// <param name="height">Height of the field</param>
+    /// <param name="width">Width of the field</param>
     /// <param name="agentNum">Number of Agents</param>
     private void RandomSetAgent(int height, int width, int agentNum)
     {
@@ -99,7 +105,7 @@ public class FieldControl : MonoBehaviour
             Vector2Int spawnIndex = new(Random.Range(0, width), Random.Range(0, height));
 
             // Only Empty position
-            if (fieldData2D[spawnIndex.y][spawnIndex.x] == 1)
+            if (fieldData[spawnIndex.y][spawnIndex.x] == 1)
             {
                 agent_tilemap.SetTile(new Vector3Int(spawnIndex.x, spawnIndex.y, 0), tiles[3]);
 
@@ -144,15 +150,15 @@ public class FieldControl : MonoBehaviour
         agentsInfo[agent_id - 10].m_positionIndex = (Vector2Int)newPos;
 
         // For debug
-        if (settings.debugMode) agentsInfo[agent_id].PrintAgentInfo();
+        if (settings.debugMode) agentsInfo[agent_id - 10].PrintAgentInfo();
     }
 
 
     /// <summary>
     /// Output Field data. (for debug)
     /// </summary>
-    /// <param name="height">Field's height</param>
-    /// <param name="width">Field's width</param>
+    /// <param name="height">Height of the field</param>
+    /// <param name="width">Width of the field</param>
     private void PrintFieldData(int height, int width)
     {
         Debug.Log("===== Field data =====");
@@ -161,7 +167,7 @@ public class FieldControl : MonoBehaviour
             string s = string.Empty;
             for (int x = 0; x < width; x++)
             {
-                s += fieldData2D[y][x].ToString() + " ";
+                s += fieldData[y][x].ToString() + " ";
             }
             Debug.Log(s);
         }

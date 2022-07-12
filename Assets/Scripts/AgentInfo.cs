@@ -34,7 +34,7 @@ public class AgentInfo
     /// </summary>
     public void PrintAgentInfo()
     {
-        Debug.Log($"Agent_{m_id} : " +
+        Debug.Log($"Agent-{m_id} : " +
             $"[Position (fieldDataIndex)]  = ({m_positionIndex.x}, {m_positionIndex.y}), " +
             $"[Active] = {m_active}");
     }

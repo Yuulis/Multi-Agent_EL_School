@@ -11,7 +11,7 @@ public class ObservationAroundAgent
     public List<bool> observationListNeighborhood;
 
     // Member var
-    private readonly List<List<int>> m_fieldData2D;
+    private readonly List<List<int>> m_fieldData;
     private readonly int m_fieldHeight;
     private readonly int m_fieldWidth;
     private Vector2Int m_positionIndex;
@@ -32,7 +32,7 @@ public class ObservationAroundAgent
     {
         observationList = new();
         observationListNeighborhood = new();
-        m_fieldData2D = fieldData;
+        m_fieldData = fieldData;
         m_fieldHeight = height;
         m_fieldWidth = width;
         m_positionIndex = positionIndex;
@@ -52,7 +52,7 @@ public class ObservationAroundAgent
     {
         // Initialize observation list
         observationListNeighborhood.Clear();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 9; i++)
         {
             observationListNeighborhood.Add(false);
         }
@@ -101,25 +101,25 @@ public class ObservationAroundAgent
                 }
 
                 // Empty
-                else if (m_fieldData2D[positionIndex.y + y][positionIndex.x + x] == 1)
+                else if (m_fieldData[positionIndex.y + y][positionIndex.x + x] == 1)
                 {
                     observationListNeighborhood[cnt] = true;
                 }
 
                 // Exit
-                else if (m_fieldData2D[positionIndex.y + y][positionIndex.x + x] == 2)
+                else if (m_fieldData[positionIndex.y + y][positionIndex.x + x] == 2)
                 {
                     observationListNeighborhood[cnt] = true;
                 }
 
                 // Obstacle
-                else if (m_fieldData2D[positionIndex.y + y][positionIndex.x + x] == 3)
+                else if (m_fieldData[positionIndex.y + y][positionIndex.x + x] == 3)
                 {
                     observationListNeighborhood[cnt] = false;
                 }
 
                 // Agent
-                else if (m_fieldData2D[positionIndex.y + y][positionIndex.x + x] == 4)
+                else if (m_fieldData[positionIndex.y + y][positionIndex.x + x] == 4)
                 {
                     observationListNeighborhood[cnt] = false;
                 }
@@ -139,9 +139,9 @@ public class ObservationAroundAgent
     /// <param name="width">Width of the field</param>
     private void GetObservationSquareArea(Vector2Int positionIndex, int sight, int height, int width)
     {
-        for (int y = -sight; y < sight; y++)
+        for (int y = -sight; y <= sight; y++)
         {
-            for (int x = -sight; x < sight; x++)
+            for (int x = -sight; x <= sight; x++)
             {
                 // Out of range
                 if (positionIndex.y + y < 0 || positionIndex.y + y >= height || positionIndex.x + x < 0 || positionIndex.x + x >= width)
@@ -156,25 +156,25 @@ public class ObservationAroundAgent
                 }
 
                 // Empty
-                else if (m_fieldData2D[positionIndex.y + y][positionIndex.x + x] == 1)
+                else if (m_fieldData[positionIndex.y + y][positionIndex.x + x] == 1)
                 {
                     observationList[y + sight][x + sight] = 1;
                 }
 
                 // Exit
-                else if (m_fieldData2D[positionIndex.y + y][positionIndex.x + x] == 2)
+                else if (m_fieldData[positionIndex.y + y][positionIndex.x + x] == 2)
                 {
                     observationList[y + sight][x + sight] = 2;
                 }
 
                 // Obstacle
-                else if (m_fieldData2D[positionIndex.y + y][positionIndex.x + x] == 3)
+                else if (m_fieldData[positionIndex.y + y][positionIndex.x + x] == 3)
                 {
                     observationList[y + sight][x + sight] = 3;
                 }
 
                 // Agent
-                else if (10 <= m_fieldData2D[positionIndex.y + y][positionIndex.x + x] && m_fieldData2D[positionIndex.y + y][positionIndex.x + x] < 10 + m_agentCnt)
+                else if (10 <= m_fieldData[positionIndex.y + y][positionIndex.x + x] && m_fieldData[positionIndex.y + y][positionIndex.x + x] < 10 + m_agentCnt)
                 {
                     observationList[y + sight][x + sight] = 4;
                 }

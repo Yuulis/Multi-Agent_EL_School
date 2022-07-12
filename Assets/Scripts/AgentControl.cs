@@ -21,7 +21,6 @@ public class AgentControl : Agent
 
     // Agent's observation
     private ObservationAroundAgent observation;
-    private readonly List<bool> observationNeighborhood;
 
 
     // Initializing
@@ -41,7 +40,7 @@ public class AgentControl : Agent
         positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
 
         observation = new(
-            fieldControl.fieldData2D,
+            fieldControl.fieldData,
             settings.fieldHeight,
             settings.fieldWidth,
             positionIndex,
@@ -85,57 +84,32 @@ public class AgentControl : Agent
             if (action[0] == 1)
             {
                 fieldControl.MoveAgentTile(agent_id, 1);
-                positionIndex.y--;
             }
 
             // Right
             else if (action[0] == 2)
             {
                 fieldControl.MoveAgentTile(agent_id, 2);
-                positionIndex.x++;
             }
 
             // Back
             else if (action[0] == 3)
             {
                 fieldControl.MoveAgentTile(agent_id, 3);
-                positionIndex.y++;
             }
 
             // Left
             else if (action[0] == 4)
             {
                 fieldControl.MoveAgentTile(agent_id, 4);
-                positionIndex.x--;
             }
         }
-    }
-
-    
-    /// <summary>
-    /// Get information of Agent's neighborhood.
-    /// </summary>
-    private void GetNeighborhoodInfo()
-    {
-        if (observation.observationList[settings.agentSight - 1][settings.agentSight] != 1
-            && observation.observationList[settings.agentSight - 1][settings.agentSight] != 2) observationNeighborhood[0] = false;
-
-        if (observation.observationList[settings.agentSight][settings.agentSight + 1] != 1
-            && observation.observationList[settings.agentSight][settings.agentSight + 1] != 2) observationNeighborhood[1] = false;
-
-        if (observation.observationList[settings.agentSight + 1][settings.agentSight] != 1
-            && observation.observationList[settings.agentSight + 1][settings.agentSight] != 2) observationNeighborhood[2] = false;
-
-        if (observation.observationList[settings.agentSight][settings.agentSight - 1] != 1
-            && observation.observationList[settings.agentSight][settings.agentSight - 1] != 2) observationNeighborhood[3] = false;
     }
 
 
     // Agent cannot move to where tile is not empty or exit.
     public override void WriteDiscreteActionMask(IDiscreteActionMask actionMask)
     {
-        // GetNeighborhoodInfo();
-
         if (!observation.observationListNeighborhood[1]) actionMask.SetActionEnabled(0, 0, false);
         if (!observation.observationListNeighborhood[3]) actionMask.SetActionEnabled(0, 1, false);
         if (!observation.observationListNeighborhood[5]) actionMask.SetActionEnabled(0, 2, false);
@@ -149,12 +123,11 @@ public class AgentControl : Agent
     /// <param name="agent_id">Agent's id</param>
     public void CheckAgentReachGoal(int agent_id)
     {
-        if (fieldControl.fieldData2D[positionIndex.y][positionIndex.x] == 2)
+        if (fieldControl.fieldData[positionIndex.y][positionIndex.x] == 2)
         {
             AddReward(1.0f);
 
             fieldControl.agentsInfo[agent_id - 10].m_active = false;
-
             fieldControl.activeAgentsNum--;
 
             if (fieldControl.activeAgentsNum == 0)
@@ -173,8 +146,6 @@ public class AgentControl : Agent
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         var discreteActionsOut = actionsOut.DiscreteActions;
-
-        // GetNeighborhoodInfo();
 
         if (observation.observationListNeighborhood[1] && Input.GetKey(KeyCode.W)) discreteActionsOut[0] = 1;
         if (observation.observationListNeighborhood[3] && Input.GetKey(KeyCode.D)) discreteActionsOut[0] = 2;
