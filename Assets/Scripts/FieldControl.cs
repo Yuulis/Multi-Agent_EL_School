@@ -83,7 +83,7 @@ public class FieldControl : MonoBehaviour
                 if (fieldData[y][x] == 2) tile = tiles[1];
                 if (fieldData[y][x] == 3) tile = tiles[2];
 
-                field_tilemap.SetTile(new Vector3Int(x, y, 0), tile);
+                field_tilemap.SetTile(new Vector3Int(x, height - y, 0), tile);
             }
         }
     }
@@ -107,7 +107,7 @@ public class FieldControl : MonoBehaviour
             // Only Empty position
             if (fieldData[spawnIndex.y][spawnIndex.x] == 1)
             {
-                agent_tilemap.SetTile(new Vector3Int(spawnIndex.x, spawnIndex.y, 0), tiles[3]);
+                agent_tilemap.SetTile(new Vector3Int(spawnIndex.x, height - spawnIndex.y, 0), tiles[3]);
 
                 AgentInfo info = new(cnt + 10, spawnIndex, true, agentsList[cnt]);
                 agentsInfo.Add(info);
@@ -128,26 +128,36 @@ public class FieldControl : MonoBehaviour
     /// <param name="dir">Direction of moving</param>
     public void MoveAgentTile(int agent_id, int dir)
     {
-        Vector3Int pos = new(agentsInfo[agent_id - 10].m_positionIndex.x, agentsInfo[agent_id - 10].m_positionIndex.y, 0);
-        Vector3Int newPos = new();
+        Vector3Int pos = new(agentsInfo[agent_id - 10].m_positionIndex.x, settings.fieldHeight - agentsInfo[agent_id - 10].m_positionIndex.y, 0);
+        agent_tilemap.SetTile(pos, null);
 
         // Forward
-        if (dir == 1) newPos = new(pos.x, pos.y + 1, pos.z);
-
-        // Right
-        else if (dir == 2) newPos = new(pos.x + 1, pos.y, pos.z);
+        if (dir == 1)
+        {
+            agentsInfo[agent_id - 10].m_positionIndex.y--;
+        }
 
         // Back
-        else if (dir == 3) newPos = new(pos.x, pos.y - 1, pos.z);
+        else if (dir == 2)
+        {
+            agentsInfo[agent_id - 10].m_positionIndex.y++;
+        }
+
+        // Right
+        else if (dir == 3)
+        {
+            agentsInfo[agent_id - 10].m_positionIndex.x++;
+        }
+
 
         // Left
-        else if (dir == 4) newPos = new(pos.x - 1, pos.y, pos.z);
+        else if (dir == 4)
+        {
+            agentsInfo[agent_id - 10].m_positionIndex.x--;
+        }
 
-
-        agent_tilemap.SetTile(pos, null);
-        agent_tilemap.SetTile(newPos, tiles[3]);
-
-        agentsInfo[agent_id - 10].m_positionIndex = (Vector2Int)newPos;
+        pos = new(agentsInfo[agent_id - 10].m_positionIndex.x, settings.fieldHeight - agentsInfo[agent_id - 10].m_positionIndex.y, 0);
+        agent_tilemap.SetTile(pos, tiles[3]);
 
         // For debug
         if (settings.debugMode) agentsInfo[agent_id - 10].PrintAgentInfo();

@@ -79,23 +79,31 @@ public class ObservationAroundAgent
     /// </summary>
     private void GetObservation(int sight)
     {
-        GetObservationNeighborhood(m_positionIndex);
+        GetObservationNeighborhood(m_positionIndex, m_fieldHeight, m_fieldWidth);
         GetObservationSquareArea(m_positionIndex, sight, m_fieldHeight, m_fieldWidth);
     }
 
     /// <summary>
     /// Get observation of Agent'S neighborhood(nine tiles)
     /// <param name="positionIndex">Index of agent's position index of the fieldData</param>
+    /// <param name="height">Height of the field</param>
+    /// <param name="width">Width of the field</param>
     /// </summary>
-    public void GetObservationNeighborhood(Vector2Int positionIndex)
+    public void GetObservationNeighborhood(Vector2Int positionIndex, int height, int width)
     {
         int cnt = 0;
         for (int y = -1; y < 2; y++)
         {
             for (int x = -1; x < 2; x++)
             {
+                // Out of range
+                if (positionIndex.y + y < 0 || positionIndex.y + y >= height || positionIndex.x + x < 0 || positionIndex.x + x >= width)
+                {
+                    observationListNeighborhood[cnt] = false;
+                }
+
                 // Agent itself
-                if (y == 0 && x == 0)
+                else if (y == 0 && x == 0)
                 {
                     observationListNeighborhood[cnt] = false;
                 }
@@ -150,7 +158,7 @@ public class ObservationAroundAgent
                 }
 
                 // Agent itself
-                if (y == 0 && x == 0)
+                else if (y == 0 && x == 0)
                 {
                     observationList[y + sight][x + sight] = 9;
                 }
@@ -190,9 +198,18 @@ public class ObservationAroundAgent
     public void PrintAgentObservation(int agent_id)
     {
         Debug.Log($"===== Agent{agent_id}'s Observation =====");
+        Debug.Log($"[Neighborhood]");
+        string s = string.Empty;
+        for (int i = 0; i < 9; i++)
+        {
+            s += observationListNeighborhood[i].ToString() + " ";
+        }
+        Debug.Log(s);
+
+        Debug.Log($"[Around]");
         for (int y = 0; y < m_agentSight * 2 + 1; y++)
         {
-            string s = string.Empty;
+            s = string.Empty;
             for (int x = 0; x < m_agentSight * 2 + 1; x++)
             {
                 s += observationList[y][x].ToString() + " ";

@@ -17,7 +17,6 @@ public class AgentControl : Agent
 
     // Agent's data
     private int agent_id;
-    private Vector2Int positionIndex;
 
     // Agent's observation
     private ObservationAroundAgent observation;
@@ -37,7 +36,7 @@ public class AgentControl : Agent
     {
         int n = (int)this.gameObject.name[5] - 48;
         agent_id = fieldControl.agentsInfo[n].m_id;
-        positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
+        Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
 
         observation = new(
             fieldControl.fieldData,
@@ -55,6 +54,7 @@ public class AgentControl : Agent
     {
         if (fieldControl.agentsInfo[agent_id - 10].m_active)
         {
+            Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
             observation.UpdateObservation(positionIndex, settings.agentSight);
 
             // For debug
@@ -86,17 +86,18 @@ public class AgentControl : Agent
                 fieldControl.MoveAgentTile(agent_id, 1);
             }
 
-            // Right
+            // Back
             else if (action[0] == 2)
             {
                 fieldControl.MoveAgentTile(agent_id, 2);
             }
 
-            // Back
+            // Right
             else if (action[0] == 3)
             {
                 fieldControl.MoveAgentTile(agent_id, 3);
             }
+
 
             // Left
             else if (action[0] == 4)
@@ -111,9 +112,9 @@ public class AgentControl : Agent
     public override void WriteDiscreteActionMask(IDiscreteActionMask actionMask)
     {
         if (!observation.observationListNeighborhood[1]) actionMask.SetActionEnabled(0, 0, false);
-        if (!observation.observationListNeighborhood[3]) actionMask.SetActionEnabled(0, 1, false);
+        if (!observation.observationListNeighborhood[7]) actionMask.SetActionEnabled(0, 1, false);
         if (!observation.observationListNeighborhood[5]) actionMask.SetActionEnabled(0, 2, false);
-        if (!observation.observationListNeighborhood[7]) actionMask.SetActionEnabled(0, 3, false);
+        if (!observation.observationListNeighborhood[3]) actionMask.SetActionEnabled(0, 3, false);
     }
 
 
@@ -123,6 +124,8 @@ public class AgentControl : Agent
     /// <param name="agent_id">Agent's id</param>
     public void CheckAgentReachGoal(int agent_id)
     {
+        Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
+
         if (fieldControl.fieldData[positionIndex.y][positionIndex.x] == 2)
         {
             AddReward(1.0f);
@@ -148,8 +151,8 @@ public class AgentControl : Agent
         var discreteActionsOut = actionsOut.DiscreteActions;
 
         if (observation.observationListNeighborhood[1] && Input.GetKey(KeyCode.W)) discreteActionsOut[0] = 1;
-        if (observation.observationListNeighborhood[3] && Input.GetKey(KeyCode.D)) discreteActionsOut[0] = 2;
-        if (observation.observationListNeighborhood[5] && Input.GetKey(KeyCode.S)) discreteActionsOut[0] = 3;
-        if (observation.observationListNeighborhood[7] && Input.GetKey(KeyCode.A)) discreteActionsOut[0] = 4;
+        if (observation.observationListNeighborhood[7] && Input.GetKey(KeyCode.S)) discreteActionsOut[0] = 2;
+        if (observation.observationListNeighborhood[5] && Input.GetKey(KeyCode.D)) discreteActionsOut[0] = 3;
+        if (observation.observationListNeighborhood[3] && Input.GetKey(KeyCode.A)) discreteActionsOut[0] = 4;
     }
 }
