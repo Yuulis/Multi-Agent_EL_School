@@ -10,8 +10,8 @@ public class AgentInfo
     // Agent id
     public int m_id;
 
-    // Agent's tilemap-positon data
-    public TilemapPositionInfo m_position;
+    // Agent's position on fieldDataIndex
+    public Vector2Int m_positionIndex;
 
     // Is the agent active? (not reach goal)
     public bool m_active;
@@ -20,10 +20,10 @@ public class AgentInfo
     public GameObject m_obj;
 
 
-    public AgentInfo(int id, TilemapPositionInfo tPos, bool active, GameObject obj)
+    public AgentInfo(int id, Vector2Int position, bool active, GameObject obj)
     {
         m_id = id;
-        m_position = tPos;
+        m_positionIndex = position;
         m_active = active;
         m_obj = obj;
     }
@@ -34,9 +34,8 @@ public class AgentInfo
     /// </summary>
     public void PrintAgentInfo()
     {
-        Debug.Log($"Agent_{m_id} : " +
-            $"[Position] tilemap = ({m_position.m_tilemapPosition.x}, {m_position.m_tilemapPosition.y}), " +
-            $"fieldData = ({m_position.m_fieldDataIndex_x}, {m_position.m_fieldDataIndex_y}) " +
+        Debug.Log($"Agent-{m_id} : " +
+            $"[Position (fieldDataIndex)]  = ({m_positionIndex.x}, {m_positionIndex.y}), " +
             $"[Active] = {m_active}");
     }
 }
