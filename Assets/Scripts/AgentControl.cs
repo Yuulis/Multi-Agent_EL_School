@@ -36,26 +36,23 @@ public class AgentControl : Agent
     {
         int n = (int)this.gameObject.name[5] - 48;
         agent_id = fieldControl.agentsInfo[n].m_id;
-        Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
-
-        observation = new(
-            fieldControl.fieldData,
-            settings.fieldHeight,
-            settings.fieldWidth,
-            positionIndex,
-            settings.agentSight,
-            settings.agentCnt
-        );
     }
 
 
     // collect observations
     public override void CollectObservations(VectorSensor sensor)
     {
-        if (fieldControl.agentsInfo[agent_id - 10].m_active)
+        if (fieldControl.agentsInfo[agent_id - 10].m_active) 
         {
             Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
-            observation.UpdateObservation(positionIndex, settings.agentSight);
+            observation = new(
+                fieldControl.fieldData,
+                settings.fieldHeight,
+                settings.fieldWidth,
+                positionIndex,
+                settings.agentSight,
+                settings.agentCnt
+            );
 
             // For debug
             if (settings.debugMode) observation.PrintAgentObservation(agent_id);
@@ -97,7 +94,6 @@ public class AgentControl : Agent
             {
                 fieldControl.MoveAgentTile(agent_id, 3);
             }
-
 
             // Left
             else if (action[0] == 4)

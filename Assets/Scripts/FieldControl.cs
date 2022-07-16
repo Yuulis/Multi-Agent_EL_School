@@ -34,7 +34,6 @@ public class FieldControl : MonoBehaviour
     {
         settings = settings_obj.GetComponent<Settings>();
         fieldDataReader = fieldDataReader_obj.GetComponent<FieldDataReader>();
-        activeAgentsNum = settings.agentCnt;
 
         ResetFieldData();
         InitializeTileMaps();
@@ -47,6 +46,8 @@ public class FieldControl : MonoBehaviour
     private void ResetFieldData()
     {
         fieldData = fieldDataReader.m_fieldData;
+        field_tilemap.ClearAllTiles();
+        SetFieldTilemap(settings.fieldHeight, settings.fieldWidth);
 
         // For debug
         if (settings.debugMode) PrintFieldData(settings.fieldHeight, settings.fieldWidth);
@@ -58,10 +59,8 @@ public class FieldControl : MonoBehaviour
     /// </summary>
     public void InitializeTileMaps()
     {
-        field_tilemap.ClearAllTiles();
+        activeAgentsNum = settings.agentCnt;
         agent_tilemap.ClearAllTiles();
-
-        SetFieldTilemap(settings.fieldHeight, settings.fieldWidth);
         RandomSetAgent(settings.fieldHeight, settings.fieldWidth, settings.agentCnt);
     }
 
