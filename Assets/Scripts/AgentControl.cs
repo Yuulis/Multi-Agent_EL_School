@@ -36,6 +36,16 @@ public class AgentControl : Agent
     {
         int n = (int)this.gameObject.name[5] - 48;
         agent_id = fieldControl.agentsInfo[n].m_id;
+
+        Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
+        observation = new(
+            fieldControl.fieldData,
+            settings.fieldHeight,
+            settings.fieldWidth,
+            positionIndex,
+            settings.agentSight,
+            settings.agentCnt
+        );
     }
 
 
@@ -44,15 +54,7 @@ public class AgentControl : Agent
     {
         if (fieldControl.agentsInfo[agent_id - 10].m_active) 
         {
-            Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
-            observation = new(
-                fieldControl.fieldData,
-                settings.fieldHeight,
-                settings.fieldWidth,
-                positionIndex,
-                settings.agentSight,
-                settings.agentCnt
-            );
+            observation.UpdateObservation(fieldControl.agentsInfo[agent_id - 10].m_positionIndex, settings.agentSight);
 
             // For debug
             if (settings.debugMode) observation.PrintAgentObservation(agent_id);
@@ -107,10 +109,10 @@ public class AgentControl : Agent
     // Agent cannot move to where tile is not empty or exit.
     public override void WriteDiscreteActionMask(IDiscreteActionMask actionMask)
     {
-        if (!observation.observationListNeighborhood[1]) actionMask.SetActionEnabled(0, 0, false);
-        if (!observation.observationListNeighborhood[7]) actionMask.SetActionEnabled(0, 1, false);
-        if (!observation.observationListNeighborhood[5]) actionMask.SetActionEnabled(0, 2, false);
-        if (!observation.observationListNeighborhood[3]) actionMask.SetActionEnabled(0, 3, false);
+        if (!observation.observationListNeighborhood[1]) actionMask.SetActionEnabled(0, 1, false);
+        if (!observation.observationListNeighborhood[7]) actionMask.SetActionEnabled(0, 2, false);
+        if (!observation.observationListNeighborhood[5]) actionMask.SetActionEnabled(0, 3, false);
+        if (!observation.observationListNeighborhood[3]) actionMask.SetActionEnabled(0, 4, false);
     }
 
 
@@ -137,7 +139,7 @@ public class AgentControl : Agent
             }
         }
 
-        AddReward(-1.0f / 5000 / settings.agentCnt);
+        AddReward(-1.0f / 1000);
     }
 
 
