@@ -350,7 +350,7 @@ MonoBehaviour:
   agentCnt: 1
   agentSight: 5
   csvFileName: fieldData_freeRoom
-  debugMode: 1
+  debugMode: 0
 --- !u!1 &9166977648869416629
 GameObject:
   m_ObjectHideFlags: 0
