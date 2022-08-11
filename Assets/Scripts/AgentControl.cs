@@ -40,6 +40,7 @@ public class AgentControl : Agent
         Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
         observation = new(
             fieldControl.fieldData,
+            fieldControl.fieldAgentData,
             settings.fieldHeight,
             settings.fieldWidth,
             positionIndex,
@@ -52,24 +53,28 @@ public class AgentControl : Agent
     // collect observations
     public override void CollectObservations(VectorSensor sensor)
     {
-        if (fieldControl.agentsInfo[agent_id - 10].m_active) 
+        observation.UpdateObservation(fieldControl.agentsInfo[agent_id - 10].m_positionIndex, settings.agentSight);
+
+        // For debug
+        if (settings.debugMode) observation.PrintAgentObservation(agent_id);
+
+        for (int i = 0; i < settings.agentSight * 2 + 1; i++)
         {
-            observation.UpdateObservation(fieldControl.agentsInfo[agent_id - 10].m_positionIndex, settings.agentSight);
-
-            // For debug
-            if (settings.debugMode) observation.PrintAgentObservation(agent_id);
-
-            for (int i = 0; i < settings.agentSight * 2 + 1; i++)
+            for (int j = 0; j < settings.agentSight * 2 + 1; j++)
             {
-                for (int j = 0; j < settings.agentSight * 2 + 1; j++)
+                if (fieldControl.agentsInfo[agent_id - 10].m_active)
                 {
                     sensor.AddObservation(observation.observationList[i][j]);
+                }
+                else
+                {
+                    sensor.AddObservation(-1);
                 }
             }
         }
     }
 
-    
+
     // When agent moves
     public override void OnActionReceived(ActionBuffers actions)
     {
@@ -128,6 +133,10 @@ public class AgentControl : Agent
         {
             AddReward(1.0f);
 
+            Vector3Int pos = new(positionIndex.x, settings.fieldHeight - positionIndex.y, 0);
+            
+            fieldControl.agent_tilemap.SetTile(pos, null);
+            fieldControl.fieldAgentData[positionIndex.y][positionIndex.x] = false;
             fieldControl.agentsInfo[agent_id - 10].m_active = false;
             fieldControl.activeAgentsNum--;
 
@@ -135,7 +144,7 @@ public class AgentControl : Agent
             {
                 EndEpisode();
 
-                fieldControl.InitializeTileMaps();
+                fieldControl.InitializeTileMaps(settings.fieldHeight, settings.fieldWidth);
             }
         }
 
