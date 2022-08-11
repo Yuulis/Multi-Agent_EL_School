@@ -12,6 +12,7 @@ public class ObservationAroundAgent
 
     // Member var
     private readonly List<List<int>> m_fieldData;
+    private readonly List<List<bool>> m_fieldAgentData;
     private readonly int m_fieldHeight;
     private readonly int m_fieldWidth;
     private Vector2Int m_positionIndex;
@@ -22,17 +23,19 @@ public class ObservationAroundAgent
     /// <summary>
     /// Create observation list.
     /// </summary>
-    /// <param name="fieldData"></param>
+    /// <param name="fieldData">fieldData</param>
+    /// <param name="fieldAgentData">fieldData of agents</param>
     /// <param name="height">Height of the field</param>
     /// <param name="width">Width of the field</param>
     /// <param name="positionIndex">Index of agent's position index of the fieldData</param>
     /// <param name="agentSight">Agent's sight</param>
     /// <param name="agentCnt">Number of Agents</param>
-    public ObservationAroundAgent(List<List<int>> fieldData, int height, int width, Vector2Int positionIndex, int agentSight, int agentCnt)
+    public ObservationAroundAgent(List<List<int>> fieldData, List<List<bool>> fieldAgentData, int height, int width, Vector2Int positionIndex, int agentSight, int agentCnt)
     {
         observationList = new();
         observationListNeighborhood = new();
         m_fieldData = fieldData;
+        m_fieldAgentData = fieldAgentData;
         m_fieldHeight = height;
         m_fieldWidth = width;
         m_positionIndex = positionIndex;
@@ -126,8 +129,7 @@ public class ObservationAroundAgent
                     observationListNeighborhood[cnt] = false;
                 }
 
-                // Agent
-                else if (m_fieldData[positionIndex.y + y][positionIndex.x + x] == 4)
+                else
                 {
                     observationListNeighborhood[cnt] = false;
                 }
@@ -163,6 +165,12 @@ public class ObservationAroundAgent
                     observationList[y + sight][x + sight] = 9;
                 }
 
+                // Agent
+                else if (m_fieldAgentData[positionIndex.y + y][positionIndex.x + x])
+                {
+                    observationList[y + sight][x + sight] = 4;
+                }
+
                 // Empty
                 else if (m_fieldData[positionIndex.y + y][positionIndex.x + x] == 1)
                 {
@@ -179,12 +187,6 @@ public class ObservationAroundAgent
                 else if (m_fieldData[positionIndex.y + y][positionIndex.x + x] == 3)
                 {
                     observationList[y + sight][x + sight] = 3;
-                }
-
-                // Agent
-                else if (10 <= m_fieldData[positionIndex.y + y][positionIndex.x + x] && m_fieldData[positionIndex.y + y][positionIndex.x + x] < 10 + m_agentCnt)
-                {
-                    observationList[y + sight][x + sight] = 4;
                 }
             }
         }

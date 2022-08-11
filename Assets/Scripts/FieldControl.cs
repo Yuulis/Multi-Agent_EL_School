@@ -17,6 +17,7 @@ public class FieldControl : MonoBehaviour
 
     // FieldData
     [HideInInspector] public List<List<int>> fieldData;
+    [HideInInspector] public List<List<bool>> fieldAgentData;
 
     // Tilemap resources
     public List<Sprite> tilemapSprites;
@@ -28,6 +29,7 @@ public class FieldControl : MonoBehaviour
     [HideInInspector] public int activeAgentsNum;
     public List<GameObject> agentsList;
     [HideInInspector] public List<AgentInfo> agentsInfo;
+    public int actionAgentNum;
 
 
     private void Start()
@@ -35,33 +37,50 @@ public class FieldControl : MonoBehaviour
         settings = settings_obj.GetComponent<Settings>();
         fieldDataReader = fieldDataReader_obj.GetComponent<FieldDataReader>();
 
-        ResetFieldData();
-        InitializeTileMaps();
+        ResetFieldData(settings.fieldHeight, settings.fieldWidth);
+        InitializeTileMaps(settings.fieldHeight, settings.fieldWidth);
     }
 
 
     /// <summary>
     /// Reset Field data.
     /// </summary>
-    private void ResetFieldData()
+    /// <param name="height">Height of the field</param>
+    /// <param name="width">Width of the field</param>
+    private void ResetFieldData(int height, int width)
     {
         fieldData = fieldDataReader.m_fieldData;
+        fieldAgentData = new();
+        for (int y = 0; y < height; y++)
+        {
+            List<bool> temp = new();
+            for (int x = 0; x < width; x++)
+            {
+                temp.Add(false);
+            }
+            fieldAgentData.Add(temp);
+        }
+
+        agent_tilemap.ClearAllTiles();
         field_tilemap.ClearAllTiles();
-        SetFieldTilemap(settings.fieldHeight, settings.fieldWidth);
+        SetFieldTilemap(height, width);
 
         // For debug
-        if (settings.debugMode) PrintFieldData(settings.fieldHeight, settings.fieldWidth);
+        if (settings.debugMode) PrintFieldData(height, width);
     }
 
 
     /// <summary>
     /// Initializing tilemaps.
     /// </summary>
-    public void InitializeTileMaps()
+    /// <param name="height">Height of the field</param>
+    /// <param name="width">Width of the field</param>
+    public void InitializeTileMaps(int height, int width)
     {
         activeAgentsNum = settings.agentCnt;
+        actionAgentNum = -1;
         agent_tilemap.ClearAllTiles();
-        RandomSetAgent(settings.fieldHeight, settings.fieldWidth, settings.agentCnt);
+        RandomSetAgent(height, width, settings.agentCnt);
     }
 
 
@@ -110,6 +129,7 @@ public class FieldControl : MonoBehaviour
 
                 AgentInfo info = new(cnt + 10, spawnIndex, true, agentsList[cnt]);
                 agentsInfo.Add(info);
+                fieldAgentData[spawnIndex.y][spawnIndex.x] = true;
 
                 // For debug
                 if (settings.debugMode) info.PrintAgentInfo();
@@ -129,6 +149,7 @@ public class FieldControl : MonoBehaviour
     {
         Vector3Int pos = new(agentsInfo[agent_id - 10].m_positionIndex.x, settings.fieldHeight - agentsInfo[agent_id - 10].m_positionIndex.y, 0);
         agent_tilemap.SetTile(pos, null);
+        fieldAgentData[agentsInfo[agent_id - 10].m_positionIndex.y][agentsInfo[agent_id - 10].m_positionIndex.x] = false;
 
         // Forward
         if (dir == 1)
@@ -157,6 +178,7 @@ public class FieldControl : MonoBehaviour
 
         pos = new(agentsInfo[agent_id - 10].m_positionIndex.x, settings.fieldHeight - agentsInfo[agent_id - 10].m_positionIndex.y, 0);
         agent_tilemap.SetTile(pos, tiles[3]);
+        fieldAgentData[agentsInfo[agent_id - 10].m_positionIndex.y][agentsInfo[agent_id - 10].m_positionIndex.x] = true;
 
         // For debug
         if (settings.debugMode) agentsInfo[agent_id - 10].PrintAgentInfo();
