@@ -1,5 +1,5 @@
 behaviors:
-# For FreeRoom_Single
+  # For FreeRoom_Single
   freeRoom_single:
     trainer_type: ppo
 
@@ -11,7 +11,7 @@ behaviors:
     threaded: true
 
     hyperparameters:
-      batch_size: 32
+      batch_size: 64
       buffer_size: 20480
       learning_rate: 1e-4
       beta: 1e-3
@@ -31,12 +31,11 @@ behaviors:
         gamma: 0.995
         strength: 1.0
 
-
-# For FreeRoom_multi_ppo
+  # For FreeRoom_multi_ppo
   freeRoom_multi_ppo:
     trainer_type: ppo
 
-    max_steps: 1000000
+    max_steps: 10000000
     keep_checkpoints: 200
     checkpoint_interval: 100000
     time_horizon: 2048

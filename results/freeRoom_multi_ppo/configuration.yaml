@@ -3,7 +3,7 @@ behaviors:
   freeRoom_single:
     trainer_type: ppo
     hyperparameters:
-      batch_size: 32
+      batch_size: 64
       buffer_size: 20480
       learning_rate: 0.0001
       beta: 0.001
@@ -41,7 +41,7 @@ behaviors:
   freeRoom_multi_ppo:
     trainer_type: ppo
     hyperparameters:
-      batch_size: 32
+      batch_size: 64
       buffer_size: 20480
       learning_rate: 0.0001
       beta: 0.001
@@ -70,21 +70,21 @@ behaviors:
     init_path: null
     keep_checkpoints: 200
     checkpoint_interval: 100000
-    max_steps: 1000000
+    max_steps: 10000000
     time_horizon: 2048
     summary_freq: 10000
     threaded: true
     self_play: null
     behavioral_cloning: null
 env_settings:
-  env_path: null
+  env_path: C:\Users\yuta04\ML-Agents\Multi-Agent_EL_School\TrainingApps\freeRoom_multi_ppo
   env_args: null
   base_port: 5005
   num_envs: 1
   seed: -1
 engine_settings:
-  width: 84
-  height: 84
+  width: 960
+  height: 720
   quality_level: 5
   time_scale: 20
   target_frame_rate: -1
@@ -92,10 +92,10 @@ engine_settings:
   no_graphics: false
 environment_parameters: null
 checkpoint_settings:
-  run_id: freeRoom_multi_ppo_1
+  run_id: freeRoom_multi_ppo
   initialize_from: null
   load_model: false
-  resume: false
+  resume: true
   force: false
   train_model: false
   inference: false
