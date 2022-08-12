@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
@@ -44,8 +42,7 @@ public class AgentControl : Agent
             settings.fieldHeight,
             settings.fieldWidth,
             positionIndex,
-            settings.agentSight,
-            settings.agentCnt
+            settings.agentSight
         );
     }
 
