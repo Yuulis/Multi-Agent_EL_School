@@ -62,3 +62,35 @@ behaviors:
       extrinsic:
         gamma: 0.995
         strength: 1.0
+
+  # For FreeRoom_multi_poca
+  freeRoom_multi_poca:
+    trainer_type: poca
+
+    max_steps: 10000000
+    keep_checkpoints: 200
+    checkpoint_interval: 100000
+    time_horizon: 2048
+    summary_freq: 10000
+    threaded: true
+
+    hyperparameters:
+      batch_size: 64
+      buffer_size: 20480
+      learning_rate: 1e-4
+      beta: 1e-3
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3
+      learning_rate_schedule: linear
+
+    network_settings:
+      normalize: false
+      hidden_units: 256
+      num_layers: 2
+      vis_encode_type: simple
+
+    reward_signals:
+      extrinsic:
+        gamma: 0.995
+        strength: 1.0

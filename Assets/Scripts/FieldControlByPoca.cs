@@ -214,9 +214,21 @@ public class FieldControlByPoca : MonoBehaviour
     }
 
 
-    public void ReachedGoal()
+    /// <summary>
+    /// When agent reached any exit.
+    /// </summary>
+    public void ReachedExit()
     {
         m_agentGroup.AddGroupReward(1.0f);
+    }
+
+
+    /// <summary>
+    /// When all agents reached any exit.
+    /// </summary>
+    public void AllReachedExit()
+    {
+        m_agentGroup.EndGroupEpisode();
     }
 
 

@@ -128,7 +128,7 @@ public class AgentControlByPoca : Agent
 
         if (fieldControl.fieldData[positionIndex.y][positionIndex.x] == 2)
         {
-            fieldControl.ReachedGoal();
+            fieldControl.ReachedExit();
 
             Vector3Int pos = new(positionIndex.x, settings.fieldHeight - positionIndex.y, 0);
 
@@ -139,8 +139,7 @@ public class AgentControlByPoca : Agent
 
             if (fieldControl.activeAgentsNum == 0)
             {
-                EndEpisode();
-
+                fieldControl.AllReachedExit();
                 fieldControl.InitializeTileMaps(settings.fieldHeight, settings.fieldWidth);
             }
         }
