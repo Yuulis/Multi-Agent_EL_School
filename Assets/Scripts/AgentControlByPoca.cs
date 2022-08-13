@@ -137,6 +137,7 @@ public class AgentControlByPoca : Agent
             fieldControl.agentsInfo[agent_id - 10].m_active = false;
             fieldControl.activeAgentsNum--;
 
+            // When all agents reached any exit
             if (fieldControl.activeAgentsNum == 0)
             {
                 fieldControl.AllReachedExit();
