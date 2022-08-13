@@ -3,16 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using UnityEngine.Tilemaps;
+using Unity.MLAgents;
 
-public class FieldControl : MonoBehaviour
+public class FieldControlByPoca : MonoBehaviour
 {
     // Settings
     public GameObject settings_obj;
     Settings settings;
 
+
     // FieldDataReader
     public GameObject fieldDataReader_obj;
     FieldDataReader fieldDataReader;
+
+    [Header("Max Environment Steps")] public int maxEnvironmentSteps = 1000;
+    private int m_resetTimer;
 
     // FieldData
     [HideInInspector] public List<List<int>> fieldData;
@@ -28,6 +33,7 @@ public class FieldControl : MonoBehaviour
     [HideInInspector] public int activeAgentsNum;
     public List<GameObject> agentsList;
     [HideInInspector] public List<AgentInfo> agentsInfo;
+    private SimpleMultiAgentGroup m_agentGroup;
 
 
     private void Start()
@@ -37,6 +43,25 @@ public class FieldControl : MonoBehaviour
 
         ResetFieldData(settings.fieldHeight, settings.fieldWidth);
         InitializeTileMaps(settings.fieldHeight, settings.fieldWidth);
+
+        m_agentGroup = new SimpleMultiAgentGroup();
+        foreach (var item in agentsInfo)
+        {
+            m_agentGroup.RegisterAgent(item.m_agentControl);
+        }
+    }
+
+
+    private void FixedUpdate()
+    {
+        m_resetTimer++;
+        if (m_resetTimer >= maxEnvironmentSteps && maxEnvironmentSteps > 0)
+        {
+            m_agentGroup.GroupEpisodeInterrupted();
+            InitializeTileMaps(settings.fieldHeight, settings.fieldWidth);
+        }
+
+        m_agentGroup.AddGroupReward(-1.0f / maxEnvironmentSteps);
     }
 
 
@@ -76,6 +101,7 @@ public class FieldControl : MonoBehaviour
     public void InitializeTileMaps(int height, int width)
     {
         activeAgentsNum = settings.agentCnt;
+        m_resetTimer = 0;
         agent_tilemap.ClearAllTiles();
         RandomSetAgent(height, width, settings.agentCnt);
     }
@@ -124,7 +150,8 @@ public class FieldControl : MonoBehaviour
             {
                 agent_tilemap.SetTile(new Vector3Int(spawnIndex.x, height - spawnIndex.y, 0), tiles[3]);
 
-                AgentInfo info = new(cnt + 10, spawnIndex, true, agentsList[cnt], null);
+                AgentControlByPoca agentControl = agentsList[cnt].GetComponent<AgentControlByPoca>();
+                AgentInfo info = new(cnt + 10, spawnIndex, true, agentsList[cnt], agentControl);
                 agentsInfo.Add(info);
                 fieldAgentData[spawnIndex.y][spawnIndex.x] = true;
 
@@ -184,6 +211,12 @@ public class FieldControl : MonoBehaviour
 
         // For debug
         if (settings.debugMode) agentsInfo[agent_id - 10].PrintAgentInfo();
+    }
+
+
+    public void ReachedGoal()
+    {
+        m_agentGroup.AddGroupReward(1.0f);
     }
 
 
