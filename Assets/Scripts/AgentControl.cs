@@ -145,7 +145,7 @@ public class AgentControl : Agent
             }
         }
 
-        AddReward(-1.0f / 1000 / settings.agentCnt);
+        AddReward(-1.0f / 1000);
     }
 
 
