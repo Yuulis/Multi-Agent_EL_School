@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class AgentInfo
@@ -19,13 +16,17 @@ public class AgentInfo
     // Agent's object
     public GameObject m_obj;
 
+    // Agent's class
+    public AgentControlByPoca m_agentControl;
 
-    public AgentInfo(int id, Vector2Int position, bool active, GameObject obj)
+
+    public AgentInfo(int id, Vector2Int position, bool active, GameObject obj, AgentControlByPoca agentControl)
     {
         m_id = id;
         m_positionIndex = position;
         m_active = active;
         m_obj = obj;
+        m_agentControl = agentControl;
     }
 
 

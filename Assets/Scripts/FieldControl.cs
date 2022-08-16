@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,7 +28,6 @@ public class FieldControl : MonoBehaviour
     [HideInInspector] public int activeAgentsNum;
     public List<GameObject> agentsList;
     [HideInInspector] public List<AgentInfo> agentsInfo;
-    public int actionAgentNum;
 
 
     private void Start()
@@ -78,7 +76,6 @@ public class FieldControl : MonoBehaviour
     public void InitializeTileMaps(int height, int width)
     {
         activeAgentsNum = settings.agentCnt;
-        actionAgentNum = -1;
         agent_tilemap.ClearAllTiles();
         RandomSetAgent(height, width, settings.agentCnt);
     }
@@ -127,7 +124,7 @@ public class FieldControl : MonoBehaviour
             {
                 agent_tilemap.SetTile(new Vector3Int(spawnIndex.x, height - spawnIndex.y, 0), tiles[3]);
 
-                AgentInfo info = new(cnt + 10, spawnIndex, true, agentsList[cnt]);
+                AgentInfo info = new(cnt + 10, spawnIndex, true, agentsList[cnt], null);
                 agentsInfo.Add(info);
                 fieldAgentData[spawnIndex.y][spawnIndex.x] = true;
 
@@ -147,38 +144,43 @@ public class FieldControl : MonoBehaviour
     /// <param name="dir">Direction of moving</param>
     public void MoveAgentTile(int agent_id, int dir)
     {
-        Vector3Int pos = new(agentsInfo[agent_id - 10].m_positionIndex.x, settings.fieldHeight - agentsInfo[agent_id - 10].m_positionIndex.y, 0);
+        int posIndex_x = agentsInfo[agent_id - 10].m_positionIndex.x;
+        int posIndex_y = agentsInfo[agent_id - 10].m_positionIndex.y;
+        Vector3Int pos = new(posIndex_x, settings.fieldHeight - posIndex_y, 0);
+
         agent_tilemap.SetTile(pos, null);
-        fieldAgentData[agentsInfo[agent_id - 10].m_positionIndex.y][agentsInfo[agent_id - 10].m_positionIndex.x] = false;
+        fieldAgentData[posIndex_y][posIndex_x] = false;
 
         // Forward
         if (dir == 1)
         {
-            agentsInfo[agent_id - 10].m_positionIndex.y--;
+            posIndex_y--;
         }
 
         // Back
         else if (dir == 2)
         {
-            agentsInfo[agent_id - 10].m_positionIndex.y++;
+            posIndex_y++;
         }
 
         // Right
         else if (dir == 3)
         {
-            agentsInfo[agent_id - 10].m_positionIndex.x++;
+            posIndex_x++;
         }
-
 
         // Left
         else if (dir == 4)
         {
-            agentsInfo[agent_id - 10].m_positionIndex.x--;
+            posIndex_x--;
         }
 
-        pos = new(agentsInfo[agent_id - 10].m_positionIndex.x, settings.fieldHeight - agentsInfo[agent_id - 10].m_positionIndex.y, 0);
+        agentsInfo[agent_id - 10].m_positionIndex.x = posIndex_x;
+        agentsInfo[agent_id - 10].m_positionIndex.y = posIndex_y;
+        pos = new(posIndex_x, settings.fieldHeight - posIndex_y, 0);
+
         agent_tilemap.SetTile(pos, tiles[3]);
-        fieldAgentData[agentsInfo[agent_id - 10].m_positionIndex.y][agentsInfo[agent_id - 10].m_positionIndex.x] = true;
+        fieldAgentData[posIndex_y][posIndex_x] = true;
 
         // For debug
         if (settings.debugMode) agentsInfo[agent_id - 10].PrintAgentInfo();

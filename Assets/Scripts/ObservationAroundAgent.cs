@@ -17,7 +17,6 @@ public class ObservationAroundAgent
     private readonly int m_fieldWidth;
     private Vector2Int m_positionIndex;
     private readonly int m_agentSight;
-    private readonly int m_agentCnt;
 
 
     /// <summary>
@@ -29,8 +28,7 @@ public class ObservationAroundAgent
     /// <param name="width">Width of the field</param>
     /// <param name="positionIndex">Index of agent's position index of the fieldData</param>
     /// <param name="agentSight">Agent's sight</param>
-    /// <param name="agentCnt">Number of Agents</param>
-    public ObservationAroundAgent(List<List<int>> fieldData, List<List<bool>> fieldAgentData, int height, int width, Vector2Int positionIndex, int agentSight, int agentCnt)
+    public ObservationAroundAgent(List<List<int>> fieldData, List<List<bool>> fieldAgentData, int height, int width, Vector2Int positionIndex, int agentSight)
     {
         observationList = new();
         observationListNeighborhood = new();
@@ -40,7 +38,6 @@ public class ObservationAroundAgent
         m_fieldWidth = width;
         m_positionIndex = positionIndex;
         m_agentSight = agentSight;
-        m_agentCnt = agentCnt;
 
         UpdateObservation(m_positionIndex, agentSight);
     }
