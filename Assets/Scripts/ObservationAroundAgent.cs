@@ -81,6 +81,7 @@ public class ObservationAroundAgent
     {
         GetObservationNeighborhood(m_positionIndex, m_fieldHeight, m_fieldWidth);
         GetObservationSquareArea(m_positionIndex, sight, m_fieldHeight, m_fieldWidth);
+        // GetObservationStraight(m_positionIndex, sight, m_fieldHeight, m_fieldWidth);
     }
 
     /// <summary>
@@ -184,6 +185,34 @@ public class ObservationAroundAgent
                 else if (m_fieldData[positionIndex.y + y][positionIndex.x + x] == 3)
                 {
                     observationList[y + sight][x + sight] = 3;
+                }
+            }
+        }
+    }
+
+
+    public void GetObservationStraight(Vector2Int positionIndex, int sight, int height, int width)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j <= sight; j++)
+            {
+                int x = positionIndex.x;
+                int y = positionIndex.y;
+
+                // Forward
+                if (i == 0)
+                {
+                    // Out of range
+                    if (y + j < 0 || y + j >= height || x < 0 || x >= width)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        Vector3Int pos = new(x, y, 0);
+                        observationList[y + j][x] = 2;
+                    }
                 }
             }
         }
