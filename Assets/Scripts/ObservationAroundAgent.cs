@@ -204,17 +204,69 @@ public class ObservationAroundAgent
                 if (i == 0)
                 {
                     // Out of range
+                    if (y - j < 0 || y - j >= height || x < 0 || x >= width)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        observationList[y - j][x] = 2;
+                    }
+                }
+
+                // Back
+                else if (i == 1)
+                {
+                    // Out of range
                     if (y + j < 0 || y + j >= height || x < 0 || x >= width)
                     {
                         continue;
                     }
                     else
                     {
-                        Vector3Int pos = new(x, y, 0);
                         observationList[y + j][x] = 2;
                     }
                 }
             }
+        }
+    }
+
+
+    public int GetPosData(int x, int y, int height, int width)
+    {
+        // Out of range
+        if (y < 0 || y >= height || x < 0 || x >= width)
+        {
+            return 0;
+        }
+
+        // Agent
+        else if (m_fieldAgentData[y][x])
+        {
+            return 4;
+        }
+
+        // Empty
+        else if (m_fieldData[y][x] == 1)
+        {
+            return 1;
+        }
+
+        // Exit
+        else if (m_fieldData[y][x] == 2)
+        {
+            return 2;
+        }
+
+        // Obstacle
+        else if (m_fieldData[y][x] == 3)
+        {
+            return 3;
+        }
+
+        else
+        {
+            return 0;
         }
     }
 
