@@ -81,6 +81,7 @@ public class ObservationAroundAgent
     {
         GetObservationNeighborhood(m_positionIndex, m_fieldHeight, m_fieldWidth);
         GetObservationSquareArea(m_positionIndex, sight, m_fieldHeight, m_fieldWidth);
+        GetObservation_new(m_positionIndex, sight, m_fieldHeight, m_fieldWidth);
     }
 
     /// <summary>
@@ -186,6 +187,80 @@ public class ObservationAroundAgent
                     observationList[y + sight][x + sight] = 3;
                 }
             }
+        }
+    }
+
+
+    public void GetObservation_new(Vector2Int positionIndex, int sight, int height, int width)
+    {
+        for (int y = -sight; y <= sight; y++)
+        {
+            for (int x = -sight; x <= sight; y++)
+            {
+                int sx = x + positionIndex.x;
+                int sy = y + positionIndex.y;
+
+                // Out of range
+                if (sy < 0 || sy >= height || sx < 0 || sx >= width)
+                {
+                    observationList[sy][sx] = 0;
+                    continue;
+                }
+
+                // Set diff
+                float dx = 0, dy = 0;
+                if (Mathf.Abs(sx) > Mathf.Abs(sx))
+                {
+                    dx = -1 * (sx > 0 ? 1 : -1);
+                    dy = -1 / Mathf.Abs(sx) * (sy > 0 ? 1 : -1);
+                }
+                else
+                {
+                    dx = -1 / Mathf.Abs(sy) * (sx > 0 ? 1 : -1);
+                    dy = -1 * (sy > 0 ? 1 : -1);
+                }
+
+                
+            }
+        }
+    }
+
+
+    public int GetPosData(int x, int y, int height, int width)
+    {
+        // Out of range
+        if (y < 0 || y >= height || x < 0 || x >= width)
+        {
+            return 0;
+        }
+
+        // Agent
+        else if (m_fieldAgentData[y][x])
+        {
+            return 4;
+        }
+
+        // Empty
+        else if (m_fieldData[y][x] == 1)
+        {
+            return 1;
+        }
+
+        // Exit
+        else if (m_fieldData[y][x] == 2)
+        {
+            return 2;
+        }
+
+        // Obstacle
+        else if (m_fieldData[y][x] == 3)
+        {
+            return 3;
+        }
+
+        else
+        {
+            return 0;
         }
     }
 
