@@ -181,25 +181,37 @@ public class FieldControlByPoca : MonoBehaviour
         // Forward
         if (dir == 1)
         {
-            posIndex_y--;
+            if (!fieldAgentData[posIndex_y - 1][posIndex_x])
+            {
+                posIndex_y--;
+            }
         }
 
         // Back
         else if (dir == 2)
         {
-            posIndex_y++;
+            if (!fieldAgentData[posIndex_y + 1][posIndex_x])
+            {
+                posIndex_y++;
+            }
         }
 
         // Right
         else if (dir == 3)
         {
-            posIndex_x++;
+            if (!fieldAgentData[posIndex_y][posIndex_x + 1])
+            {
+                posIndex_x++;
+            }
         }
 
         // Left
         else if (dir == 4)
         {
-            posIndex_x--;
+            if (!fieldAgentData[posIndex_y][posIndex_x - 1])
+            {
+                posIndex_x--;
+            }
         }
 
         agentsInfo[agent_id - 10].m_positionIndex.x = posIndex_x;
