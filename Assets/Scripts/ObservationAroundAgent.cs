@@ -81,7 +81,7 @@ public class ObservationAroundAgent
     {
         GetObservationNeighborhood(m_positionIndex, m_fieldHeight, m_fieldWidth);
         GetObservationSquareArea(m_positionIndex, sight, m_fieldHeight, m_fieldWidth);
-        // GetObservationStraight(m_positionIndex, sight, m_fieldHeight, m_fieldWidth);
+        GetObservation_new(m_positionIndex, sight, m_fieldHeight, m_fieldWidth);
     }
 
     /// <summary>
@@ -191,42 +191,36 @@ public class ObservationAroundAgent
     }
 
 
-    public void GetObservationStraight(Vector2Int positionIndex, int sight, int height, int width)
+    public void GetObservation_new(Vector2Int positionIndex, int sight, int height, int width)
     {
-        for (int i = 0; i < 4; i++)
+        for (int y = -sight; y <= sight; y++)
         {
-            for (int j = 0; j <= sight; j++)
+            for (int x = -sight; x <= sight; y++)
             {
-                int x = positionIndex.x;
-                int y = positionIndex.y;
+                int sx = x + positionIndex.x;
+                int sy = y + positionIndex.y;
 
-                // Forward
-                if (i == 0)
+                // Out of range
+                if (sy < 0 || sy >= height || sx < 0 || sx >= width)
                 {
-                    // Out of range
-                    if (y - j < 0 || y - j >= height || x < 0 || x >= width)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        observationList[y - j][x] = 2;
-                    }
+                    observationList[sy][sx] = 0;
+                    continue;
                 }
 
-                // Back
-                else if (i == 1)
+                // Set diff
+                float dx = 0, dy = 0;
+                if (Mathf.Abs(sx) > Mathf.Abs(sx))
                 {
-                    // Out of range
-                    if (y + j < 0 || y + j >= height || x < 0 || x >= width)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        observationList[y + j][x] = 2;
-                    }
+                    dx = -1 * (sx > 0 ? 1 : -1);
+                    dy = -1 / Mathf.Abs(sx) * (sy > 0 ? 1 : -1);
                 }
+                else
+                {
+                    dx = -1 / Mathf.Abs(sy) * (sx > 0 ? 1 : -1);
+                    dy = -1 * (sy > 0 ? 1 : -1);
+                }
+
+                
             }
         }
     }
