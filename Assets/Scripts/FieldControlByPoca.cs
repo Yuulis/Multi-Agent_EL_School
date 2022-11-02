@@ -123,7 +123,7 @@ public class FieldControlByPoca : MonoBehaviour
                 if (fieldData[y][x] == 1) tile = tiles[0];
                 if (fieldData[y][x] == 2) tile = tiles[1];
                 if (fieldData[y][x] == 3) tile = tiles[2];
-                if (fieldData[y][x] == 4) tile = tiles[3];
+                if (fieldData[y][x] == 4) tile = tiles[4];
 
                 field_tilemap.SetTile(new Vector3Int(x, height - y, 0), tile);
             }

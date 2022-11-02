@@ -650,11 +650,13 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2b2545b6eded4354294a2ac7c5df5cf9, type: 3}
   - {fileID: 21300000, guid: ea5669e489e7a6246af34a45022d25f3, type: 3}
   - {fileID: 21300000, guid: 94944dea46925cb41996b730d85d0d3d, type: 3}
+  - {fileID: 21300000, guid: 3cec4bc0e7c4ae042a098e76a33fdad8, type: 3}
   tiles:
   - {fileID: 11400000, guid: 5caa44c0682f3ca42aa47121abd4bdbf, type: 2}
   - {fileID: 11400000, guid: fa4a3f53b4461e74faf4c23d4afe9510, type: 2}
   - {fileID: 11400000, guid: d2947251c3eadbc4aa9ec76fd7280125, type: 2}
   - {fileID: 11400000, guid: fb1e72465730d8549b38c322c68e962e, type: 2}
+  - {fileID: 11400000, guid: 28ef43264d3b8eb4a9e5742ad5472462, type: 2}
   field_tilemap: {fileID: 9166977649054736522}
   agent_tilemap: {fileID: 9166977648878797911}
   activeAgentsNum: 0
