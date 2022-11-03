@@ -119,7 +119,7 @@ public class FieldControlByPoca : MonoBehaviour
             for (int x = 0; x < width; x++)
             {
                 TileBase tile = null;
-                if (fieldData[y][x] == 0) tile = null;
+                if (fieldData[y][x] == 0) tile = tiles[0];
                 if (fieldData[y][x] == 1) tile = tiles[0];
                 if (fieldData[y][x] == 2) tile = tiles[1];
                 if (fieldData[y][x] == 3) tile = tiles[2];
