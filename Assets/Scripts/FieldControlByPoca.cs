@@ -119,10 +119,11 @@ public class FieldControlByPoca : MonoBehaviour
             for (int x = 0; x < width; x++)
             {
                 TileBase tile = null;
-                if (fieldData[y][x] == 0) tile = null;
+                if (fieldData[y][x] == 0) tile = tiles[0];
                 if (fieldData[y][x] == 1) tile = tiles[0];
                 if (fieldData[y][x] == 2) tile = tiles[1];
                 if (fieldData[y][x] == 3) tile = tiles[2];
+                if (fieldData[y][x] == 4) tile = tiles[4];
 
                 field_tilemap.SetTile(new Vector3Int(x, height - y, 0), tile);
             }
@@ -181,25 +182,37 @@ public class FieldControlByPoca : MonoBehaviour
         // Forward
         if (dir == 1)
         {
-            posIndex_y--;
+            if (!fieldAgentData[posIndex_y - 1][posIndex_x])
+            {
+                posIndex_y--;
+            }
         }
 
         // Back
         else if (dir == 2)
         {
-            posIndex_y++;
+            if (!fieldAgentData[posIndex_y + 1][posIndex_x])
+            {
+                posIndex_y++;
+            }
         }
 
         // Right
         else if (dir == 3)
         {
-            posIndex_x++;
+            if (!fieldAgentData[posIndex_y][posIndex_x + 1])
+            {
+                posIndex_x++;
+            }
         }
 
         // Left
         else if (dir == 4)
         {
-            posIndex_x--;
+            if (!fieldAgentData[posIndex_y][posIndex_x - 1])
+            {
+                posIndex_x--;
+            }
         }
 
         agentsInfo[agent_id - 10].m_positionIndex.x = posIndex_x;
