@@ -1,5 +1,5 @@
 ﻿behaviors:
-  # For FreeRoom_multi_poca
+  # School_1F
   freeRoom_multi_poca:
     trainer_type: poca
 
