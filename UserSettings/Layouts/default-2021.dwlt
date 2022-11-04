@@ -121,7 +121,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 200}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 70
+  controlID: 90
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 20
+  controlID: 16
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -270,8 +270,8 @@ MonoBehaviour:
     y: 0
     width: 484
     height: 939
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 16}
   m_Panes:
   - {fileID: 16}
@@ -424,7 +424,7 @@ MonoBehaviour:
       floating: 0
       collapsed: 0
       displayed: 1
-      snapOffset: {x: 0, y: 25}
+      snapOffset: {x: 0, y: 0}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
       id: unity-scene-view-toolbar
@@ -446,7 +446,7 @@ MonoBehaviour:
       floating: 0
       collapsed: 0
       displayed: 0
-      snapOffset: {x: 0, y: 25}
+      snapOffset: {x: 0, y: 0}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
       id: Scene View/Open Tile Palette
@@ -616,9 +616,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 191.14856, y: -7.0990777, z: -1.6440655}
+    m_Target: {x: 49.36482, y: 25.806372, z: -0.39209497}
     speed: 2
-    m_Value: {x: 191.14856, y: -7.0990777, z: -1.6440655}
+    m_Value: {x: 49.36482, y: 25.806372, z: -0.39209497}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -669,9 +669,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 167.75032
+    m_Target: 44.332157
     speed: 2
-    m_Value: 167.75032
+    m_Value: 44.332157
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -729,21 +729,21 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 66e5fffffce8ffff04fbffffe6640000
+      m_ExpandedIDs: f4e6ffff3ee7ffffd2eefffffefaffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: TrainingArea (1)
-        m_OriginalName: TrainingArea (1)
+        m_Name: 
+        m_OriginalName: 
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: -8134
+        m_UserData: 0
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 0
+        m_OriginalEventType: 11
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 9}
       m_SearchString: 
@@ -793,8 +793,7 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SkipHidden: 0
     m_SearchArea: 1
-    m_Folders:
-    - Assets/Prefabs/School_1F
+    m_Folders: []
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 0
@@ -808,7 +807,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: d0440000
     m_LastClickedID: 17616
-    m_ExpandedIDs: 000000005465000056650000586500005a6500005c6500005e65000060650000
+    m_ExpandedIDs: 00000000e8650000ea650000ec650000ee650000f0650000f2650000f4650000f6650000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -836,21 +835,21 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: ffffffff000000005465000056650000586500005a6500005c6500005e65000060650000dc820000
+    m_ExpandedIDs: ffffffff00000000e8650000ea650000ec650000ee650000f0650000f2650000f4650000f6650000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: TrainingArea
-      m_OriginalName: TrainingArea
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 33870
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 10}
     m_SearchString: 
