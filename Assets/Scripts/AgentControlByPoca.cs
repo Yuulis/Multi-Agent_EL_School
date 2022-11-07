@@ -105,6 +105,14 @@ public class AgentControlByPoca : Agent
                 fieldControl.MoveAgentTile(agent_id, 4);
             }
         }
+        else
+        {
+            Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
+            Vector3Int pos = new(positionIndex.x, settings.fieldHeight - positionIndex.y, 0);
+            fieldControl.agent_tilemap.SetTile(pos, null);
+            fieldControl.fieldAgentData[positionIndex.y][positionIndex.x] = false;
+            fieldControl.agentsInfo[agent_id - 10].m_active = false;
+        }
     }
 
 
