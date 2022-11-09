@@ -35,7 +35,7 @@ public class AgentControlByPoca : Agent
         int n = (int)this.gameObject.name[5] - 48;
         agent_id = fieldControl.agentsInfo[n].m_id;
 
-        Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
+        Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 1000].m_positionIndex;
         observation = new(
             fieldControl.fieldData,
             fieldControl.fieldAgentData,
@@ -50,7 +50,7 @@ public class AgentControlByPoca : Agent
     // collect observations
     public override void CollectObservations(VectorSensor sensor)
     {
-        observation.UpdateObservation(fieldControl.agentsInfo[agent_id - 10].m_positionIndex, settings.agentSight);
+        observation.UpdateObservation(fieldControl.agentsInfo[agent_id - 1000].m_positionIndex, settings.agentSight);
 
         // For debug
         if (settings.debugMode) observation.PrintAgentObservation(agent_id);
@@ -59,7 +59,7 @@ public class AgentControlByPoca : Agent
         {
             for (int j = 0; j < settings.agentSight * 2 + 1; j++)
             {
-                if (fieldControl.agentsInfo[agent_id - 10].m_active)
+                if (fieldControl.agentsInfo[agent_id - 1000].m_active)
                 {
                     sensor.AddObservation(observation.observationList[i][j]);
                 }
@@ -75,7 +75,7 @@ public class AgentControlByPoca : Agent
     // When agent moves
     public override void OnActionReceived(ActionBuffers actions)
     {
-        if (fieldControl.agentsInfo[agent_id - 10].m_active)
+        if (fieldControl.agentsInfo[agent_id - 1000].m_active)
         {
             CheckAgentReachGoal(agent_id);
 
@@ -107,11 +107,11 @@ public class AgentControlByPoca : Agent
         }
         else
         {
-            Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
+            Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 1000].m_positionIndex;
             Vector3Int pos = new(positionIndex.x, settings.fieldHeight - positionIndex.y, 0);
             fieldControl.agent_tilemap.SetTile(pos, null);
             fieldControl.fieldAgentData[positionIndex.y][positionIndex.x] = false;
-            fieldControl.agentsInfo[agent_id - 10].m_active = false;
+            fieldControl.agentsInfo[agent_id - 1000].m_active = false;
         }
     }
 
@@ -132,7 +132,7 @@ public class AgentControlByPoca : Agent
     /// <param name="agent_id">Agent's id</param>
     public void CheckAgentReachGoal(int agent_id)
     {
-        Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
+        Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 1000].m_positionIndex;
 
         if (fieldControl.fieldData[positionIndex.y][positionIndex.x] == 2)
         {
@@ -142,7 +142,7 @@ public class AgentControlByPoca : Agent
 
             fieldControl.agent_tilemap.SetTile(pos, null);
             fieldControl.fieldAgentData[positionIndex.y][positionIndex.x] = false;
-            fieldControl.agentsInfo[agent_id - 10].m_active = false;
+            fieldControl.agentsInfo[agent_id - 1000].m_active = false;
             fieldControl.activeAgentsNum--;
 
             // When all agents reached any exit

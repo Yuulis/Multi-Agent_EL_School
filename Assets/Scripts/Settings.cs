@@ -9,7 +9,7 @@ public class Settings : MonoBehaviour
     public int fieldHeight = 20;
 
     // Set this value of Agent prefabs on the scene before start.
-    public int agentCnt = 10;
+    public int agentCnt = 20;
 
     // This parameter is depended on vector observation space size of agent.
     // Space size = (agentSight * 2 + 1) ^ 2 .
