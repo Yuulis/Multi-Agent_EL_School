@@ -11,10 +11,14 @@ public class FieldControlByPoca : MonoBehaviour
     public GameObject settings_obj;
     Settings settings;
 
-
     // FieldDataReader
     public GameObject fieldDataReader_obj;
     FieldDataReader fieldDataReader;
+    private bool dataCounterInitialized = false;
+
+    // DataCounter
+    public GameObject dataCounter_obj;
+    DataCounter dataCounter;
 
     [Header("Max Environment Steps")] public int maxEnvironmentSteps = 2000;
     private int m_resetTimer;
@@ -40,6 +44,13 @@ public class FieldControlByPoca : MonoBehaviour
     {
         settings = settings_obj.GetComponent<Settings>();
         fieldDataReader = fieldDataReader_obj.GetComponent<FieldDataReader>();
+        dataCounter = dataCounter_obj.GetComponent<DataCounter>();
+
+        if (!dataCounterInitialized && settings.dataCountMode)
+        {
+            dataCounter.Initialize(settings.fieldHeight, settings.fieldWidth);
+            dataCounterInitialized = true;
+        }
 
         ResetFieldData(settings.fieldHeight, settings.fieldWidth);
         InitializeTileMaps(settings.fieldHeight, settings.fieldWidth);
@@ -218,6 +229,8 @@ public class FieldControlByPoca : MonoBehaviour
         agentsInfo[agent_id - 1000].m_positionIndex.x = posIndex_x;
         agentsInfo[agent_id - 1000].m_positionIndex.y = posIndex_y;
         pos = new(posIndex_x, settings.fieldHeight - posIndex_y, 0);
+
+        if (settings.dataCountMode) dataCounter.UpdateData(posIndex_y, posIndex_x);
 
         agent_tilemap.SetTile(pos, tiles[3]);
         fieldAgentData[posIndex_y][posIndex_x] = true;

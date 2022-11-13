@@ -20,4 +20,7 @@ public class Settings : MonoBehaviour
 
     // For debug.
     public bool debugMode = false;
+
+    // For dataCounter.
+    public bool dataCountMode = false;
 }
