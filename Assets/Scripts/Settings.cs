@@ -21,6 +21,10 @@ public class Settings : MonoBehaviour
     // For debug.
     public bool debugMode = false;
 
+    // Timescale
+    public int timeScale = 1;
+
     // For dataCounter.
     public bool dataCountMode = false;
+    public int maxEpisodeCount;
 }

@@ -16,6 +16,11 @@ public class FieldControlByPoca : MonoBehaviour
     FieldDataReader fieldDataReader;
     private bool dataCounterInitialized = false;
 
+    // CSVExporter
+    public GameObject csvExporter_obj;
+    CsvExporter csvExporter;
+    private int episodeCount;
+
     // DataCounter
     public GameObject dataCounter_obj;
     DataCounter dataCounter;
@@ -45,11 +50,15 @@ public class FieldControlByPoca : MonoBehaviour
         settings = settings_obj.GetComponent<Settings>();
         fieldDataReader = fieldDataReader_obj.GetComponent<FieldDataReader>();
         dataCounter = dataCounter_obj.GetComponent<DataCounter>();
+        csvExporter = csvExporter_obj.GetComponent<CsvExporter>();
 
         if (!dataCounterInitialized && settings.dataCountMode)
         {
+            Time.timeScale = settings.timeScale;
+
             dataCounter.Initialize(settings.fieldHeight, settings.fieldWidth);
             dataCounterInitialized = true;
+            episodeCount = 0;
         }
 
         ResetFieldData(settings.fieldHeight, settings.fieldWidth);
@@ -111,10 +120,18 @@ public class FieldControlByPoca : MonoBehaviour
     /// <param name="width">Width of the field</param>
     public void InitializeTileMaps(int height, int width)
     {
+        if (settings.dataCountMode && episodeCount > settings.maxEpisodeCount)
+        {
+            csvExporter.SaveData(dataCounter.fieldData);
+            settings.dataCountMode = false;
+        }
+
         activeAgentsNum = settings.agentCnt;
         m_resetTimer = 0;
         agent_tilemap.ClearAllTiles();
         RandomSetAgent(height, width, settings.agentCnt);
+
+        if (settings.dataCountMode) episodeCount++;
     }
 
 

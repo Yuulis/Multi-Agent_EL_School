@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DataCounter : MonoBehaviour
 {
-    private List<List<int>> fieldData;
+    [HideInInspector] public List<List<int>> fieldData;
 
 
     public void Initialize(int height, int width)

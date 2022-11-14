@@ -19,32 +19,30 @@ public class CsvExporter : MonoBehaviour
         if (export)
         {
             sw = new StreamWriter(filePath, true, Encoding.GetEncoding("UTF-8"));
-            string[] s1 = { "X", "Z", "Success?", "ReachStair_Floor1", "ReachStair_Floor2", "Water_height" };
-            string s2 = string.Join(",", s1);
-            sw.WriteLine(s2);
         }
-        else Debug.LogWarning("Boolean value, Export, is false.");
+        else
+        {
+            Debug.LogWarning("Boolean value, Export, is false.");
+        }
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && export)
-        {
-            sw.Flush();
-            sw.Close();
-            Debug.Log("Saved CSV file.");
-        }
+
     }
 
 
-    public void SaveData(string txt1, string txt2, string txt3, string txt4, string txt5, string txt6)
+    public void SaveData(List<List<int>> data)
     {
         if (export)
         {
-            string[] s1 = { txt1, txt2, txt3, txt4, txt5, txt6 };
-            string s2 = string.Join(",", s1);
-            sw.WriteLine(s2);
-            sw.Flush();
+            foreach (List<int> array in data)
+            {
+                sw.WriteLine(string.Join(", ", array));
+                sw.Flush();
+            }
+
+            FinishCSVExport();
         }
     }
 
