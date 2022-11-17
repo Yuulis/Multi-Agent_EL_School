@@ -63,3 +63,4 @@ crashlytics-build.properties
 /TrainingApps/*
 /results/**/*.log
 /results/**/*.json
+.fake
