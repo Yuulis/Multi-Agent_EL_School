@@ -11,12 +11,21 @@ public class FieldControlByPoca : MonoBehaviour
     public GameObject settings_obj;
     Settings settings;
 
-
     // FieldDataReader
     public GameObject fieldDataReader_obj;
     FieldDataReader fieldDataReader;
+    private bool dataCounterInitialized = false;
 
-    [Header("Max Environment Steps")] public int maxEnvironmentSteps = 1000;
+    // CSVExporter
+    public GameObject csvExporter_obj;
+    CsvExporter csvExporter;
+    private int episodeCount;
+
+    // DataCounter
+    public GameObject dataCounter_obj;
+    DataCounter dataCounter;
+
+    [Header("Max Environment Steps")] public int maxEnvironmentSteps = 2000;
     private int m_resetTimer;
 
     // FieldData
@@ -40,6 +49,17 @@ public class FieldControlByPoca : MonoBehaviour
     {
         settings = settings_obj.GetComponent<Settings>();
         fieldDataReader = fieldDataReader_obj.GetComponent<FieldDataReader>();
+        dataCounter = dataCounter_obj.GetComponent<DataCounter>();
+        csvExporter = csvExporter_obj.GetComponent<CsvExporter>();
+
+        if (!dataCounterInitialized && settings.dataCountMode)
+        {
+            Time.timeScale = settings.timeScale;
+
+            dataCounter.Initialize(settings.fieldHeight, settings.fieldWidth);
+            dataCounterInitialized = true;
+            episodeCount = 0;
+        }
 
         ResetFieldData(settings.fieldHeight, settings.fieldWidth);
         InitializeTileMaps(settings.fieldHeight, settings.fieldWidth);
@@ -100,10 +120,18 @@ public class FieldControlByPoca : MonoBehaviour
     /// <param name="width">Width of the field</param>
     public void InitializeTileMaps(int height, int width)
     {
+        if (settings.dataCountMode && episodeCount > settings.maxEpisodeCount)
+        {
+            csvExporter.SaveData(dataCounter.fieldData);
+            settings.dataCountMode = false;
+        }
+
         activeAgentsNum = settings.agentCnt;
         m_resetTimer = 0;
         agent_tilemap.ClearAllTiles();
         RandomSetAgent(height, width, settings.agentCnt);
+
+        if (settings.dataCountMode) episodeCount++;
     }
 
 
@@ -152,7 +180,7 @@ public class FieldControlByPoca : MonoBehaviour
                 agent_tilemap.SetTile(new Vector3Int(spawnIndex.x, height - spawnIndex.y, 0), tiles[3]);
 
                 AgentControlByPoca agentControl = agentsList[cnt].GetComponent<AgentControlByPoca>();
-                AgentInfo info = new(cnt + 10, spawnIndex, true, agentsList[cnt], agentControl);
+                AgentInfo info = new(cnt + 1000, spawnIndex, true, agentsList[cnt], agentControl);
                 agentsInfo.Add(info);
                 fieldAgentData[spawnIndex.y][spawnIndex.x] = true;
 
@@ -172,8 +200,8 @@ public class FieldControlByPoca : MonoBehaviour
     /// <param name="dir">Direction of moving</param>
     public void MoveAgentTile(int agent_id, int dir)
     {
-        int posIndex_x = agentsInfo[agent_id - 10].m_positionIndex.x;
-        int posIndex_y = agentsInfo[agent_id - 10].m_positionIndex.y;
+        int posIndex_x = agentsInfo[agent_id - 1000].m_positionIndex.x;
+        int posIndex_y = agentsInfo[agent_id - 1000].m_positionIndex.y;
         Vector3Int pos = new(posIndex_x, settings.fieldHeight - posIndex_y, 0);
 
         agent_tilemap.SetTile(pos, null);
@@ -215,15 +243,17 @@ public class FieldControlByPoca : MonoBehaviour
             }
         }
 
-        agentsInfo[agent_id - 10].m_positionIndex.x = posIndex_x;
-        agentsInfo[agent_id - 10].m_positionIndex.y = posIndex_y;
+        agentsInfo[agent_id - 1000].m_positionIndex.x = posIndex_x;
+        agentsInfo[agent_id - 1000].m_positionIndex.y = posIndex_y;
         pos = new(posIndex_x, settings.fieldHeight - posIndex_y, 0);
+
+        if (settings.dataCountMode) dataCounter.UpdateData(posIndex_y, posIndex_x);
 
         agent_tilemap.SetTile(pos, tiles[3]);
         fieldAgentData[posIndex_y][posIndex_x] = true;
 
         // For debug
-        if (settings.debugMode) agentsInfo[agent_id - 10].PrintAgentInfo();
+        if (settings.debugMode) agentsInfo[agent_id - 1000].PrintAgentInfo();
     }
 
 
