@@ -221,11 +221,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 9093684475741618099, guid: db339a09a74804a4dae329a5501b0709, type: 3}
       propertyPath: timeScale
-      value: 50
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9093684475741618099, guid: db339a09a74804a4dae329a5501b0709, type: 3}
       propertyPath: dataCountMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9093684475942920093, guid: db339a09a74804a4dae329a5501b0709, type: 3}
       propertyPath: m_RootOrder
@@ -294,7 +294,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4313664783538558617, guid: 836493f9e5a67c140b2e891fdbdc2b48, type: 3}
       propertyPath: export
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4313664783538558622, guid: 836493f9e5a67c140b2e891fdbdc2b48, type: 3}
       propertyPath: m_RootOrder
