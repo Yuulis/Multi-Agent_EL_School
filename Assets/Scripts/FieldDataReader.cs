@@ -11,7 +11,7 @@ public class FieldDataReader : MonoBehaviour
 
     // For csv reading
     private TextAsset csvFile;
-    private readonly List<string[]> csvDatas = new();
+    private List<string[]> csvDatas;
 
     // fieldData
     public List<List<int>> m_fieldData;
@@ -22,6 +22,7 @@ public class FieldDataReader : MonoBehaviour
         Transform TrainingArea = transform.parent;
         settings = TrainingArea.GetComponentInChildren<Settings>();
 
+        csvDatas = new();
         for (int i = 0; i < settings.csvFileNameList.Count; i++)
         {
             csvFile = Resources.Load(settings.csvFileNameList[i]) as TextAsset;

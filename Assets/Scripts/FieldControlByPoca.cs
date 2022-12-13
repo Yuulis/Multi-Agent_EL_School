@@ -35,8 +35,8 @@ public class FieldControlByPoca : MonoBehaviour
     // Tilemap resources
     public List<Sprite> tilemapSprites;
     public List<TileBase> tiles;
-    public Tilemap field_tilemap;
-    public Tilemap agent_tilemap;
+    public List<Tilemap> fieldTilemapList;
+    public Tilemap agentTilemap;
 
     // Agents resources
     [HideInInspector] public int activeAgentsNum;
@@ -104,9 +104,13 @@ public class FieldControlByPoca : MonoBehaviour
             fieldAgentData.Add(temp);
         }
 
-        agent_tilemap.ClearAllTiles();
-        field_tilemap.ClearAllTiles();
-        SetFieldTilemap(height, width);
+        agentTilemap.ClearAllTiles();
+
+        for (int idx = 0; idx < fieldTilemapList.Count; idx++)
+        {
+            fieldTilemapList[idx].ClearAllTiles();
+            SetFieldTilemap(idx, height, width);
+        }
 
         // For debug
         if (settings.debugMode) PrintFieldData(height, width);
@@ -128,7 +132,7 @@ public class FieldControlByPoca : MonoBehaviour
 
         activeAgentsNum = settings.agentCnt;
         m_resetTimer = 0;
-        agent_tilemap.ClearAllTiles();
+        agentTilemap.ClearAllTiles();
         RandomSetAgent(height, width, settings.agentCnt);
 
         if (settings.dataCountMode) episodeCount++;
@@ -140,7 +144,7 @@ public class FieldControlByPoca : MonoBehaviour
     /// </summary>
     /// <param name="height">Height of the field</param>
     /// <param name="width">Width of the field</param>
-    private void SetFieldTilemap(int height, int width)
+    private void SetFieldTilemap(int idx, int height, int width)
     {
         for (int y = 0; y < height; y++)
         {
@@ -153,7 +157,7 @@ public class FieldControlByPoca : MonoBehaviour
                 if (fieldData[y][x] == 3) tile = tiles[2];
                 if (fieldData[y][x] == 4) tile = tiles[4];
 
-                field_tilemap.SetTile(new Vector3Int(x, height - y, 0), tile);
+                fieldTilemapList[idx].SetTile(new Vector3Int(x, height - y, 0), tile);
             }
         }
     }
@@ -177,7 +181,7 @@ public class FieldControlByPoca : MonoBehaviour
             // Only Empty position
             if (fieldData[spawnIndex.y][spawnIndex.x] == 1)
             {
-                agent_tilemap.SetTile(new Vector3Int(spawnIndex.x, height - spawnIndex.y, 0), tiles[3]);
+                agentTilemap.SetTile(new Vector3Int(spawnIndex.x, height - spawnIndex.y, 0), tiles[3]);
 
                 AgentControlByPoca agentControl = agentsList[cnt].GetComponent<AgentControlByPoca>();
                 AgentInfo info = new(cnt + 1000, spawnIndex, true, agentsList[cnt], agentControl);
@@ -204,7 +208,7 @@ public class FieldControlByPoca : MonoBehaviour
         int posIndex_y = agentsInfo[agent_id - 1000].m_positionIndex.y;
         Vector3Int pos = new(posIndex_x, settings.fieldHeight - posIndex_y, 0);
 
-        agent_tilemap.SetTile(pos, null);
+        agentTilemap.SetTile(pos, null);
         fieldAgentData[posIndex_y][posIndex_x] = false;
 
         // Forward
@@ -249,7 +253,7 @@ public class FieldControlByPoca : MonoBehaviour
 
         if (settings.dataCountMode) dataCounter.UpdateData(posIndex_y, posIndex_x);
 
-        agent_tilemap.SetTile(pos, tiles[3]);
+        agentTilemap.SetTile(pos, tiles[3]);
         fieldAgentData[posIndex_y][posIndex_x] = true;
 
         // For debug

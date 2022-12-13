@@ -1788,8 +1788,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fb1e72465730d8549b38c322c68e962e, type: 2}
   - {fileID: 11400000, guid: d13e0679fa595bc44a16755defda06e3, type: 2}
   - {fileID: 11400000, guid: 82e4b22a28cda8e44aaec8f15fa16a71, type: 2}
-  field_tilemap: {fileID: 9093684475248148145}
-  agent_tilemap: {fileID: 9093684475876989548}
+  fieldTilemapList:
+  - {fileID: 9093684475248148145}
+  - {fileID: 754020247}
+  - {fileID: 183529841}
+  - {fileID: 1643543511}
+  - {fileID: 1404032590}
+  agentTilemap: {fileID: 9093684475876989548}
   activeAgentsNum: 0
   agentsList:
   - {fileID: 2597476076552893514}
