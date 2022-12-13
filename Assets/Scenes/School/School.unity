@@ -2109,7 +2109,12 @@ MonoBehaviour:
   fieldHeight: 36
   agentCnt: 10
   agentSight: 10
-  csvFileName: fieldData_school_1F
+  csvFileNameList:
+  - fieldData_school_1F
+  - fieldData_school_2F
+  - fieldData_school_3F
+  - fieldData_school_4F
+  - fieldData_school_5F
   debugMode: 0
   timeScale: 1
   dataCountMode: 0

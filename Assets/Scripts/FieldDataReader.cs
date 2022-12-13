@@ -21,16 +21,20 @@ public class FieldDataReader : MonoBehaviour
     {
         Transform TrainingArea = transform.parent;
         settings = TrainingArea.GetComponentInChildren<Settings>();
-        csvFile = Resources.Load(settings.csvFileName) as TextAsset;
-        StringReader reader = new(csvFile.text);
 
-        while (reader.Peek() != -1)
+        for (int i = 0; i < settings.csvFileNameList.Count; i++)
         {
-            string line = reader.ReadLine();
-            csvDatas.Add(line.Split(','));
-        }
+            csvFile = Resources.Load(settings.csvFileNameList[i]) as TextAsset;
+            StringReader reader = new(csvFile.text);
 
-        m_fieldData = ChangeToFieldData();
+            while (reader.Peek() != -1)
+            {
+                string line = reader.ReadLine();
+                csvDatas.Add(line.Split(','));
+            }
+
+            m_fieldData = ChangeToFieldData();
+        }
     }
 
 
@@ -46,7 +50,10 @@ public class FieldDataReader : MonoBehaviour
             List<int> list = new();
             foreach (string s in strs)
             {
-                list.Add(Int32.Parse(s));
+                if (int.TryParse(s, out _))
+                {
+                    list.Add(Int32.Parse(s));
+                }
             }
 
             res.Add(list);
