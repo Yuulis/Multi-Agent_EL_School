@@ -37,7 +37,7 @@ public class AgentControlByPoca : Agent
 
         Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 1000].m_positionIndex;
         observation = new(
-            fieldControl.fieldData,
+            fieldControl.fieldDataList,
             fieldControl.fieldAgentData,
             settings.fieldHeight,
             settings.fieldWidth,
@@ -134,7 +134,7 @@ public class AgentControlByPoca : Agent
     {
         Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 1000].m_positionIndex;
 
-        if (fieldControl.fieldData[positionIndex.y][positionIndex.x] == 2)
+        if (fieldControl.fieldDataList[0][positionIndex.y][positionIndex.x] == 2)
         {
             fieldControl.ReachedExit();
 

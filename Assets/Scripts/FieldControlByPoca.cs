@@ -29,13 +29,13 @@ public class FieldControlByPoca : MonoBehaviour
     private int m_resetTimer;
 
     // FieldData
-    [HideInInspector] public List<List<int>> fieldData;
+    [HideInInspector] public List<List<List<int>>> fieldDataList;
     [HideInInspector] public List<List<bool>> fieldAgentData;
 
     // Tilemap resources
     public List<Sprite> tilemapSprites;
     public List<TileBase> tiles;
-    public Tilemap field_tilemap;
+    public List<Tilemap> field_tilemapList;
     public Tilemap agent_tilemap;
 
     // Agents resources
@@ -92,7 +92,7 @@ public class FieldControlByPoca : MonoBehaviour
     /// <param name="width">Width of the field</param>
     private void ResetFieldData(int height, int width)
     {
-        fieldData = fieldDataReader.m_fieldData;
+        // For fieldAgentData
         fieldAgentData = new();
         for (int y = 0; y < height; y++)
         {
@@ -103,13 +103,18 @@ public class FieldControlByPoca : MonoBehaviour
             }
             fieldAgentData.Add(temp);
         }
-
         agent_tilemap.ClearAllTiles();
-        field_tilemap.ClearAllTiles();
-        SetFieldTilemap(height, width);
 
-        // For debug
-        if (settings.debugMode) PrintFieldData(height, width);
+        // For fieldDataList
+        fieldDataList = fieldDataReader.m_fieldDataList;
+        for (int i = 0; i < fieldDataList.Count; i++)
+        {
+            field_tilemapList[i].ClearAllTiles();
+            SetFieldTilemap(i, height, width);
+
+            // For debug
+            if (settings.debugMode) PrintFieldData(i, height, width);
+        }
     }
 
 
@@ -138,22 +143,24 @@ public class FieldControlByPoca : MonoBehaviour
     /// <summary>
     /// Set tiles of field.
     /// </summary>
+    /// <param name="index">Index of data</param>
     /// <param name="height">Height of the field</param>
     /// <param name="width">Width of the field</param>
-    private void SetFieldTilemap(int height, int width)
+    private void SetFieldTilemap(int index, int height, int width)
     {
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
                 TileBase tile = null;
-                if (fieldData[y][x] == 0) tile = tiles[0];
-                if (fieldData[y][x] == 1) tile = tiles[0];
-                if (fieldData[y][x] == 2) tile = tiles[1];
-                if (fieldData[y][x] == 3) tile = tiles[2];
-                if (fieldData[y][x] == 4) tile = tiles[4];
+                if (fieldDataList[index][y][x] == 0) tile = tiles[0];
+                if (fieldDataList[index][y][x] == 1) tile = tiles[0];
+                if (fieldDataList[index][y][x] == 2) tile = tiles[1];
+                if (fieldDataList[index][y][x] == 3) tile = tiles[2];
+                if (fieldDataList[index][y][x] == 4) tile = tiles[4];
+                if (fieldDataList[index][y][x] == 5) tile = tiles[5];
 
-                field_tilemap.SetTile(new Vector3Int(x, height - y, 0), tile);
+                field_tilemapList[index].SetTile(new Vector3Int(x, height - y, 0), tile);
             }
         }
     }
@@ -175,7 +182,7 @@ public class FieldControlByPoca : MonoBehaviour
             Vector2Int spawnIndex = new(Random.Range(0, width), Random.Range(0, height));
 
             // Only Empty position
-            if (fieldData[spawnIndex.y][spawnIndex.x] == 1)
+            if (fieldDataList[0][spawnIndex.y][spawnIndex.x] == 1)
             {
                 agent_tilemap.SetTile(new Vector3Int(spawnIndex.x, height - spawnIndex.y, 0), tiles[3]);
 
@@ -278,9 +285,10 @@ public class FieldControlByPoca : MonoBehaviour
     /// <summary>
     /// Output Field data. (for debug)
     /// </summary>
+    /// <param name="index">Index of data</param>
     /// <param name="height">Height of the field</param>
     /// <param name="width">Width of the field</param>
-    private void PrintFieldData(int height, int width)
+    private void PrintFieldData(int index, int height, int width)
     {
         Debug.Log("===== Field data =====");
         for (int y = 0; y < height; y++)
@@ -288,7 +296,7 @@ public class FieldControlByPoca : MonoBehaviour
             string s = string.Empty;
             for (int x = 0; x < width; x++)
             {
-                s += fieldData[y][x].ToString() + " ";
+                s += fieldDataList[index][y][x].ToString() + " ";
             }
             Debug.Log(s);
         }

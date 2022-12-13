@@ -15,7 +15,7 @@ public class FieldControl : MonoBehaviour
     FieldDataReader fieldDataReader;
 
     // FieldData
-    [HideInInspector] public List<List<int>> fieldData;
+    [HideInInspector] public List<List<List<int>>> fieldData;
     [HideInInspector] public List<List<bool>> fieldAgentData;
 
     // Tilemap resources
@@ -47,7 +47,7 @@ public class FieldControl : MonoBehaviour
     /// <param name="width">Width of the field</param>
     private void ResetFieldData(int height, int width)
     {
-        fieldData = fieldDataReader.m_fieldData;
+        fieldData = fieldDataReader.m_fieldDataList;
         fieldAgentData = new();
         for (int y = 0; y < height; y++)
         {
@@ -93,10 +93,10 @@ public class FieldControl : MonoBehaviour
             for (int x = 0; x < width; x++)
             {
                 TileBase tile = null;
-                if (fieldData[y][x] == 0) tile = null;
-                if (fieldData[y][x] == 1) tile = tiles[0];
-                if (fieldData[y][x] == 2) tile = tiles[1];
-                if (fieldData[y][x] == 3) tile = tiles[2];
+                if (fieldData[0][y][x] == 0) tile = null;
+                if (fieldData[0][y][x] == 1) tile = tiles[0];
+                if (fieldData[0][y][x] == 2) tile = tiles[1];
+                if (fieldData[0][y][x] == 3) tile = tiles[2];
 
                 field_tilemap.SetTile(new Vector3Int(x, height - y, 0), tile);
             }
@@ -120,7 +120,7 @@ public class FieldControl : MonoBehaviour
             Vector2Int spawnIndex = new(Random.Range(0, width), Random.Range(0, height));
 
             // Only Empty position
-            if (fieldData[spawnIndex.y][spawnIndex.x] == 1)
+            if (fieldData[0][spawnIndex.y][spawnIndex.x] == 1)
             {
                 agent_tilemap.SetTile(new Vector3Int(spawnIndex.x, height - spawnIndex.y, 0), tiles[3]);
 
