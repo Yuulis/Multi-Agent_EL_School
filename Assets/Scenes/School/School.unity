@@ -1779,21 +1779,16 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2b2545b6eded4354294a2ac7c5df5cf9, type: 3}
   - {fileID: 21300000, guid: ea5669e489e7a6246af34a45022d25f3, type: 3}
   - {fileID: 21300000, guid: 94944dea46925cb41996b730d85d0d3d, type: 3}
-  - {fileID: 21300000, guid: 3cec4bc0e7c4ae042a098e76a33fdad8, type: 3}
+  - {fileID: 21300000, guid: 0e39ecdd416cf1447bbce497eb3b80c3, type: 3}
   - {fileID: 21300000, guid: c110ba1a6f5cbf04fb09286ec1343ab9, type: 3}
   tiles:
   - {fileID: 11400000, guid: 5caa44c0682f3ca42aa47121abd4bdbf, type: 2}
   - {fileID: 11400000, guid: fa4a3f53b4461e74faf4c23d4afe9510, type: 2}
   - {fileID: 11400000, guid: d2947251c3eadbc4aa9ec76fd7280125, type: 2}
   - {fileID: 11400000, guid: fb1e72465730d8549b38c322c68e962e, type: 2}
-  - {fileID: 11400000, guid: 28ef43264d3b8eb4a9e5742ad5472462, type: 2}
+  - {fileID: 11400000, guid: d13e0679fa595bc44a16755defda06e3, type: 2}
   - {fileID: 11400000, guid: 82e4b22a28cda8e44aaec8f15fa16a71, type: 2}
-  field_tilemapList:
-  - {fileID: 9093684475248148145}
-  - {fileID: 754020247}
-  - {fileID: 183529841}
-  - {fileID: 1643543511}
-  - {fileID: 1404032590}
+  field_tilemap: {fileID: 9093684475248148145}
   agent_tilemap: {fileID: 9093684475876989548}
   activeAgentsNum: 0
   agentsList:
@@ -2114,12 +2109,7 @@ MonoBehaviour:
   fieldHeight: 36
   agentCnt: 10
   agentSight: 10
-  csvFileName:
-  - fieldData_school_1F
-  - fieldData_school_2F
-  - fieldData_school_3F
-  - fieldData_school_4F
-  - fieldData_school_5F
+  csvFileName: fieldData_school_1F
   debugMode: 0
   timeScale: 1
   dataCountMode: 0
