@@ -16,6 +16,9 @@ public class AgentControlByPoca : Agent
     // Agent's data
     private int agent_id;
 
+    // Agent's floor
+    private int floorNum;
+
     // Agent's observation
     private ObservationAroundAgent observation;
 
@@ -34,6 +37,7 @@ public class AgentControlByPoca : Agent
     {
         int n = (int)this.gameObject.name[5] - 48;
         agent_id = fieldControl.agentsInfo[n].m_id;
+        floorNum = fieldControl.agentsInfo[agent_id - 1000].m_floorNum;
 
         Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 1000].m_positionIndex;
         observation = new(
@@ -84,33 +88,33 @@ public class AgentControlByPoca : Agent
             // Forward
             if (action[0] == 1)
             {
-                fieldControl.MoveAgentTile(agent_id, 1);
+                fieldControl.MoveAgentTile(floorNum, agent_id, 1);
             }
 
             // Back
             else if (action[0] == 2)
             {
-                fieldControl.MoveAgentTile(agent_id, 2);
+                fieldControl.MoveAgentTile(floorNum, agent_id, 2);
             }
 
             // Right
             else if (action[0] == 3)
             {
-                fieldControl.MoveAgentTile(agent_id, 3);
+                fieldControl.MoveAgentTile(floorNum, agent_id, 3);
             }
 
             // Left
             else if (action[0] == 4)
             {
-                fieldControl.MoveAgentTile(agent_id, 4);
+                fieldControl.MoveAgentTile(floorNum, agent_id, 4);
             }
         }
         else
         {
             Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 1000].m_positionIndex;
             Vector3Int pos = new(positionIndex.x, settings.fieldHeight - positionIndex.y, 0);
-            fieldControl.agent_tilemap.SetTile(pos, null);
-            fieldControl.fieldAgentData[positionIndex.y][positionIndex.x] = false;
+            fieldControl.agentTilemapList[floorNum].SetTile(pos, null);
+            fieldControl.fieldAgentDataList[floorNum][positionIndex.y][positionIndex.x] = false;
             fieldControl.agentsInfo[agent_id - 1000].m_active = false;
         }
     }
@@ -140,8 +144,8 @@ public class AgentControlByPoca : Agent
 
             Vector3Int pos = new(positionIndex.x, settings.fieldHeight - positionIndex.y, 0);
 
-            fieldControl.agent_tilemap.SetTile(pos, null);
-            fieldControl.fieldAgentData[positionIndex.y][positionIndex.x] = false;
+            fieldControl.agentTilemapList[floorNum].SetTile(pos, null);
+            fieldControl.fieldAgentDataList[floorNum][positionIndex.y][positionIndex.x] = false;
             fieldControl.agentsInfo[agent_id - 1000].m_active = false;
             fieldControl.activeAgentsNum--;
 

@@ -124,7 +124,7 @@ public class FieldControl : MonoBehaviour
             {
                 agent_tilemap.SetTile(new Vector3Int(spawnIndex.x, height - spawnIndex.y, 0), tiles[3]);
 
-                AgentInfo info = new(cnt + 10, spawnIndex, true, agentsList[cnt], null);
+                AgentInfo info = new(cnt + 10, 0, spawnIndex, true, agentsList[cnt], null);
                 agentsInfo.Add(info);
                 fieldAgentData[spawnIndex.y][spawnIndex.x] = true;
 

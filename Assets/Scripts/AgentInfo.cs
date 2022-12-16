@@ -7,6 +7,9 @@ public class AgentInfo
     // Agent id
     public int m_id;
 
+    // Agent's current floor 
+    public int m_floorNum;
+
     // Agent's position on fieldDataIndex
     public Vector2Int m_positionIndex;
 
@@ -20,9 +23,10 @@ public class AgentInfo
     public AgentControlByPoca m_agentControl;
 
 
-    public AgentInfo(int id, Vector2Int position, bool active, GameObject obj, AgentControlByPoca agentControl)
+    public AgentInfo(int id, int floorNum, Vector2Int position, bool active, GameObject obj, AgentControlByPoca agentControl)
     {
         m_id = id;
+        m_floorNum = floorNum;
         m_positionIndex = position;
         m_active = active;
         m_obj = obj;
@@ -36,7 +40,8 @@ public class AgentInfo
     public void PrintAgentInfo()
     {
         Debug.Log($"Agent-{m_id} : " +
-            $"[Position (fieldDataIndex)]  = ({m_positionIndex.x}, {m_positionIndex.y}), " +
+            $"[Floor] = {m_floorNum}" +  
+            $"[Position (fieldDataIndex)] = ({m_positionIndex.x}, {m_positionIndex.y}), " +
             $"[Active] = {m_active}");
     }
 }
