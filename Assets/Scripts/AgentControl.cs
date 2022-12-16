@@ -33,7 +33,7 @@ public class AgentControl : Agent
     public override void OnEpisodeBegin()
     {
         int n = (int)this.gameObject.name[5] - 48;
-        agent_id = fieldControl.agentsInfo[n].m_id;
+        agent_id = fieldControl.agentsInfo[n].m_id;        
 
         Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].m_positionIndex;
         observation = new(

@@ -47,7 +47,7 @@ public class FieldControl : MonoBehaviour
     /// <param name="width">Width of the field</param>
     private void ResetFieldData(int height, int width)
     {
-        fieldData = fieldDataReader.m_fieldData;
+        fieldData = fieldDataReader.m_fieldDataList[0];
         fieldAgentData = new();
         for (int y = 0; y < height; y++)
         {
@@ -124,7 +124,7 @@ public class FieldControl : MonoBehaviour
             {
                 agent_tilemap.SetTile(new Vector3Int(spawnIndex.x, height - spawnIndex.y, 0), tiles[3]);
 
-                AgentInfo info = new(cnt + 10, spawnIndex, true, agentsList[cnt], null);
+                AgentInfo info = new(cnt + 10, 0, spawnIndex, true, agentsList[cnt], null);
                 agentsInfo.Add(info);
                 fieldAgentData[spawnIndex.y][spawnIndex.x] = true;
 
