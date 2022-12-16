@@ -13,7 +13,7 @@ public class FieldDataReader : MonoBehaviour
     private TextAsset csvFile;
     private List<string[]> csvDatas;
 
-    // The list of fieldData
+    // List of fieldData
     public List<List<List<int>>> m_fieldDataList = new();
 
 
@@ -22,9 +22,9 @@ public class FieldDataReader : MonoBehaviour
         Transform TrainingArea = transform.parent;
         settings = TrainingArea.GetComponentInChildren<Settings>();
 
-        for (int i = 0; i < settings.csvFileNameList.Count; i++)
+        for (int i = 0; i < settings.csvFileName.Count; i++)
         {
-            csvFile = Resources.Load(settings.csvFileNameList[i]) as TextAsset;
+            csvFile = Resources.Load(settings.csvFileName[i]) as TextAsset;
             StringReader reader = new(csvFile.text);
 
             csvDatas = new();
