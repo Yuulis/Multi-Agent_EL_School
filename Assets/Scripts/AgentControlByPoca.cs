@@ -41,8 +41,8 @@ public class AgentControlByPoca : Agent
 
         Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 1000].m_positionIndex;
         observation = new(
-            fieldControl.fieldDataList,
-            fieldControl.fieldAgentData,
+            fieldControl.fieldDataList[floorNum],
+            fieldControl.fieldAgentDataList[floorNum],
             settings.fieldHeight,
             settings.fieldWidth,
             positionIndex,
@@ -113,7 +113,7 @@ public class AgentControlByPoca : Agent
         {
             Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 1000].m_positionIndex;
             Vector3Int pos = new(positionIndex.x, settings.fieldHeight - positionIndex.y, 0);
-            fieldControl.agentTilemapList[floorNum].SetTile(pos, null);
+            fieldControl.agent_tilemapList[floorNum].SetTile(pos, null);
             fieldControl.fieldAgentDataList[floorNum][positionIndex.y][positionIndex.x] = false;
             fieldControl.agentsInfo[agent_id - 1000].m_active = false;
         }
@@ -144,7 +144,7 @@ public class AgentControlByPoca : Agent
 
             Vector3Int pos = new(positionIndex.x, settings.fieldHeight - positionIndex.y, 0);
 
-            fieldControl.agentTilemapList[floorNum].SetTile(pos, null);
+            fieldControl.agent_tilemapList[floorNum].SetTile(pos, null);
             fieldControl.fieldAgentDataList[floorNum][positionIndex.y][positionIndex.x] = false;
             fieldControl.agentsInfo[agent_id - 1000].m_active = false;
             fieldControl.activeAgentsNum--;

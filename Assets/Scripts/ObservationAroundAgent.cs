@@ -11,7 +11,7 @@ public class ObservationAroundAgent
     public List<bool> observationListNeighborhood;
 
     // Member var
-    private readonly List<List<List<int>>> m_fieldDataList;
+    private readonly List<List<int>> m_fieldDataList;
     private readonly List<List<bool>> m_fieldAgentData;
     private readonly int m_fieldHeight;
     private readonly int m_fieldWidth;
@@ -28,7 +28,7 @@ public class ObservationAroundAgent
     /// <param name="width">Width of the field</param>
     /// <param name="positionIndex">Index of agent's position index of the fieldData</param>
     /// <param name="agentSight">Agent's sight</param>
-    public ObservationAroundAgent(List<List<List<int>>> fieldData, List<List<bool>> fieldAgentData, int height, int width, Vector2Int positionIndex, int agentSight)
+    public ObservationAroundAgent(List<List<int>> fieldData, List<List<bool>> fieldAgentData, int height, int width, Vector2Int positionIndex, int agentSight)
     {
         observationList = new();
         observationListNeighborhood = new();
@@ -109,19 +109,19 @@ public class ObservationAroundAgent
                 }
 
                 // Empty
-                else if (m_fieldDataList[0][positionIndex.y + y][positionIndex.x + x] == 1)
+                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 1)
                 {
                     observationListNeighborhood[cnt] = true;
                 }
 
                 // Exit
-                else if (m_fieldDataList[0][positionIndex.y + y][positionIndex.x + x] == 2)
+                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 2)
                 {
                     observationListNeighborhood[cnt] = true;
                 }
 
                 // Obstacle
-                else if (m_fieldDataList[0][positionIndex.y + y][positionIndex.x + x] == 3)
+                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 3)
                 {
                     observationListNeighborhood[cnt] = false;
                 }
@@ -169,19 +169,19 @@ public class ObservationAroundAgent
                 }
 
                 // Empty
-                else if (m_fieldDataList[0][positionIndex.y + y][positionIndex.x + x] == 1)
+                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 1)
                 {
                     observationList[y + sight][x + sight] = 1;
                 }
 
                 // Exit
-                else if (m_fieldDataList[0][positionIndex.y + y][positionIndex.x + x] == 2)
+                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 2)
                 {
                     observationList[y + sight][x + sight] = 2;
                 }
 
                 // Obstacle
-                else if (m_fieldDataList[0][positionIndex.y + y][positionIndex.x + x] == 3)
+                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 3)
                 {
                     observationList[y + sight][x + sight] = 3;
                 }
