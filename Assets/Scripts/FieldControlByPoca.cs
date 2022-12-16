@@ -111,11 +111,6 @@ public class FieldControlByPoca : MonoBehaviour
             fieldAgentDataList.Add(temp);
         }
 
-        foreach (var tilemap in agentTilemapList)
-        {
-            tilemap.ClearAllTiles();
-        }
-
         for (int idx = 0; idx < fieldTilemapList.Count; idx++)
         {
             fieldTilemapList[idx].ClearAllTiles();
@@ -192,7 +187,8 @@ public class FieldControlByPoca : MonoBehaviour
         int cnt = 0;
         while (cnt < agentNum)
         {
-            int spawnFloor = Random.Range(0, 5 + 1);
+            //int spawnFloor = Random.Range(0, 5 + 1);
+            int spawnFloor = 0;
             Vector2Int spawnPosIndex = new(Random.Range(0, width), Random.Range(0, height));
 
             // Only Empty position

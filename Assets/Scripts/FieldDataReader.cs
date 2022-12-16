@@ -14,7 +14,7 @@ public class FieldDataReader : MonoBehaviour
     private List<string[]> csvDatas;
 
     // The list of fieldData
-    public List<List<List<int>>> m_fieldDataList;
+    public List<List<List<int>>> m_fieldDataList = new();
 
 
     void Start()
@@ -22,19 +22,19 @@ public class FieldDataReader : MonoBehaviour
         Transform TrainingArea = transform.parent;
         settings = TrainingArea.GetComponentInChildren<Settings>();
 
-        csvDatas = new();
         for (int i = 0; i < settings.csvFileNameList.Count; i++)
         {
             csvFile = Resources.Load(settings.csvFileNameList[i]) as TextAsset;
             StringReader reader = new(csvFile.text);
 
+            csvDatas = new();
             while (reader.Peek() != -1)
             {
                 string line = reader.ReadLine();
                 csvDatas.Add(line.Split(','));
             }
 
-            m_fieldDataList[i] = ChangeToFieldData();
+            m_fieldDataList.Add(ChangeToFieldData());
         }
     }
 
