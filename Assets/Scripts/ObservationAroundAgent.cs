@@ -126,6 +126,19 @@ public class ObservationAroundAgent
                     observationListNeighborhood[cnt] = false;
                 }
 
+                // Upstair
+                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 4)
+                {
+                    observationListNeighborhood[cnt] = true;
+                }
+
+                // Downstair
+                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 5)
+                {
+                    observationListNeighborhood[cnt] = true;
+                }
+
+                // Otherwise
                 else
                 {
                     observationListNeighborhood[cnt] = false;
@@ -165,7 +178,7 @@ public class ObservationAroundAgent
                 // Agent
                 else if (m_fieldAgentData[positionIndex.y + y][positionIndex.x + x])
                 {
-                    observationList[y + sight][x + sight] = 4;
+                    observationList[y + sight][x + sight] = 10;
                 }
 
                 // Empty
@@ -184,6 +197,18 @@ public class ObservationAroundAgent
                 else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 3)
                 {
                     observationList[y + sight][x + sight] = 3;
+                }
+
+                // Upstair
+                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 4)
+                {
+                    observationList[y + sight][x + sight] = 4;
+                }
+
+                // Downstair
+                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 5)
+                {
+                    observationList[y + sight][x + sight] = 5;
                 }
             }
         }
