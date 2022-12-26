@@ -5,16 +5,19 @@ using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 
-public class AgentControl : Agent
+public class AgentControlMultiFloor : Agent
 {
     // Settings
     Settings settings;
 
     // FieldControl
-    FieldControl fieldControl;
+    FieldControlByPoca fieldControl;
 
     // Agent's data
-    private int agent_id;
+    private int agentId;
+
+    // Agent's floor
+    private int floorNum;
 
     // Agent's observation
     private ObservationAroundAgent observation;
@@ -25,7 +28,7 @@ public class AgentControl : Agent
     {
         Transform TrainingArea = transform.parent;
         settings = TrainingArea.GetComponentInChildren<Settings>();
-        fieldControl = TrainingArea.GetComponentInChildren<FieldControl>();
+        fieldControl = TrainingArea.GetComponentInChildren<FieldControlByPoca>();
     }
 
 
@@ -33,12 +36,13 @@ public class AgentControl : Agent
     public override void OnEpisodeBegin()
     {
         int n = (int)this.gameObject.name[5] - 48;
-        agent_id = fieldControl.agentsInfo[n].id;        
+        agentId = fieldControl.agentsInfo[n].id;
+        floorNum = fieldControl.agentsInfo[agentId - 1000].floorNum;
 
-        Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].positionIndex;
+        Vector2Int positionIndex = fieldControl.agentsInfo[agentId - 1000].positionIndex;
         observation = new(
-            fieldControl.fieldData,
-            fieldControl.fieldAgentData,
+            fieldControl.fieldDataList[floorNum],
+            fieldControl.fieldAgentDataList[floorNum],
             settings.fieldHeight,
             settings.fieldWidth,
             positionIndex,
@@ -50,16 +54,16 @@ public class AgentControl : Agent
     // collect observations
     public override void CollectObservations(VectorSensor sensor)
     {
-        observation.UpdateObservation(fieldControl.agentsInfo[agent_id - 10].positionIndex, settings.agentSight);
+        observation.UpdateObservation(fieldControl.agentsInfo[agentId - 1000].positionIndex, settings.agentSight);
 
         // For debug
-        if (settings.debugMode) observation.PrintAgentObservation(agent_id);
+        if (settings.debugMode) observation.PrintAgentObservation(agentId);
 
         for (int i = 0; i < settings.agentSight * 2 + 1; i++)
         {
             for (int j = 0; j < settings.agentSight * 2 + 1; j++)
             {
-                if (fieldControl.agentsInfo[agent_id - 10].active)
+                if (fieldControl.agentsInfo[agentId - 1000].active)
                 {
                     sensor.AddObservation(observation.observationList[i][j]);
                 }
@@ -75,35 +79,43 @@ public class AgentControl : Agent
     // When agent moves
     public override void OnActionReceived(ActionBuffers actions)
     {
-        if (fieldControl.agentsInfo[agent_id - 10].active)
+        if (fieldControl.agentsInfo[agentId - 1000].active)
         {
-            CheckAgentReachGoal(agent_id);
+            CheckAgentReachGoal(agentId);
 
             var action = actions.DiscreteActions;
 
             // Forward
             if (action[0] == 1)
             {
-                fieldControl.MoveAgentTile(agent_id, 1);
+                fieldControl.MoveAgentTile(floorNum, agentId, 1);
             }
 
             // Back
             else if (action[0] == 2)
             {
-                fieldControl.MoveAgentTile(agent_id, 2);
+                fieldControl.MoveAgentTile(floorNum, agentId, 2);
             }
 
             // Right
             else if (action[0] == 3)
             {
-                fieldControl.MoveAgentTile(agent_id, 3);
+                fieldControl.MoveAgentTile(floorNum, agentId, 3);
             }
 
             // Left
             else if (action[0] == 4)
             {
-                fieldControl.MoveAgentTile(agent_id, 4);
+                fieldControl.MoveAgentTile(floorNum, agentId, 4);
             }
+        }
+        else
+        {
+            Vector2Int positionIndex = fieldControl.agentsInfo[agentId - 1000].positionIndex;
+            Vector3Int pos = new(positionIndex.x, settings.fieldHeight - positionIndex.y, 0);
+            fieldControl.agentTilemapList[floorNum].SetTile(pos, null);
+            fieldControl.fieldAgentDataList[floorNum][positionIndex.y][positionIndex.x] = false;
+            fieldControl.agentsInfo[agentId - 1000].active = false;
         }
     }
 
@@ -124,28 +136,44 @@ public class AgentControl : Agent
     /// <param name="agent_id">Agent's id</param>
     public void CheckAgentReachGoal(int agent_id)
     {
-        Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 10].positionIndex;
+        Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 1000].positionIndex;
 
-        if (fieldControl.fieldData[positionIndex.y][positionIndex.x] == 2)
+        if (fieldControl.fieldDataList[floorNum][positionIndex.y][positionIndex.x] == 2)
         {
-            AddReward(1.0f);
+            fieldControl.ReachedExit();
 
             Vector3Int pos = new(positionIndex.x, settings.fieldHeight - positionIndex.y, 0);
-            
-            fieldControl.agent_tilemap.SetTile(pos, null);
-            fieldControl.fieldAgentData[positionIndex.y][positionIndex.x] = false;
-            fieldControl.agentsInfo[agent_id - 10].active = false;
+
+            fieldControl.agentTilemapList[floorNum].SetTile(pos, null);
+            fieldControl.fieldAgentDataList[floorNum][positionIndex.y][positionIndex.x] = false;
+            fieldControl.agentsInfo[agent_id - 1000].active = false;
             fieldControl.activeAgentsNum--;
 
+            // When all agents reached any exit
             if (fieldControl.activeAgentsNum == 0)
             {
-                EndEpisode();
-
+                fieldControl.AllReachedExit();
                 fieldControl.InitializeTileMaps(settings.fieldHeight, settings.fieldWidth);
             }
         }
+    }
 
-        AddReward(-1.0f / 1000);
+
+    public void MoveAnotherFloor()
+    {
+        Vector2Int positionIndex = fieldControl.agentsInfo[agentId - 1000].positionIndex;
+
+        // Upstair
+        if (fieldControl.fieldDataList[floorNum][positionIndex.y][positionIndex.x] == 4)
+        {
+
+        }
+
+        // Downstair
+        else if (fieldControl.fieldDataList[floorNum][positionIndex.y][positionIndex.x] == 5)
+        {
+
+        }
     }
 
 

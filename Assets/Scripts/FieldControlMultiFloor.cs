@@ -1,11 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Random = UnityEngine.Random;
-using UnityEngine.Tilemaps;
 using Unity.MLAgents;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
-public class FieldControlByPoca : MonoBehaviour
+public class FieldControlMultiFloor : MonoBehaviour
 {
     // Settings
     public GameObject settings_obj;
@@ -31,6 +32,7 @@ public class FieldControlByPoca : MonoBehaviour
     // FieldData
     [HideInInspector] public List<List<List<int>>> fieldDataList;
     [HideInInspector] public List<List<List<bool>>> fieldAgentDataList;
+    [HideInInspector] public List<Tuple<int, Vector2Int, int, Vector2Int>> stairDataList;
 
     // Tilemap resources
     public List<Sprite> tilemapSprites;
@@ -56,6 +58,7 @@ public class FieldControlByPoca : MonoBehaviour
         {
             Time.timeScale = settings.timeScale;
 
+            InitializeStairDataList();
             dataCounter.Initialize(settings.fieldHeight, settings.fieldWidth);
             dataCounterInitialized = true;
             episodeCount = 0;
@@ -322,5 +325,11 @@ public class FieldControlByPoca : MonoBehaviour
             }
         }
         Debug.Log("======================");
+    }
+
+
+    private void InitializeStairDataList()
+    {
+        stairDataList = new();
     }
 }
