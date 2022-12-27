@@ -330,6 +330,109 @@ public class FieldControlMultiFloor : MonoBehaviour
 
     private void InitializeStairDataList()
     {
-        stairDataList = new();
+        stairDataList = new()
+        {
+            // 1F-1
+            new Tuple<int, Vector2Int, int, Vector2Int>(0, new Vector2Int(21, 12), 1, new Vector2Int(21, 15)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(0, new Vector2Int(21, 13), 1, new Vector2Int(21, 14)),
+
+            // 1F-2
+            new Tuple<int, Vector2Int, int, Vector2Int>(0, new Vector2Int(21, 51), 1, new Vector2Int(14, 51)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(0, new Vector2Int(21, 52), 1, new Vector2Int(14, 52)),
+
+            // 1F-3
+            new Tuple<int, Vector2Int, int, Vector2Int>(0, new Vector2Int(21, 87), 1, new Vector2Int(21, 86)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(0, new Vector2Int(21, 88), 1, new Vector2Int(21, 85)),
+
+            // 2F-1
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(21, 12), 2, new Vector2Int(21, 15)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(21, 13), 2, new Vector2Int(21, 14)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(21, 15), 0, new Vector2Int(21, 12)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(21, 14), 0, new Vector2Int(21, 13)),
+
+            // 2F-2
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(21, 51), 2, new Vector2Int(14, 51)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(21, 52), 2, new Vector2Int(14, 52)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(14, 51), 0, new Vector2Int(21, 51)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(14, 52), 0, new Vector2Int(21, 52)),
+
+            // 2F-3
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(21, 87), 2, new Vector2Int(21, 86)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(21, 88), 2, new Vector2Int(21, 75)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(21, 86), 0, new Vector2Int(21, 87)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(21, 85), 0, new Vector2Int(21, 88)),
+
+            // Stair-field (2F)
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(13, 70), 2, new Vector2Int(13, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(14, 70), 2, new Vector2Int(14, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(15, 70), 2, new Vector2Int(15, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(16, 70), 2, new Vector2Int(16, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(17, 70), 2, new Vector2Int(17, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(18, 70), 2, new Vector2Int(18, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(19, 70), 2, new Vector2Int(19, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(20, 70), 2, new Vector2Int(20, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(21, 70), 2, new Vector2Int(21, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(1, new Vector2Int(22, 70), 2, new Vector2Int(22, 70)),
+
+            // 3F-1
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(21, 12), 3, new Vector2Int(21, 15)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(21, 13), 3, new Vector2Int(21, 14)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(21, 15), 1, new Vector2Int(21, 12)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(21, 14), 1, new Vector2Int(21, 13)),
+
+            // 3F-2
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(21, 51), 3, new Vector2Int(14, 51)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(21, 52), 3, new Vector2Int(14, 52)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(14, 51), 1, new Vector2Int(21, 51)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(14, 52), 1, new Vector2Int(21, 52)),
+
+            // 3F-3
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(21, 87), 3, new Vector2Int(21, 86)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(21, 88), 3, new Vector2Int(21, 75)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(21, 86), 1, new Vector2Int(21, 87)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(21, 85), 1, new Vector2Int(21, 88)),
+
+            // Stair-field (3F)
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(13, 70), 1, new Vector2Int(13, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(14, 70), 1, new Vector2Int(14, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(15, 70), 1, new Vector2Int(15, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(16, 70), 1, new Vector2Int(16, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(17, 70), 1, new Vector2Int(17, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(18, 70), 1, new Vector2Int(18, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(19, 70), 1, new Vector2Int(19, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(20, 70), 1, new Vector2Int(20, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(21, 70), 1, new Vector2Int(21, 70)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(2, new Vector2Int(22, 70), 1, new Vector2Int(22, 70)),
+
+            // 4F-1
+            new Tuple<int, Vector2Int, int, Vector2Int>(3, new Vector2Int(21, 12), 4, new Vector2Int(21, 15)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(3, new Vector2Int(21, 13), 4, new Vector2Int(21, 14)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(3, new Vector2Int(21, 15), 2, new Vector2Int(21, 12)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(3, new Vector2Int(21, 14), 2, new Vector2Int(21, 13)),
+
+            // 4F-2
+            new Tuple<int, Vector2Int, int, Vector2Int>(3, new Vector2Int(21, 51), 4, new Vector2Int(14, 51)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(3, new Vector2Int(21, 52), 4, new Vector2Int(14, 52)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(3, new Vector2Int(14, 51), 2, new Vector2Int(21, 51)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(3, new Vector2Int(14, 52), 2, new Vector2Int(21, 52)),
+
+            // 4F-3
+            new Tuple<int, Vector2Int, int, Vector2Int>(3, new Vector2Int(21, 87), 4, new Vector2Int(21, 86)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(3, new Vector2Int(21, 88), 4, new Vector2Int(21, 75)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(3, new Vector2Int(21, 86), 2, new Vector2Int(21, 87)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(3, new Vector2Int(21, 85), 2, new Vector2Int(21, 88)),
+
+            // 5F-1
+            new Tuple<int, Vector2Int, int, Vector2Int>(4, new Vector2Int(21, 15), 3, new Vector2Int(21, 12)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(4, new Vector2Int(21, 14), 3, new Vector2Int(21, 13)),
+
+            // 5F-2
+            new Tuple<int, Vector2Int, int, Vector2Int>(4, new Vector2Int(14, 51), 3, new Vector2Int(21, 51)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(4, new Vector2Int(14, 52), 3, new Vector2Int(21, 52)),
+
+            // 5F-3
+            new Tuple<int, Vector2Int, int, Vector2Int>(4, new Vector2Int(21, 86), 3, new Vector2Int(21, 87)),
+            new Tuple<int, Vector2Int, int, Vector2Int>(4, new Vector2Int(21, 85), 3, new Vector2Int(21, 88)),
+        };
     }
 }

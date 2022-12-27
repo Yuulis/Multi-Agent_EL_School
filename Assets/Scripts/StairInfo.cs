@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class StairInfo : MonoBehaviour
 {
+    // All variable is index
     // Floor1
     int floorFrom;
 
