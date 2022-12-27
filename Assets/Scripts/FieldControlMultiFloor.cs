@@ -27,7 +27,7 @@ public class FieldControlMultiFloor : MonoBehaviour
     DataCounter dataCounter;
 
     [Header("Max Environment Steps")] public int maxEnvironmentSteps = 2000;
-    private int m_resetTimer;
+    private int resetTimer;
 
     // FieldData
     [HideInInspector] public List<List<List<int>>> fieldDataList;
@@ -44,7 +44,7 @@ public class FieldControlMultiFloor : MonoBehaviour
     [HideInInspector] public int activeAgentsNum;
     public List<GameObject> agentsList;
     [HideInInspector] public List<AgentInfo> agentsInfo;
-    private SimpleMultiAgentGroup m_agentGroup;
+    private SimpleMultiAgentGroup agentGroup;
 
 
     private void Start()
@@ -67,24 +67,24 @@ public class FieldControlMultiFloor : MonoBehaviour
         ResetFieldData(settings.fieldHeight, settings.fieldWidth);
         InitializeTileMaps(settings.fieldHeight, settings.fieldWidth);
 
-        m_agentGroup = new SimpleMultiAgentGroup();
+        agentGroup = new SimpleMultiAgentGroup();
         foreach (var item in agentsInfo)
         {
-            m_agentGroup.RegisterAgent(item.agentControl);
+            agentGroup.RegisterAgent(item.agentControl);
         }
     }
 
 
     private void FixedUpdate()
     {
-        m_resetTimer++;
-        if (m_resetTimer >= maxEnvironmentSteps && maxEnvironmentSteps > 0)
+        resetTimer++;
+        if (resetTimer >= maxEnvironmentSteps && maxEnvironmentSteps > 0)
         {
-            m_agentGroup.GroupEpisodeInterrupted();
+            agentGroup.GroupEpisodeInterrupted();
             InitializeTileMaps(settings.fieldHeight, settings.fieldWidth);
         }
 
-        m_agentGroup.AddGroupReward(-1.0f / maxEnvironmentSteps);
+        agentGroup.AddGroupReward(-1.0f / maxEnvironmentSteps);
     }
 
 
@@ -118,7 +118,7 @@ public class FieldControlMultiFloor : MonoBehaviour
         }
 
         // For fieldDataList
-        fieldDataList = fieldDataReader.m_fieldDataList;
+        fieldDataList = fieldDataReader.fieldDataList;
         for (int i = 0; i < fieldDataList.Count; i++)
         {
             fieldTilemapList[i].ClearAllTiles();
@@ -144,7 +144,7 @@ public class FieldControlMultiFloor : MonoBehaviour
         }
 
         activeAgentsNum = settings.agentCnt;
-        m_resetTimer = 0;
+        resetTimer = 0;
 
         foreach (var tilemap in agentTilemapList)
         {
@@ -289,7 +289,7 @@ public class FieldControlMultiFloor : MonoBehaviour
     /// </summary>
     public void ReachedExit()
     {
-        m_agentGroup.AddGroupReward(1.0f);
+        agentGroup.AddGroupReward(1.0f);
     }
 
 
@@ -298,7 +298,7 @@ public class FieldControlMultiFloor : MonoBehaviour
     /// </summary>
     public void AllReachedExit()
     {
-        m_agentGroup.EndGroupEpisode();
+        agentGroup.EndGroupEpisode();
     }
 
 

@@ -14,7 +14,7 @@ public class FieldDataReader : MonoBehaviour
     private List<string[]> csvDatas;
 
     // List of fieldData
-    public List<List<List<int>>> m_fieldDataList = new();
+    public List<List<List<int>>> fieldDataList = new();
 
 
     void Start()
@@ -34,7 +34,7 @@ public class FieldDataReader : MonoBehaviour
                 csvDatas.Add(line.Split(','));
             }
 
-            m_fieldDataList.Add(ChangeToFieldData());
+            fieldDataList.Add(ChangeToFieldData());
         }
     }
 

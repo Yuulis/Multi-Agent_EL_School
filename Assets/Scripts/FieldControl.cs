@@ -47,7 +47,7 @@ public class FieldControl : MonoBehaviour
     /// <param name="width">Width of the field</param>
     private void ResetFieldData(int height, int width)
     {
-        fieldData = fieldDataReader.m_fieldDataList[0];
+        fieldData = fieldDataReader.fieldDataList[0];
         fieldAgentData = new();
         for (int y = 0; y < height; y++)
         {

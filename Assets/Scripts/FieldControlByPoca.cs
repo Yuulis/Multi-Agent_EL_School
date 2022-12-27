@@ -115,7 +115,7 @@ public class FieldControlByPoca : MonoBehaviour
         }
 
         // For fieldDataList
-        fieldDataList = fieldDataReader.m_fieldDataList;
+        fieldDataList = fieldDataReader.fieldDataList;
         for (int i = 0; i < fieldDataList.Count; i++)
         {
             fieldTilemapList[i].ClearAllTiles();
