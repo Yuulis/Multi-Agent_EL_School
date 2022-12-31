@@ -13,10 +13,10 @@ public class CellInfo : MonoBehaviour
      * 4 : Upstair
      * 5 : Downstair
      */
-    int cellType;
+    public int cellType;
 
     // If cell-type is 4 or 5, this is not null. 
-    StairInfo stairInfo;
+    public StairInfo stairInfo;
 
 
     public CellInfo(int cellType, StairInfo stairInfo)

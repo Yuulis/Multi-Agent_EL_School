@@ -30,7 +30,7 @@ public class FieldControlMultiFloor : MonoBehaviour
     private int resetTimer;
 
     // FieldData
-    [HideInInspector] public List<List<List<int>>> fieldDataList;
+    [HideInInspector] public List<List<List<CellInfo>>> fieldDataList;
     [HideInInspector] public List<List<List<bool>>> fieldAgentDataList;
     [HideInInspector] public List<Tuple<int, Vector2Int, int, Vector2Int>> stairDataList;
 
@@ -118,7 +118,43 @@ public class FieldControlMultiFloor : MonoBehaviour
         }
 
         // For fieldDataList
-        fieldDataList = fieldDataReader.fieldDataList;
+        fieldDataList = new();
+        for (int index = 0; index < fieldTilemapList.Count; index++)
+        {
+            List<List<CellInfo>> temp1 = new();
+            for (int y = 0; y < settings.fieldHeight; y++)
+            {
+                List<CellInfo> temp2 = new();
+                for (int x = 0; x < settings.fieldWidth; x++)
+                {
+                    int cellType = fieldDataReader.fieldDataList[index][y][x];
+                    CellInfo cellInfo = new(cellType, null);
+
+                    // If cell is upstair or downstair
+                    if (cellType == 4 || cellType == 5)
+                    {
+                        foreach (var stairData in stairDataList)
+                        {
+                            if (stairData.Item1 == index && stairData.Item2.y == y && stairData.Item2.x == x)
+                            {
+                                StairInfo stairInfo = new(stairData.Item1, stairData.Item2, stairData.Item3, stairData.Item4);
+                                cellInfo.stairInfo = stairInfo;
+
+                                break;
+                            }
+                        }
+                    }
+
+                    temp2.Add(cellInfo);
+                }
+
+                temp1.Add(temp2);
+            }
+
+            fieldDataList.Add(temp1);
+
+        }
+
         for (int i = 0; i < fieldDataList.Count; i++)
         {
             fieldTilemapList[i].ClearAllTiles();
@@ -170,12 +206,12 @@ public class FieldControlMultiFloor : MonoBehaviour
             for (int x = 0; x < width; x++)
             {
                 TileBase tile = null;
-                if (fieldDataList[index][y][x] == 0) tile = tiles[0];
-                if (fieldDataList[index][y][x] == 1) tile = tiles[0];
-                if (fieldDataList[index][y][x] == 2) tile = tiles[1];
-                if (fieldDataList[index][y][x] == 3) tile = tiles[2];
-                if (fieldDataList[index][y][x] == 4) tile = tiles[4];
-                if (fieldDataList[index][y][x] == 5) tile = tiles[5];
+                if (fieldDataList[index][y][x].cellType == 0) tile = tiles[0];
+                if (fieldDataList[index][y][x].cellType == 1) tile = tiles[0];
+                if (fieldDataList[index][y][x].cellType == 2) tile = tiles[1];
+                if (fieldDataList[index][y][x].cellType == 3) tile = tiles[2];
+                if (fieldDataList[index][y][x].cellType == 4) tile = tiles[4];
+                if (fieldDataList[index][y][x].cellType == 5) tile = tiles[5];
 
                 fieldTilemapList[index].SetTile(new Vector3Int(x, height - y, 0), tile);
             }
@@ -201,7 +237,7 @@ public class FieldControlMultiFloor : MonoBehaviour
             Vector2Int spawnPosIndex = new(Random.Range(0, width), Random.Range(0, height));
 
             // Only Empty position
-            if (fieldDataList[0][spawnPosIndex.y][spawnPosIndex.x] == 1)
+            if (fieldDataList[0][spawnPosIndex.y][spawnPosIndex.x].cellType == 1)
             {
                 agentTilemapList[spawnFloor].SetTile(new Vector3Int(spawnPosIndex.x, height - spawnPosIndex.y, 0), tiles[3]);
 
@@ -328,6 +364,9 @@ public class FieldControlMultiFloor : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Initialize stairDataList.
+    /// </summary>
     private void InitializeStairDataList()
     {
         stairDataList = new()

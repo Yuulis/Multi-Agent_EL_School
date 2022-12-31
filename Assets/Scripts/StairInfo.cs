@@ -6,16 +6,16 @@ public class StairInfo : MonoBehaviour
 {
     // All variable is index
     // Floor1
-    int floorFrom;
+    public int floorFrom;
 
     // pos1
-    Vector2Int posFrom;
+    public Vector2Int posFrom;
 
     // floor2
-    int floorTo;
+    public int floorTo;
 
     // pos2
-    Vector2Int posTo;
+    public Vector2Int posTo;
 
 
     public StairInfo(int floorFrom, Vector2Int posFrom, int floorTo, Vector2Int posTo)
