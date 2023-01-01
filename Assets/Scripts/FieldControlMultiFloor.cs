@@ -26,7 +26,7 @@ public class FieldControlMultiFloor : MonoBehaviour
     public GameObject dataCounter_obj;
     DataCounter dataCounter;
 
-    [Header("Max Environment Steps")] public int maxEnvironmentSteps = 2000;
+    [Header("Max Environment Steps")] public int maxEnvironmentSteps = 1000;
     private int resetTimer;
 
     // FieldData
@@ -43,7 +43,7 @@ public class FieldControlMultiFloor : MonoBehaviour
     // Agents resources
     [HideInInspector] public int activeAgentsNum;
     public List<GameObject> agentsList;
-    [HideInInspector] public List<AgentInfo> agentsInfo;
+    [HideInInspector] public List<AgentInfoMultiFloor> agentsInfo;
     private SimpleMultiAgentGroup agentGroup;
 
 
@@ -58,12 +58,12 @@ public class FieldControlMultiFloor : MonoBehaviour
         {
             Time.timeScale = settings.timeScale;
 
-            InitializeStairDataList();
             dataCounter.Initialize(settings.fieldHeight, settings.fieldWidth);
             dataCounterInitialized = true;
             episodeCount = 0;
         }
 
+        InitializeStairDataList();
         ResetFieldData(settings.fieldHeight, settings.fieldWidth);
         InitializeTileMaps(settings.fieldHeight, settings.fieldWidth);
 
@@ -241,8 +241,8 @@ public class FieldControlMultiFloor : MonoBehaviour
             {
                 agentTilemapList[spawnFloor].SetTile(new Vector3Int(spawnPosIndex.x, height - spawnPosIndex.y, 0), tiles[3]);
 
-                AgentControlByPoca agentControl = agentsList[cnt].GetComponent<AgentControlByPoca>();
-                AgentInfo info = new(cnt + 1000, spawnFloor, spawnPosIndex, true, agentsList[cnt], agentControl);
+                AgentControlMultiFloor agentControl = agentsList[cnt].GetComponent<AgentControlMultiFloor>();
+                AgentInfoMultiFloor info = new(cnt + 1000, spawnFloor, spawnPosIndex, true, agentsList[cnt], agentControl);
                 agentsInfo.Add(info);
                 fieldAgentDataList[spawnFloor][spawnPosIndex.y][spawnPosIndex.x] = true;
 

@@ -11,7 +11,7 @@ public class AgentControlMultiFloor : Agent
     Settings settings;
 
     // FieldControl
-    FieldControlByPoca fieldControl;
+    FieldControlMultiFloor fieldControl;
 
     // Agent's data
     private int agentId;
@@ -20,7 +20,7 @@ public class AgentControlMultiFloor : Agent
     private int floorNum;
 
     // Agent's observation
-    private ObservationAroundAgent observation;
+    private ObservationAroundAgentMultiFloor observation;
 
 
     // Initializing
@@ -28,7 +28,7 @@ public class AgentControlMultiFloor : Agent
     {
         Transform TrainingArea = transform.parent;
         settings = TrainingArea.GetComponentInChildren<Settings>();
-        fieldControl = TrainingArea.GetComponentInChildren<FieldControlByPoca>();
+        fieldControl = TrainingArea.GetComponentInChildren<FieldControlMultiFloor>();
     }
 
 
@@ -138,7 +138,7 @@ public class AgentControlMultiFloor : Agent
     {
         Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 1000].positionIndex;
 
-        if (fieldControl.fieldDataList[floorNum][positionIndex.y][positionIndex.x] == 2)
+        if (fieldControl.fieldDataList[floorNum][positionIndex.y][positionIndex.x].cellType == 2)
         {
             fieldControl.ReachedExit();
 
@@ -164,13 +164,13 @@ public class AgentControlMultiFloor : Agent
         Vector2Int positionIndex = fieldControl.agentsInfo[agentId - 1000].positionIndex;
 
         // Upstair
-        if (fieldControl.fieldDataList[floorNum][positionIndex.y][positionIndex.x] == 4)
+        if (fieldControl.fieldDataList[floorNum][positionIndex.y][positionIndex.x].cellType == 4)
         {
 
         }
 
         // Downstair
-        else if (fieldControl.fieldDataList[floorNum][positionIndex.y][positionIndex.x] == 5)
+        else if (fieldControl.fieldDataList[floorNum][positionIndex.y][positionIndex.x].cellType == 5)
         {
 
         }

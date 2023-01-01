@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StairInfo : MonoBehaviour
+public class StairInfo
 {
     // All variable is index
     // Floor1
