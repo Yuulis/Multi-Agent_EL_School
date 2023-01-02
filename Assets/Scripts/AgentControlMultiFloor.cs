@@ -22,6 +22,9 @@ public class AgentControlMultiFloor : Agent
     // Agent's observation
     private ObservationAroundAgentMultiFloor observation;
 
+    // Whether agent used a stair at previous action or not
+    private bool usedStair;
+
 
     // Initializing
     public override void Initialize()
@@ -38,6 +41,7 @@ public class AgentControlMultiFloor : Agent
         int n = (int)this.gameObject.name[5] - 48;
         agentId = fieldControl.agentsInfo[n].id;
         floorNum = fieldControl.agentsInfo[agentId - 1000].floorNum;
+        usedStair = fieldControl.agentsInfo[agentId - 1000].usedStair;
 
         Vector2Int positionIndex = fieldControl.agentsInfo[agentId - 1000].positionIndex;
         observation = new(
@@ -46,7 +50,8 @@ public class AgentControlMultiFloor : Agent
             settings.fieldHeight,
             settings.fieldWidth,
             positionIndex,
-            settings.agentSight
+            settings.agentSight,
+            usedStair
         );
     }
 
@@ -54,7 +59,7 @@ public class AgentControlMultiFloor : Agent
     // collect observations
     public override void CollectObservations(VectorSensor sensor)
     {
-        observation.UpdateObservation(fieldControl.agentsInfo[agentId - 1000].positionIndex, settings.agentSight);
+        observation.UpdateObservation(fieldControl.agentsInfo[agentId - 1000].positionIndex, settings.agentSight, usedStair);
 
         // For debug
         if (settings.debugMode) observation.PrintAgentObservation(agentId);
@@ -155,24 +160,6 @@ public class AgentControlMultiFloor : Agent
                 fieldControl.AllReachedExit();
                 fieldControl.InitializeTileMaps(settings.fieldHeight, settings.fieldWidth);
             }
-        }
-    }
-
-
-    public void MoveAnotherFloor()
-    {
-        Vector2Int positionIndex = fieldControl.agentsInfo[agentId - 1000].positionIndex;
-
-        // Upstair
-        if (fieldControl.fieldDataList[floorNum][positionIndex.y][positionIndex.x].cellType == 4)
-        {
-
-        }
-
-        // Downstair
-        else if (fieldControl.fieldDataList[floorNum][positionIndex.y][positionIndex.x].cellType == 5)
-        {
-
         }
     }
 

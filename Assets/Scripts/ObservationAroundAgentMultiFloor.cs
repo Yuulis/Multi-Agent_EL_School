@@ -7,7 +7,7 @@ public class ObservationAroundAgentMultiFloor
     // Agent's observation
     public List<List<int>> observationList;
 
-    // Agent's observation of around itself (only detecting whether the tile is null or not; the empty tile and exit tile is true)
+    // Agent's observation of around itself (only detecting whether the tile is null or not; empty and exit is true)
     public List<bool> observationListNeighborhood;
 
     private readonly List<List<CellInfo>> fieldDataList;
@@ -16,18 +16,20 @@ public class ObservationAroundAgentMultiFloor
     private readonly int fieldWidth;
     private Vector2Int positionIndex;
     private readonly int agentSight;
+    private bool usedStair;
 
 
     /// <summary>
     /// Create observation list.
     /// </summary>
     /// <param name="fieldDataList">fieldData</param>
-    /// <param name="fieldAgentData">fieldData of agents</param>
+    /// <param name="fieldAgentData">fieldData of agents (record agent's position) </param>
     /// <param name="fieldHeight">Height of the field</param>
     /// <param name="fieldWidth">Width of the field</param>
     /// <param name="positionIndex">Index of agent's position index of the fieldData</param>
     /// <param name="agentSight">Agent's sight</param>
-    public ObservationAroundAgentMultiFloor(List<List<CellInfo>> fieldDataList, List<List<bool>> fieldAgentData, int fieldHeight, int fieldWidth, Vector2Int positionIndex, int agentSight)
+    /// <param name="usedStair">Whether agent used a stair at previous action or not</param>
+    public ObservationAroundAgentMultiFloor(List<List<CellInfo>> fieldDataList, List<List<bool>> fieldAgentData, int fieldHeight, int fieldWidth, Vector2Int positionIndex, int agentSight, bool usedStair)
     {
         observationList = new();
         observationListNeighborhood = new();
@@ -37,17 +39,19 @@ public class ObservationAroundAgentMultiFloor
         this.fieldWidth = fieldWidth;
         this.positionIndex = positionIndex;
         this.agentSight = agentSight;
+        this.usedStair = usedStair;
 
-        UpdateObservation(this.positionIndex, agentSight);
+        UpdateObservation(this.positionIndex, agentSight, usedStair);
     }
 
 
     /// <summary>
     /// Update observation list.
-    /// </summary>
-    /// <param name="new_positionIndex">Index of the agent's new position of the fieldData2D<</param>
+    /// <param name="new_positionIndex">Index of agent's new position of the fieldData<</param>
     /// <param name="sight">Agent's sight</param>
-    public void UpdateObservation(Vector2Int new_positionIndex, int sight)
+    /// <param name="usedStair">Whether agent used a stair at previous action or not</param>
+    /// </summary>
+    public void UpdateObservation(Vector2Int new_positionIndex, int sight, bool usedStair)
     {
         // Initialize observation list
         observationListNeighborhood.Clear();
@@ -67,147 +71,142 @@ public class ObservationAroundAgentMultiFloor
             observationList.Add(temp);
         }
 
+        // Update data
         positionIndex = new_positionIndex;
-        GetObservation(sight);
+        this.usedStair = usedStair;
+
+        GetObservation();
     }
 
 
     /// <summary>
     /// Call GetObservation functions.
-    /// <param name="sight">Agent's sight</param>
     /// </summary>
-    private void GetObservation(int sight)
+    private void GetObservation()
     {
-        GetObservationNeighborhood(positionIndex, fieldHeight, fieldWidth);
-        GetObservationSquareArea(positionIndex, sight, fieldHeight, fieldWidth);
+        GetObservationNeighborhood();
+        GetObservationSquareArea();
     }
 
     /// <summary>
-    /// Get observation of Agent'S neighborhood(nine tiles)
-    /// <param name="positionIndex">Index of agent's position index of the fieldData</param>
-    /// <param name="height">Height of the field</param>
-    /// <param name="width">Width of the field</param>
+    /// Get observation of Agent's neighborhood (nine tiles)
     /// </summary>
-    public void GetObservationNeighborhood(Vector2Int positionIndex, int height, int width)
+    public void GetObservationNeighborhood()
     {
-        int cnt = 0;
-        for (int y = -1; y < 2; y++)
+        int index = 0;
+        for (int dy = -1; dy < 2; dy++)
         {
-            for (int x = -1; x < 2; x++)
+            for (int dx = -1; dx < 2; dx++)
             {
                 // Out of range
-                if (positionIndex.y + y < 0 || positionIndex.y + y >= height || positionIndex.x + x < 0 || positionIndex.x + x >= width)
+                if (positionIndex.y + dy < 0 || positionIndex.y + dy >= fieldHeight || positionIndex.x + dx < 0 || positionIndex.x + dx >= fieldWidth)
                 {
-                    observationListNeighborhood[cnt] = false;
+                    observationListNeighborhood[index] = false;
                 }
 
                 // Agent itself
-                else if (y == 0 && x == 0)
+                else if (dy == 0 && dx == 0)
                 {
-                    observationListNeighborhood[cnt] = false;
+                    observationListNeighborhood[index] = false;
                 }
 
                 // Empty
-                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x].cellType == 1)
+                else if (fieldDataList[positionIndex.y + dy][positionIndex.x + dx].cellType == 1)
                 {
-                    observationListNeighborhood[cnt] = true;
+                    observationListNeighborhood[index] = true;
                 }
 
                 // Exit
-                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x].cellType == 2)
+                else if (fieldDataList[positionIndex.y + dy][positionIndex.x + dx].cellType == 2)
                 {
-                    observationListNeighborhood[cnt] = true;
+                    observationListNeighborhood[index] = true;
                 }
 
                 // Obstacle
-                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x].cellType == 3)
+                else if (fieldDataList[positionIndex.y + dy][positionIndex.x + dx].cellType == 3)
                 {
-                    observationListNeighborhood[cnt] = false;
+                    observationListNeighborhood[index] = false;
                 }
 
                 // Upstair
-                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x].cellType == 4)
+                else if (fieldDataList[positionIndex.y + dy][positionIndex.x + dx].cellType == 4 && !usedStair)
                 {
-                    observationListNeighborhood[cnt] = true;
+                    observationListNeighborhood[index] = true;
                 }
 
                 // Downstair
-                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x].cellType == 5)
+                else if (fieldDataList[positionIndex.y + dy][positionIndex.x + dx].cellType == 5 && !usedStair)
                 {
-                    observationListNeighborhood[cnt] = true;
+                    observationListNeighborhood[index] = true;
                 }
 
                 // Otherwise
                 else
                 {
-                    observationListNeighborhood[cnt] = false;
+                    observationListNeighborhood[index] = false;
                 }
 
-                cnt++;
+                index++;
             }
         }
     }
 
 
     /// <summary>
-    /// 
+    /// Get observation within the range of agentSight
     /// </summary>
-    /// <param name="positionIndex">Index of agent's position index of the fieldData</param>
-    /// <param name="sight">Agent's sight</param>
-    /// <param name="height">Height of the field</param>
-    /// <param name="width">Width of the field</param>
-    private void GetObservationSquareArea(Vector2Int positionIndex, int sight, int height, int width)
+    private void GetObservationSquareArea()
     {
-        for (int y = -sight; y <= sight; y++)
+        for (int y = -agentSight; y <= agentSight; y++)
         {
-            for (int x = -sight; x <= sight; x++)
+            for (int x = -agentSight; x <= agentSight; x++)
             {
                 // Out of range
-                if (positionIndex.y + y < 0 || positionIndex.y + y >= height || positionIndex.x + x < 0 || positionIndex.x + x >= width)
+                if (positionIndex.y + y < 0 || positionIndex.y + y >= fieldHeight || positionIndex.x + x < 0 || positionIndex.x + x >= fieldWidth)
                 {
-                    observationList[y + sight][x + sight] = 0;
+                    observationList[y + agentSight][x + agentSight] = 0;
                 }
 
                 // Agent itself
                 else if (y == 0 && x == 0)
                 {
-                    observationList[y + sight][x + sight] = 9;
+                    observationList[y + agentSight][x + agentSight] = 9;
                 }
 
                 // Agent
                 else if (fieldAgentData[positionIndex.y + y][positionIndex.x + x])
                 {
-                    observationList[y + sight][x + sight] = 10;
+                    observationList[y + agentSight][x + agentSight] = 10;
                 }
 
                 // Empty
                 else if (fieldDataList[positionIndex.y + y][positionIndex.x + x].cellType == 1)
                 {
-                    observationList[y + sight][x + sight] = 1;
+                    observationList[y + agentSight][x + agentSight] = 1;
                 }
 
                 // Exit
                 else if (fieldDataList[positionIndex.y + y][positionIndex.x + x].cellType == 2)
                 {
-                    observationList[y + sight][x + sight] = 2;
+                    observationList[y + agentSight][x + agentSight] = 2;
                 }
 
                 // Obstacle
                 else if (fieldDataList[positionIndex.y + y][positionIndex.x + x].cellType == 3)
                 {
-                    observationList[y + sight][x + sight] = 3;
+                    observationList[y + agentSight][x + agentSight] = 3;
                 }
 
                 // Upstair
                 else if (fieldDataList[positionIndex.y + y][positionIndex.x + x].cellType == 4)
                 {
-                    observationList[y + sight][x + sight] = 4;
+                    observationList[y + agentSight][x + agentSight] = 4;
                 }
 
                 // Downstair
                 else if (fieldDataList[positionIndex.y + y][positionIndex.x + x].cellType == 5)
                 {
-                    observationList[y + sight][x + sight] = 5;
+                    observationList[y + agentSight][x + agentSight] = 5;
                 }
             }
         }

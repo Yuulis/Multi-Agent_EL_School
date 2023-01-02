@@ -4,17 +4,10 @@ using UnityEngine;
 
 public class StairInfo
 {
-    // All variable is index
-    // Floor1
+    // All variable shows index
     public int floorFrom;
-
-    // pos1
     public Vector2Int posFrom;
-
-    // floor2
     public int floorTo;
-
-    // pos2
     public Vector2Int posTo;
 
 

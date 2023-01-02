@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.MLAgents;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static UnityEditor.PlayerSettings;
 using Random = UnityEngine.Random;
 
 public class FieldControlMultiFloor : MonoBehaviour
@@ -242,7 +243,7 @@ public class FieldControlMultiFloor : MonoBehaviour
                 agentTilemapList[spawnFloor].SetTile(new Vector3Int(spawnPosIndex.x, height - spawnPosIndex.y, 0), tiles[3]);
 
                 AgentControlMultiFloor agentControl = agentsList[cnt].GetComponent<AgentControlMultiFloor>();
-                AgentInfoMultiFloor info = new(cnt + 1000, spawnFloor, spawnPosIndex, true, agentsList[cnt], agentControl);
+                AgentInfoMultiFloor info = new(cnt + 1000, spawnFloor, spawnPosIndex, true, false, agentsList[cnt], agentControl);
                 agentsInfo.Add(info);
                 fieldAgentDataList[spawnFloor][spawnPosIndex.y][spawnPosIndex.x] = true;
 
@@ -306,14 +307,26 @@ public class FieldControlMultiFloor : MonoBehaviour
             }
         }
 
-        agentsInfo[agent_id - 1000].positionIndex.x = posIndex_x;
-        agentsInfo[agent_id - 1000].positionIndex.y = posIndex_y;
-        pos = new(posIndex_x, settings.fieldHeight - posIndex_y, 0);
 
-        if (settings.dataCountMode) dataCounter.UpdateData(posIndex_y, posIndex_x);
+        // If agent reaches stair, it moves another floor
+        if (fieldDataList[floorNum][posIndex_y][posIndex_x].cellType == 4 || fieldDataList[floorNum][posIndex_y][posIndex_x].cellType == 5)
+        {
+            StairInfo stairInfo = fieldDataList[floorNum][posIndex_y][posIndex_x].stairInfo;
+            floorNum = stairInfo.floorTo;
+            pos.x = stairInfo.posTo.x;
+            pos.y = stairInfo.posTo.y;
+
+            agentsInfo[agent_id - 1000].usedStair = true;
+        }
+        else
+        {
+            agentsInfo[agent_id - 1000].usedStair = false;
+        }
 
         agentTilemapList[floorNum].SetTile(pos, tiles[3]);
         fieldAgentDataList[floorNum][posIndex_y][posIndex_x] = true;
+
+        if (settings.dataCountMode) dataCounter.UpdateData(posIndex_y, posIndex_x);
 
         // For debug
         if (settings.debugMode) agentsInfo[agent_id - 1000].PrintAgentInfo();

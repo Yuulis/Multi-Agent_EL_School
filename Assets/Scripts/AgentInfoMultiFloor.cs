@@ -16,6 +16,9 @@ public class AgentInfoMultiFloor
     // Is the agent active? (not reach goal)
     public bool active;
 
+    // Whether agent used a stair at previous action or not
+    public bool usedStair;
+
     // Agent's object
     public GameObject obj;
 
@@ -23,12 +26,13 @@ public class AgentInfoMultiFloor
     public AgentControlMultiFloor agentControl;
 
 
-    public AgentInfoMultiFloor(int id, int floorNum, Vector2Int positionIndex, bool active, GameObject obj, AgentControlMultiFloor agentControl)
+    public AgentInfoMultiFloor(int id, int floorNum, Vector2Int positionIndex, bool active, bool usedStair, GameObject obj, AgentControlMultiFloor agentControl)
     {
         this.id = id;
         this.floorNum = floorNum;
         this.positionIndex = positionIndex;
         this.active = active;
+        this.usedStair = usedStair;
         this.obj = obj;
         this.agentControl = agentControl;
     }
