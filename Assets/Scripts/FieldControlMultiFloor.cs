@@ -266,9 +266,7 @@ public class FieldControlMultiFloor : MonoBehaviour
     {
         int posIndex_x = agentsInfo[agent_id - 1000].positionIndex.x;
         int posIndex_y = agentsInfo[agent_id - 1000].positionIndex.y;
-        Vector3Int pos = new(posIndex_x, settings.fieldHeight - posIndex_y, 0);
-
-        agentTilemapList[floorNum].SetTile(pos, null);
+        agentTilemapList[floorNum].SetTile(new Vector3Int(posIndex_x, settings.fieldHeight - posIndex_y, 0), null);
         fieldAgentDataList[floorNum][posIndex_y][posIndex_x] = false;
 
         // Forward
@@ -313,8 +311,8 @@ public class FieldControlMultiFloor : MonoBehaviour
         {
             StairInfo stairInfo = fieldDataList[floorNum][posIndex_y][posIndex_x].stairInfo;
             floorNum = stairInfo.floorTo;
-            pos.x = stairInfo.posTo.x;
-            pos.y = stairInfo.posTo.y;
+            posIndex_x = stairInfo.posTo.x;
+            posIndex_y = stairInfo.posTo.y;
 
             agentsInfo[agent_id - 1000].usedStair = true;
         }
@@ -323,7 +321,10 @@ public class FieldControlMultiFloor : MonoBehaviour
             agentsInfo[agent_id - 1000].usedStair = false;
         }
 
-        agentTilemapList[floorNum].SetTile(pos, tiles[3]);
+        agentsInfo[agent_id - 1000].positionIndex.x = posIndex_x;
+        agentsInfo[agent_id - 1000].positionIndex.y = posIndex_y;
+        agentsInfo[agent_id - 1000].floorNum = floorNum;
+        agentTilemapList[floorNum].SetTile(new Vector3Int(posIndex_x, settings.fieldHeight - posIndex_y, 0), tiles[3]);
         fieldAgentDataList[floorNum][posIndex_y][posIndex_x] = true;
 
         if (settings.dataCountMode) dataCounter.UpdateData(posIndex_y, posIndex_x);
