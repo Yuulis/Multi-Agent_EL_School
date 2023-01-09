@@ -59,6 +59,7 @@ public class AgentControlMultiFloor : Agent
     // collect observations
     public override void CollectObservations(VectorSensor sensor)
     {
+        floorNum = fieldControl.agentsInfo[agentId - 1000].floorNum;
         observation.UpdateObservation(fieldControl.agentsInfo[agentId - 1000].positionIndex, settings.agentSight, usedStair);
 
         // For debug

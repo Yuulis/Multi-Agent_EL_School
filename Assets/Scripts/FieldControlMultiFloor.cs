@@ -306,7 +306,7 @@ public class FieldControlMultiFloor : MonoBehaviour
 
 
         // If agent reaches stair, it moves another floor
-        if (fieldDataList[floorNum][posIndex_y][posIndex_x].cellType == 4 || fieldDataList[floorNum][posIndex_y][posIndex_x].cellType == 5)
+        if ((fieldDataList[floorNum][posIndex_y][posIndex_x].cellType == 4 || fieldDataList[floorNum][posIndex_y][posIndex_x].cellType == 5) && !agentsInfo[agent_id - 1000].usedStair)
         {
             StairInfo stairInfo = fieldDataList[floorNum][posIndex_y][posIndex_x].stairInfo;
             floorNum = stairInfo.floorTo;
