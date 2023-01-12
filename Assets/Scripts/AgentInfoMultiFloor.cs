@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AgentInfo
+public class AgentInfoMultiFloor
 {
     // Agent id
     public int id;
@@ -16,19 +16,23 @@ public class AgentInfo
     // Is the agent active? (not reach goal)
     public bool active;
 
+    // Whether agent used a stair at previous action or not
+    public bool usedStair;
+
     // Agent's object
     public GameObject obj;
 
     // Agent's class
-    public AgentControlByPoca agentControl;
+    public AgentControlMultiFloor agentControl;
 
 
-    public AgentInfo(int id, int floorNum, Vector2Int positionIndex, bool active, GameObject obj, AgentControlByPoca agentControl)
+    public AgentInfoMultiFloor(int id, int floorNum, Vector2Int positionIndex, bool active, bool usedStair, GameObject obj, AgentControlMultiFloor agentControl)
     {
         this.id = id;
         this.floorNum = floorNum;
         this.positionIndex = positionIndex;
         this.active = active;
+        this.usedStair = usedStair;
         this.obj = obj;
         this.agentControl = agentControl;
     }
@@ -40,7 +44,7 @@ public class AgentInfo
     public void PrintAgentInfo()
     {
         Debug.Log($"Agent-{id} : " +
-            $"[Floor] = {floorNum}" +  
+            $"[Floor] = {floorNum}" +
             $"[Position (fieldDataIndex)] = ({positionIndex.x}, {positionIndex.y}), " +
             $"[Active] = {active}");
     }

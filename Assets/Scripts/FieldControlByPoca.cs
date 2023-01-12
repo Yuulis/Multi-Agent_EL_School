@@ -67,7 +67,7 @@ public class FieldControlByPoca : MonoBehaviour
         m_agentGroup = new SimpleMultiAgentGroup();
         foreach (var item in agentsInfo)
         {
-            m_agentGroup.RegisterAgent(item.m_agentControl);
+            m_agentGroup.RegisterAgent(item.agentControl);
         }
     }
 
@@ -115,7 +115,7 @@ public class FieldControlByPoca : MonoBehaviour
         }
 
         // For fieldDataList
-        fieldDataList = fieldDataReader.m_fieldDataList;
+        fieldDataList = fieldDataReader.fieldDataList;
         for (int i = 0; i < fieldDataList.Count; i++)
         {
             fieldTilemapList[i].ClearAllTiles();
@@ -224,8 +224,8 @@ public class FieldControlByPoca : MonoBehaviour
     /// <param name="dir">Direction of moving</param>
     public void MoveAgentTile(int floorNum, int agent_id, int dir)
     {
-        int posIndex_x = agentsInfo[agent_id - 1000].m_positionIndex.x;
-        int posIndex_y = agentsInfo[agent_id - 1000].m_positionIndex.y;
+        int posIndex_x = agentsInfo[agent_id - 1000].positionIndex.x;
+        int posIndex_y = agentsInfo[agent_id - 1000].positionIndex.y;
         Vector3Int pos = new(posIndex_x, settings.fieldHeight - posIndex_y, 0);
 
         agentTilemapList[floorNum].SetTile(pos, null);
@@ -267,8 +267,8 @@ public class FieldControlByPoca : MonoBehaviour
             }
         }
 
-        agentsInfo[agent_id - 1000].m_positionIndex.x = posIndex_x;
-        agentsInfo[agent_id - 1000].m_positionIndex.y = posIndex_y;
+        agentsInfo[agent_id - 1000].positionIndex.x = posIndex_x;
+        agentsInfo[agent_id - 1000].positionIndex.y = posIndex_y;
         pos = new(posIndex_x, settings.fieldHeight - posIndex_y, 0);
 
         if (settings.dataCountMode) dataCounter.UpdateData(posIndex_y, posIndex_x);
