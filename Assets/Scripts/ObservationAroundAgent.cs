@@ -10,36 +10,35 @@ public class ObservationAroundAgent
     // Agent's observation of around itself (only detecting whether the tile is null or not; the empty tile and exit tile is true)
     public List<bool> observationListNeighborhood;
 
-    // Member var
-    private readonly List<List<int>> m_fieldDataList;
-    private readonly List<List<bool>> m_fieldAgentData;
-    private readonly int m_fieldHeight;
-    private readonly int m_fieldWidth;
-    private Vector2Int m_positionIndex;
-    private readonly int m_agentSight;
+    private readonly List<List<int>> fieldDataList;
+    private readonly List<List<bool>> fieldAgentData;
+    private readonly int fieldHeight;
+    private readonly int fieldWidth;
+    private Vector2Int positionIndex;
+    private readonly int agentSight;
 
 
     /// <summary>
     /// Create observation list.
     /// </summary>
-    /// <param name="fieldData">fieldData</param>
+    /// <param name="fieldDataList">fieldData</param>
     /// <param name="fieldAgentData">fieldData of agents</param>
-    /// <param name="height">Height of the field</param>
-    /// <param name="width">Width of the field</param>
+    /// <param name="fieldHeight">Height of the field</param>
+    /// <param name="fieldWidth">Width of the field</param>
     /// <param name="positionIndex">Index of agent's position index of the fieldData</param>
     /// <param name="agentSight">Agent's sight</param>
-    public ObservationAroundAgent(List<List<int>> fieldData, List<List<bool>> fieldAgentData, int height, int width, Vector2Int positionIndex, int agentSight)
+    public ObservationAroundAgent(List<List<int>> fieldDataList, List<List<bool>> fieldAgentData, int fieldHeight, int fieldWidth, Vector2Int positionIndex, int agentSight)
     {
         observationList = new();
         observationListNeighborhood = new();
-        m_fieldDataList = fieldData;
-        m_fieldAgentData = fieldAgentData;
-        m_fieldHeight = height;
-        m_fieldWidth = width;
-        m_positionIndex = positionIndex;
-        m_agentSight = agentSight;
+        this.fieldDataList = fieldDataList;
+        this.fieldAgentData = fieldAgentData;
+        this.fieldHeight = fieldHeight;
+        this.fieldWidth = fieldWidth;
+        this.positionIndex = positionIndex;
+        this.agentSight = agentSight;
 
-        UpdateObservation(m_positionIndex, agentSight);
+        UpdateObservation(this.positionIndex, agentSight);
     }
 
 
@@ -68,7 +67,7 @@ public class ObservationAroundAgent
             observationList.Add(temp);
         }
 
-        m_positionIndex = new_positionIndex;
+        positionIndex = new_positionIndex;
         GetObservation(sight);
     }
 
@@ -79,8 +78,8 @@ public class ObservationAroundAgent
     /// </summary>
     private void GetObservation(int sight)
     {
-        GetObservationNeighborhood(m_positionIndex, m_fieldHeight, m_fieldWidth);
-        GetObservationSquareArea(m_positionIndex, sight, m_fieldHeight, m_fieldWidth);
+        GetObservationNeighborhood(positionIndex, fieldHeight, fieldWidth);
+        GetObservationSquareArea(positionIndex, sight, fieldHeight, fieldWidth);
     }
 
     /// <summary>
@@ -109,31 +108,31 @@ public class ObservationAroundAgent
                 }
 
                 // Empty
-                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 1)
+                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x] == 1)
                 {
                     observationListNeighborhood[cnt] = true;
                 }
 
                 // Exit
-                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 2)
+                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x] == 2)
                 {
                     observationListNeighborhood[cnt] = true;
                 }
 
                 // Obstacle
-                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 3)
+                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x] == 3)
                 {
                     observationListNeighborhood[cnt] = false;
                 }
 
                 // Upstair
-                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 4)
+                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x] == 4)
                 {
                     observationListNeighborhood[cnt] = true;
                 }
 
                 // Downstair
-                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 5)
+                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x] == 5)
                 {
                     observationListNeighborhood[cnt] = true;
                 }
@@ -176,37 +175,37 @@ public class ObservationAroundAgent
                 }
 
                 // Agent
-                else if (m_fieldAgentData[positionIndex.y + y][positionIndex.x + x])
+                else if (fieldAgentData[positionIndex.y + y][positionIndex.x + x])
                 {
                     observationList[y + sight][x + sight] = 10;
                 }
 
                 // Empty
-                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 1)
+                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x] == 1)
                 {
                     observationList[y + sight][x + sight] = 1;
                 }
 
                 // Exit
-                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 2)
+                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x] == 2)
                 {
                     observationList[y + sight][x + sight] = 2;
                 }
 
                 // Obstacle
-                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 3)
+                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x] == 3)
                 {
                     observationList[y + sight][x + sight] = 3;
                 }
 
                 // Upstair
-                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 4)
+                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x] == 4)
                 {
                     observationList[y + sight][x + sight] = 4;
                 }
 
                 // Downstair
-                else if (m_fieldDataList[positionIndex.y + y][positionIndex.x + x] == 5)
+                else if (fieldDataList[positionIndex.y + y][positionIndex.x + x] == 5)
                 {
                     observationList[y + sight][x + sight] = 5;
                 }
@@ -218,10 +217,10 @@ public class ObservationAroundAgent
     /// <summary>
     /// For debug
     /// </summary>
-    /// <param name="agent_id">Agent's id</param>
-    public void PrintAgentObservation(int agent_id)
+    /// <param name="agentId">Agent's id</param>
+    public void PrintAgentObservation(int agentId)
     {
-        Debug.Log($"===== Agent{agent_id}'s Observation =====");
+        Debug.Log($"===== Agent{agentId}'s Observation =====");
         Debug.Log($"[Neighborhood]");
         string s = string.Empty;
         for (int i = 0; i < 9; i++)
@@ -231,10 +230,10 @@ public class ObservationAroundAgent
         Debug.Log(s);
 
         Debug.Log($"[Around]");
-        for (int y = 0; y < m_agentSight * 2 + 1; y++)
+        for (int y = 0; y < agentSight * 2 + 1; y++)
         {
             s = string.Empty;
-            for (int x = 0; x < m_agentSight * 2 + 1; x++)
+            for (int x = 0; x < agentSight * 2 + 1; x++)
             {
                 s += observationList[y][x].ToString() + " ";
             }

@@ -47,7 +47,7 @@ public class FieldControl : MonoBehaviour
     /// <param name="width">Width of the field</param>
     private void ResetFieldData(int height, int width)
     {
-        fieldData = fieldDataReader.m_fieldDataList[0];
+        fieldData = fieldDataReader.fieldDataList[0];
         fieldAgentData = new();
         for (int y = 0; y < height; y++)
         {
@@ -144,8 +144,8 @@ public class FieldControl : MonoBehaviour
     /// <param name="dir">Direction of moving</param>
     public void MoveAgentTile(int agent_id, int dir)
     {
-        int posIndex_x = agentsInfo[agent_id - 10].m_positionIndex.x;
-        int posIndex_y = agentsInfo[agent_id - 10].m_positionIndex.y;
+        int posIndex_x = agentsInfo[agent_id - 10].positionIndex.x;
+        int posIndex_y = agentsInfo[agent_id - 10].positionIndex.y;
         Vector3Int pos = new(posIndex_x, settings.fieldHeight - posIndex_y, 0);
 
         agent_tilemap.SetTile(pos, null);
@@ -175,8 +175,8 @@ public class FieldControl : MonoBehaviour
             posIndex_x--;
         }
 
-        agentsInfo[agent_id - 10].m_positionIndex.x = posIndex_x;
-        agentsInfo[agent_id - 10].m_positionIndex.y = posIndex_y;
+        agentsInfo[agent_id - 10].positionIndex.x = posIndex_x;
+        agentsInfo[agent_id - 10].positionIndex.y = posIndex_y;
         pos = new(posIndex_x, settings.fieldHeight - posIndex_y, 0);
 
         agent_tilemap.SetTile(pos, tiles[3]);
