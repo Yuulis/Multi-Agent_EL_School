@@ -92,7 +92,8 @@ MonoBehaviour:
   fieldHeight: 36
   agentCnt: 10
   agentSight: 10
-  csvFileName: fieldData_school_1F
+  csvFileName:
+  - fieldData_school_1F
   debugMode: 0
   timeScale: 1
   dataCountMode: 0
@@ -107,7 +108,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9093684475942920093}
   m_Layer: 0
-  m_Name: TrainingArea
+  m_Name: TrainingArea_1F
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -356,21 +357,25 @@ MonoBehaviour:
   fieldDataReader_obj: {fileID: 9093684475149242136}
   csvExporter_obj: {fileID: 4313664783538558623, guid: 836493f9e5a67c140b2e891fdbdc2b48, type: 3}
   dataCounter_obj: {fileID: 7917084202069003373, guid: 17ef24be40b03814993c8ecb2a79bf98, type: 3}
-  maxEnvironmentSteps: 2000
+  maxEnvironmentSteps: 1000
   tilemapSprites:
   - {fileID: 21300000, guid: 6df8038af0c7b2e498cb1cbe60a8cbe8, type: 3}
   - {fileID: 21300000, guid: 2b2545b6eded4354294a2ac7c5df5cf9, type: 3}
   - {fileID: 21300000, guid: ea5669e489e7a6246af34a45022d25f3, type: 3}
   - {fileID: 21300000, guid: 94944dea46925cb41996b730d85d0d3d, type: 3}
-  - {fileID: 21300000, guid: 3cec4bc0e7c4ae042a098e76a33fdad8, type: 3}
+  - {fileID: 21300000, guid: 0e39ecdd416cf1447bbce497eb3b80c3, type: 3}
+  - {fileID: 21300000, guid: c110ba1a6f5cbf04fb09286ec1343ab9, type: 3}
   tiles:
   - {fileID: 11400000, guid: 5caa44c0682f3ca42aa47121abd4bdbf, type: 2}
   - {fileID: 11400000, guid: fa4a3f53b4461e74faf4c23d4afe9510, type: 2}
   - {fileID: 11400000, guid: d2947251c3eadbc4aa9ec76fd7280125, type: 2}
   - {fileID: 11400000, guid: fb1e72465730d8549b38c322c68e962e, type: 2}
-  - {fileID: 11400000, guid: 28ef43264d3b8eb4a9e5742ad5472462, type: 2}
-  field_tilemap: {fileID: 9093684476550394613}
-  agent_tilemap: {fileID: 9093684476726384168}
+  - {fileID: 11400000, guid: d13e0679fa595bc44a16755defda06e3, type: 2}
+  - {fileID: 11400000, guid: 82e4b22a28cda8e44aaec8f15fa16a71, type: 2}
+  fieldTilemapList:
+  - {fileID: 9093684476550394613}
+  agentTilemapList:
+  - {fileID: 9093684476726384168}
   activeAgentsNum: 0
   agentsList:
   - {fileID: 2597476075711887374}
