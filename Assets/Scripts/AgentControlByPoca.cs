@@ -138,7 +138,7 @@ public class AgentControlByPoca : Agent
     {
         Vector2Int positionIndex = fieldControl.agentsInfo[agent_id - 1000].positionIndex;
 
-        if (fieldControl.fieldDataList[floorNum][positionIndex.y][positionIndex.x] == 2)
+        if (fieldControl.fieldDataList[floorNum][positionIndex.y][positionIndex.x] == 2 || fieldControl.fieldDataList[floorNum][positionIndex.y][positionIndex.x] == 5)
         {
             fieldControl.ReachedExit();
 

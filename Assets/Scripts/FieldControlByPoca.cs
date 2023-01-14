@@ -167,12 +167,42 @@ public class FieldControlByPoca : MonoBehaviour
             for (int x = 0; x < width; x++)
             {
                 TileBase tile = null;
-                if (fieldDataList[index][y][x] == 0) tile = tiles[0];
-                if (fieldDataList[index][y][x] == 1) tile = tiles[0];
-                if (fieldDataList[index][y][x] == 2) tile = tiles[1];
-                if (fieldDataList[index][y][x] == 3) tile = tiles[2];
-                if (fieldDataList[index][y][x] == 4) tile = tiles[4];
-                if (fieldDataList[index][y][x] == 5) tile = tiles[5];
+                // Null
+                if (fieldDataList[index][y][x] == 0)
+                {
+                    tile = tiles[0];
+                }
+
+                // Empty
+                else if (fieldDataList[index][y][x] == 1) 
+                {
+                    tile = tiles[0];
+                }
+
+                // Exit
+                else if (fieldDataList[index][y][x] == 2) 
+                { 
+                    tile = tiles[1];
+                }
+
+                // Obstacle
+                else if (fieldDataList[index][y][x] == 3)
+                {
+                    tile = tiles[2];
+                }
+
+                // Upstair
+                else if (fieldDataList[index][y][x] == 4) 
+                {
+                    //tile = tiles[4];
+                    tile = tiles[2];
+                }
+
+                // Downstair
+                else if (fieldDataList[index][y][x] == 5) 
+                {
+                    tile = tiles[5];
+                }
 
                 fieldTilemapList[index].SetTile(new Vector3Int(x, height - y, 0), tile);
             }

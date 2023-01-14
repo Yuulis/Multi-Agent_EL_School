@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Unity.MLAgents;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using static UnityEditor.PlayerSettings;
 using Random = UnityEngine.Random;
 
 public class FieldControlMultiFloor : MonoBehaviour
