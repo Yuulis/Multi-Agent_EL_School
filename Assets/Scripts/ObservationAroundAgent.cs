@@ -128,7 +128,8 @@ public class ObservationAroundAgent
                 // Upstair
                 else if (fieldDataList[positionIndex.y + y][positionIndex.x + x] == 4)
                 {
-                    observationListNeighborhood[cnt] = true;
+                    //observationListNeighborhood[cnt] = true;
+                    observationListNeighborhood[cnt] = false;
                 }
 
                 // Downstair
@@ -201,7 +202,8 @@ public class ObservationAroundAgent
                 // Upstair
                 else if (fieldDataList[positionIndex.y + y][positionIndex.x + x] == 4)
                 {
-                    observationList[y + sight][x + sight] = 4;
+                    //observationList[y + sight][x + sight] = 4;
+                    observationList[y + sight][x + sight] = 3;
                 }
 
                 // Downstair
