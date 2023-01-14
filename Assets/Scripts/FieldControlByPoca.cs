@@ -25,7 +25,7 @@ public class FieldControlByPoca : MonoBehaviour
     public GameObject dataCounter_obj;
     DataCounter dataCounter;
 
-    [Header("Max Environment Steps")] public int maxEnvironmentSteps = 1000;
+    [Header("Max Environment Steps")] public int maxEnvironmentSteps = 2000;
     private int m_resetTimer;
 
     // FieldData

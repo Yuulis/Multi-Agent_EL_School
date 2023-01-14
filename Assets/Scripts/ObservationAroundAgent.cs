@@ -209,7 +209,8 @@ public class ObservationAroundAgent
                 // Downstair
                 else if (fieldDataList[positionIndex.y + y][positionIndex.x + x] == 5)
                 {
-                    observationList[y + sight][x + sight] = 5;
+                    //observationList[y + sight][x + sight] = 5;
+                    observationList[y + sight][x + sight] = 2;
                 }
             }
         }
