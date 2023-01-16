@@ -7,6 +7,8 @@ using System.Text;
 
 public class CsvExporter : MonoBehaviour
 {
+    public string filePathHeader;
+
     public bool export;
     
     StreamWriter sw;
@@ -15,7 +17,7 @@ public class CsvExporter : MonoBehaviour
     void Start()
     {
         DateTime dt = DateTime.Now;
-        string filePath = @"School_1F_result_" + dt.ToString("yyyy-MM-dd-HH-mm-ss") + ".csv";
+        string filePath = @$"{filePathHeader}" + dt.ToString("yyyy-MM-dd-HH-mm-ss") + ".csv";
         if (export)
         {
             sw = new StreamWriter(filePath, true, Encoding.GetEncoding("UTF-8"));

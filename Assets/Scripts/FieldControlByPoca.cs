@@ -150,7 +150,11 @@ public class FieldControlByPoca : MonoBehaviour
 
         RandomSetAgent(height, width, settings.agentCnt);
 
-        if (settings.dataCountMode) episodeCount++;
+        if (settings.dataCountMode)
+        {
+            episodeCount++;
+            Debug.Log($"{episodeCount}");
+        }
     }
 
 
