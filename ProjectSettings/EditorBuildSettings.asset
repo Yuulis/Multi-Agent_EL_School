@@ -14,7 +14,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/School_3F/School_3F.unity
     guid: 100e935ac26439b4ca23215ce232085e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/School_4F/School_4F.unity
     guid: 2240f675a89d23142a00943bb1225286
+  - enabled: 1
+    path: Assets/Scenes/School_5F/School_5F.unity
+    guid: 5ded98aae86fcdc4db4b44d144b61d02
   m_configObjects: {}

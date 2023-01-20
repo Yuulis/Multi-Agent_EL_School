@@ -188,8 +188,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4313664783538558617, guid: 836493f9e5a67c140b2e891fdbdc2b48, type: 3}
+      propertyPath: export
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4313664783538558617, guid: 836493f9e5a67c140b2e891fdbdc2b48, type: 3}
       propertyPath: filePathHeader
-      value: School_4F_result
+      value: School_4F_result_
       objectReference: {fileID: 0}
     - target: {fileID: 4313664783538558622, guid: 836493f9e5a67c140b2e891fdbdc2b48, type: 3}
       propertyPath: m_RootOrder
@@ -325,6 +329,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &961720756 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4313664783538558623, guid: 836493f9e5a67c140b2e891fdbdc2b48, type: 3}
+  m_PrefabInstance: {fileID: 350591573}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1364572346 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7917084202069003373, guid: 17ef24be40b03814993c8ecb2a79bf98, type: 3}
+  m_PrefabInstance: {fileID: 301413084}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3495400733076298852
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -332,6 +346,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5670429589325613586, guid: a425edfa7cc24f3418de0dbff5dffaf1, type: 3}
+      propertyPath: csvExporter_obj
+      value: 
+      objectReference: {fileID: 961720756}
+    - target: {fileID: 5670429589325613586, guid: a425edfa7cc24f3418de0dbff5dffaf1, type: 3}
+      propertyPath: dataCounter_obj
+      value: 
+      objectReference: {fileID: 1364572346}
     - target: {fileID: 5670429589325613586, guid: a425edfa7cc24f3418de0dbff5dffaf1, type: 3}
       propertyPath: maxEnvironmentSteps
       value: 1000
@@ -383,6 +405,14 @@ PrefabInstance:
     - target: {fileID: 5670429590219974451, guid: a425edfa7cc24f3418de0dbff5dffaf1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5670429590555920157, guid: a425edfa7cc24f3418de0dbff5dffaf1, type: 3}
+      propertyPath: timeScale
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5670429590555920157, guid: a425edfa7cc24f3418de0dbff5dffaf1, type: 3}
+      propertyPath: dataCountMode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5670429590555920157, guid: a425edfa7cc24f3418de0dbff5dffaf1, type: 3}
       propertyPath: maxEpisodeCount
